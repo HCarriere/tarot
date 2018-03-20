@@ -1,0 +1,66 @@
+/* general */
+body {
+    background-color: #121212;
+    font-family: 'Raleway', sans-serif;
+    color: white;
+    margin: 0;
+    padding: 0;
+    font-size: 16px;
+}
+.body-content {
+    background-color: #363636;
+    max-width: 1012px;
+    min-width:480px;
+    margin: auto;
+}
+h1 {
+    margin: 0;
+    padding: 10px;
+    font-size:4em;
+}
+
+/* hideable section */
+.hideable-section {
+    margin: 36px;
+}
+.hideable-section.hidden {
+    
+}
+.hideable-section .icon {
+    display: inline-block;
+    vertical-align: middle;
+}
+.hideable-section .title {
+    font-size:2em;
+    display: inline-block;
+    cursor: pointer;
+}
+.hideable-section .content {
+    display:block;
+    border-left: 1px solid white;
+    margin:8px;
+    padding:10px;
+}
+.hideable-section.hidden .content {
+    display:none
+}
+
+/* forms */
+form {
+    
+}
+.input-component {
+    
+}
+.input-component.text{
+    
+}
+.input-component label{
+    
+}
+.input-component input{
+    
+}
+.input-component .info{
+    
+}

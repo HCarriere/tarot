@@ -1,0 +1,46 @@
+<h1>Tarot</h1>
+<div class="hideable-section hidden">
+    
+    <div class="title">
+        <img class="icon" src="/icons/a.png">
+        Nouveau groupe
+    </div>
+    <div class="content">
+        <form action="/group/add" method="POST">
+            <div class="input-component text">
+                <label>Groupe</label>
+                <input type="text" name="group" placeholder="Ce Super groupe">
+                <div class="info"></div>
+            </div>
+
+            <div class="input-component text optionnal">
+                <label>Mot de passe (optionnel)</label>
+                <input type="password" name="password">
+                <div class="info"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="hideable-section hidden">
+    <div class="title">
+        <img class="icon" src="/icons/a.png">
+        Mon groupe
+    </div>
+    <div class="content">
+        <form action="/login" method="POST">
+            <div class="input-component text">
+                <label>Groupe</label>
+                <input type="text" name="group" placeholder="Mon Super groupe">
+                <div class="info"></div>
+            </div>
+
+            <div class="input-component text optionnal">
+                <label>Mot de passe (optionnel)</label>
+                <input type="password" name="password">
+                <div class="info"></div>
+            </div>
+        </form>
+    </div>
+</div>
+
