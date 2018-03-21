@@ -82,8 +82,9 @@ const Group = require('./app/group');
 
 app
 .get('/', utils.mustBeAuthentified() ,(req, res) => {
-    res.render('login', {
-        
+    res.render('group', {
+        titleSuffix: ' - '+req.session.currentGroup,
+        group: req.session.currentGroup,
     });
 })
 
