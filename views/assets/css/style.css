@@ -67,25 +67,27 @@ form {
     display: block;
     font-size: 0.8em;
 }
-form .submit {
+.input-component.text input{
+    background-color:transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    color: white;
+}
+
+/* buttons */
+.button {
     background-color: greenyellow;
     border: 1px solid transparent;
     cursor: pointer;
     margin: 8px;
     padding: 8px;
     width: 160px;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
 }
-form .submit:hover {
+.button:hover {
     border: 1px solid greenyellow;
     background-color: transparent;
-    color: white;
-    margin: 8px;
-    padding: 8px;
-    width: 160px;
-}
-.input-component.text input{
-    background-color:transparent;
-    border: none;
-    border-bottom: 1px solid white;
     color: white;
 }
