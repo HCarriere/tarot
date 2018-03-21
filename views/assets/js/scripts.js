@@ -5,10 +5,10 @@ $(document).ready(()=>{
 function addEffects() {
     
     // hideable sections
-    $('.hideable-section').click(function(e) {
-        $(this).children('.content').slideToggle({
+    $('.hideable-section .title').click(function(e) {
+        $(this).siblings('.content').slideToggle({
             queue: false
         });
-        $(this).toggleClass('hidden');
+        $(this).parent('.hideable-section').toggleClass('hidden');
     });
 }

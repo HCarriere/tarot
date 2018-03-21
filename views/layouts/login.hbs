@@ -1,6 +1,9 @@
 <h1>Tarot</h1>
+{{#if error}}
+    <div class="warning error">{{error}}</div>
+{{/if}}
+
 <div class="hideable-section hidden">
-    
     <div class="title">
         <img class="icon" src="/icons/a.png">
         Nouveau groupe
@@ -9,15 +12,17 @@
         <form action="/group/add" method="POST">
             <div class="input-component text">
                 <label>Groupe</label>
-                <input type="text" name="group" placeholder="Ce Super groupe">
+                <input type="text" name="name" placeholder="Ce Super groupe" required>
                 <div class="info"></div>
             </div>
 
             <div class="input-component text optionnal">
                 <label>Mot de passe (optionnel)</label>
                 <input type="password" name="password">
-                <div class="info"></div>
+                <div class="info">Optionnel</div>
             </div>
+            
+            <input type="submit" value="Créer" class="submit">
         </form>
     </div>
 </div>
@@ -31,7 +36,7 @@
         <form action="/login" method="POST">
             <div class="input-component text">
                 <label>Groupe</label>
-                <input type="text" name="group" placeholder="Mon Super groupe">
+                <input type="text" name="name" placeholder="Mon Super groupe" required>
                 <div class="info"></div>
             </div>
 
@@ -40,6 +45,8 @@
                 <input type="password" name="password">
                 <div class="info"></div>
             </div>
+            
+            <input type="submit" value="Se connecter" class="submit">
         </form>
     </div>
 </div>

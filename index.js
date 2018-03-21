@@ -5,6 +5,7 @@ const session = require('express-session');
 const exphbs = require('express-handlebars');
 const passport = require('passport');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const http = require('http');
 const path = require('path');
@@ -13,6 +14,7 @@ const path = require('path');
 const app = express();
 const port = process.env.PORT || 3000;
 const server = http.createServer(app);
+const utils = require('./app/utils');
 
 // handlebars conf
 
@@ -49,18 +51,77 @@ app
 .set('view engine', '.hbs')
 .set('views', path.join(__dirname, 'views/layouts'));
 
+// mongoose
+mongoose.connect(process.env.DB_URI || 'mongodb://localhost/tarot');
+
+mongoose.connection.on('error', (err) => {
+    console.log('mongoose default connection error: '+err);
+});
+
+mongoose.connection.on('connected', () => {
+    console.log('mongoose connected');
+});
+
+mongoose.connection.on('disconnected', () => {
+    console.log('mongoose disconnected');
+});
+
+process.on('SIGINT', function() {  
+    mongoose.connection.close(function () { 
+        console.log('Mongoose default connection disconnected through app termination'); 
+        process.exit(0); 
+    }); 
+}); 
+
+// models 
+const Group = require('./app/group');
+
 /*
 * ROUTES
 */
 
 app
-
-.get('/', (req, res) => {
+.get('/', utils.mustBeAuthentified() ,(req, res) => {
     res.render('login', {
         
     });
 })
 
+.get('/login', (req, res) => {
+    res.render('login', {
+        
+    });
+})
+
+.post('/login', (req, res) => {
+    Group.logonToGroup(req, (group) => {
+        if(group) {
+            // ok
+            utils.setConnected(req, group.name);
+            res.redirect('/');
+        } else {
+            // ko
+            res.render('login', {
+                error: 'wrong password'
+            });  
+        }
+    });
+})
+
+.post('/group/add', (req, res) => {
+    Group.addGroup(req, (err, group) => {
+        if(group) {
+            // ok
+            utils.setConnected(req, group.name);
+            res.redirect('/');
+        } else {
+            // ko
+            res.render('login', {
+                error: err,
+            });     
+        }
+    });
+})
 // 404
 
 .get('*', (req, res) => {
@@ -71,7 +132,7 @@ app
 // error handler
 
 .use((err, req, res, next) => {  
-    console.log(err);
+    console.log('server error : '+err);
     res.status(500);
     res.json({error:err});
 });
@@ -80,10 +141,11 @@ app
 
 server.listen(port, (err) => {
    if(err) {
-       console.log(err);
+       console.log('server launch error : '+err);
    } else {
        console.log(`platform listening on port ${port}`);
    }
 });
+
 
 

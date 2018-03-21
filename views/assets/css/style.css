@@ -37,7 +37,7 @@ h1 {
 }
 .hideable-section .content {
     display:block;
-    border-left: 1px solid white;
+    border-left: 3px solid white;
     margin:8px;
     padding:10px;
 }
@@ -47,20 +47,45 @@ h1 {
 
 /* forms */
 form {
-    
+    margin: 0;
 }
 .input-component {
-    
-}
-.input-component.text{
-    
+    margin:8px;
+    padding: 8px 0;
 }
 .input-component label{
-    
+    display: block;
+    font-weight: bold;
 }
 .input-component input{
-    
+    display: block;
+    padding-top: 8px;
+    margin-bottom: 3px;
+    width: 100%;
 }
 .input-component .info{
-    
+    display: block;
+    font-size: 0.8em;
+}
+form .submit {
+    background-color: greenyellow;
+    border: 1px solid transparent;
+    cursor: pointer;
+    margin: 8px;
+    padding: 8px;
+    width: 160px;
+}
+form .submit:hover {
+    border: 1px solid greenyellow;
+    background-color: transparent;
+    color: white;
+    margin: 8px;
+    padding: 8px;
+    width: 160px;
+}
+.input-component.text input{
+    background-color:transparent;
+    border: none;
+    border-bottom: 1px solid white;
+    color: white;
 }
