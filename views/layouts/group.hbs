@@ -1,7 +1,10 @@
-<h1>{{group}}</h1>
+<h1>Groupe {{group}}</h1>
 
-<div class="button" id="newGame">Nouvelle partie</div>
+{{#if error}}
+    <div class="warning error">{{error}}</div>
+{{/if}}
 
+<a class="button" href="/new/game">Nouvelle partie</a>
 
 <div class="hideable-section hidden">
     <div class="title">

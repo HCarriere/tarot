@@ -23,20 +23,27 @@ function getRequestParams(req, params) {
     return resolvedParams;
 }
 
-function setConnected(req, groupName) {
+function setConnected(req, sessionSecret, groupName) {
     if(!groupName) return;
     console.log('connected as '+groupName);
     req.session.currentGroup = groupName;
+    req.session.sessionID = getSessionKey(sessionSecret, groupName);
 }
 
 
-function mustBeAuthentified() {
+function mustBeAuthentified(secret) {
     return function (req, res, next) {
-        if(req.session.currentGroup) {
+        if(req.session.currentGroup &&
+          getSessionKey(secret, req.session.currentGroup) == req.session.sessionID) {
             return next()
         }
         res.redirect('/login');
     }
+}
+
+
+function getSessionKey(grp, secret) {
+    return md5(secret + '-' + grp + '==');
 }
 
 module.exports = {

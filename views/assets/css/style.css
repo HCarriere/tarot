@@ -10,13 +10,13 @@ body {
 .body-content {
     background-color: #363636;
     max-width: 1012px;
-    min-width:480px;
+    min-width:360px;
     margin: auto;
 }
 h1 {
     margin: 0;
     padding: 10px;
-    font-size:4em;
+    font-size:3em;
 }
 
 /* hideable section */
@@ -53,25 +53,58 @@ form {
     margin:8px;
     padding: 8px 0;
 }
-.input-component label{
+.input-component label {
     display: block;
     font-weight: bold;
 }
-.input-component input{
+.input-component input {
     display: block;
     padding-top: 8px;
     margin-bottom: 3px;
     width: 100%;
+    max-width: 540px;
 }
-.input-component .info{
+.input-component input[type=radio]
+{
+    display: inline;
+    width: auto;
+    margin-right: 30px;
+}
+.input-component .info {
     display: block;
     font-size: 0.8em;
 }
-.input-component.text input{
+.input-component.text input {
     background-color:transparent;
     border: none;
     border-bottom: 1px solid white;
     color: white;
+}
+label.input-players {
+    background-color: grey;
+    border: 1px solid transparent;
+    display: inline-block;
+    width: 69px;
+    padding: 8px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+label.input-players:hover {
+    background-color: transparent;
+    border: 1px solid greenyellow;
+}
+label.input-players input:checked + .player{
+    color: greenyellow;
+}
+.input-players .player {
+    display: inline-block;
+    font-weight: normal;
+}
+.input-players input {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    width: 20px;
 }
 
 /* buttons */

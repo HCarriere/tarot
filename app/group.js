@@ -41,7 +41,10 @@ class Group {
     }
     
     static logonToGroup(req, callback) {
-        let params = utils.getRequestParams(req, ['name', 'password']);
+        let params = utils.getRequestParams(req, [
+            'name', 
+            'password'
+        ]);
         if(!params.name) {
             return callback('name is needed');
         }
@@ -60,6 +63,25 @@ class Group {
                 }
             }
             return callback(result);
+        });
+    }
+    
+    static addPlayerToGroup(playerName, groupName) {
+        GroupModel.findOne({
+            name: groupName
+        }, (err, group) => {
+            let player = {
+                name: playerName,
+                date: new Date(),
+            };
+            if(!group.players) {
+                group.players = [player];
+            } else {
+                group.players.push(player);
+            }
+            group.save((err, res) => {
+                
+            });
         });
     }
 }
