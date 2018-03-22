@@ -84,7 +84,7 @@ label.input-players {
     background-color: grey;
     border: 1px solid transparent;
     display: inline-block;
-    width: 69px;
+    min-width: 69px;
     padding: 8px;
     margin-right: 10px;
     cursor: pointer;

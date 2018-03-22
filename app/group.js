@@ -4,6 +4,14 @@ const utils = require('./utils');
 const groupSchema = mongoose.Schema({
     name: String,
     password: String,
+    players: [{
+        name: String,
+        date: Date,
+    }],
+    games: [{
+        name: String,
+        id: String,
+    }],
 });
 const GroupModel = mongoose.model('Group', groupSchema);
 
@@ -32,11 +40,21 @@ class Group {
             let newGroup = new GroupModel({
                 name: params.name,
                 password: utils.hashPassword(params.password),
+                players: [],
             });
             newGroup.save((err, object) => {
                 if(err) console.error(err);
                 callback(err, object);
             }); 
+        });
+    }
+    
+    static getGroup(groupName, callback) {
+        GroupModel.findOne({
+            name: groupName,
+        }, (err, result) => {
+            if(err) return console.error(err);
+            callback(err, result);
         });
     }
     
@@ -53,16 +71,17 @@ class Group {
             name: params.name,
         }, (err, result) => {
             if(err) return console.error(err);
+            if(!result) return callback('invalid group');
             if(result.password) {
                 if(result.password == utils.hashPassword(params.password)) {
                     // good password
-                    return callback(result);
+                    return callback(null, result);
                 } else {
                     // bad password
-                    return callback(false);
+                    return callback('wrong password');
                 }
             }
-            return callback(result);
+            return callback(null, result);
         });
     }
     
@@ -70,17 +89,33 @@ class Group {
         GroupModel.findOne({
             name: groupName
         }, (err, group) => {
-            let player = {
-                name: playerName,
-                date: new Date(),
-            };
-            if(!group.players) {
-                group.players = [player];
-            } else {
-                group.players.push(player);
+            /* don't add doublons */
+            if(group.players.every(el => {
+                return el.name.toUpperCase() != playerName.toUpperCase();
+            })) {
+                group.players.push({
+                    name: playerName.toUpperCase(),
+                    date: new Date(),
+                });
             }
+            
             group.save((err, res) => {
-                
+                if(err) console.log(err);
+            });
+        });
+    }
+    
+    static addGameToGroup(name, id, groupName) {
+        GroupModel.findOne({
+            name: groupName
+        }, (err, group) => {
+            group.games.push({
+                name: name,
+                id: id,
+            });
+            
+            group.save((err, res) => {
+                if(err) console.log(err);
             });
         });
     }

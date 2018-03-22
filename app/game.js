@@ -4,10 +4,12 @@ const Group = require('./group');
 
 const gameSchema = mongoose.Schema({
     name: String,
+    type: String,
     group: String,
     playersNumber: Number,
     players: [String],
     date: Date,
+    round:[mongoose.Schema.Types.Mixed],
 });
 const GameModel = mongoose.model('Game', gameSchema);
 
@@ -42,6 +44,7 @@ class Game {
         
         let newGame = new GameModel({
             name: name,
+            type: 'tarot',
             group: groupName,
             playersNumber: playersNumber,
             players : players,
@@ -51,6 +54,7 @@ class Game {
             if(err) {
                 console.error(err);
             }
+            Group.addGameToGroup(name, object._id, groupName);
             callback(null, object);
         });
     }

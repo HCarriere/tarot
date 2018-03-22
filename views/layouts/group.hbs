@@ -1,4 +1,4 @@
-<h1>Groupe {{group}}</h1>
+<h1>Groupe {{group.name}}</h1>
 
 {{#if error}}
     <div class="warning error">{{error}}</div>
@@ -12,7 +12,9 @@
         Parties
     </div>
     <div class="content">
-        TODO previous parties
+        {{#each group.games}}
+        <a href="/game/{{name}}?id={{id}}">{{name}}</a>
+        {{/each}}
     </div>
 </div>
 
@@ -22,6 +24,10 @@
         Joueurs
     </div>
     <div class="content">
-        TODO players here
+        <ul>
+            {{#each group.players}}
+            <li>{{name}}</li>
+            {{/each}}
+        </ul>
     </div>
 </div>

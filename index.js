@@ -24,6 +24,7 @@ let handlebars = exphbs.create({
     defaultLayout: 'main',
     extname: '.hbs',
     layoutsDir: path.join(__dirname, 'views/layouts'),
+    partialsDir: path.join(__dirname, 'views/partials'),
 });
 
 // general middlewares
@@ -86,9 +87,11 @@ const Game = require('./app/game');
 
 app
 .get('/', isAuth, (req, res) => {
-    res.render('group', {
-        titleSuffix: ' - '+req.session.currentGroup,
-        group: req.session.currentGroup,
+    Group.getGroup(req.session.currentGroup, (err, group) => {
+        res.render('group', {
+            titleSuffix: ' - '+req.session.currentGroup,
+            group: group,
+        });
     });
 })
 
@@ -99,7 +102,7 @@ app
 })
 
 .post('/login', (req, res) => {
-    Group.logonToGroup(req, (group) => {
+    Group.logonToGroup(req, (err, group) => {
         if(group) {
             // ok
             utils.setConnected(req, sessionSecret, group.name);
@@ -107,7 +110,7 @@ app
         } else {
             // ko
             res.render('login', {
-                error: 'wrong password'
+                error: err
             });  
         }
     });
@@ -129,8 +132,11 @@ app
 })
 
 .get('/new/game', isAuth, (req, res) => {
-    res.render('newGame', {
-        defaultName : Game.getRandomName(),
+    Group.getGroup(req.session.currentGroup, (err, group) => {
+        res.render('newGame', {
+            defaultName : Game.getRandomName(),
+            group: group,
+        });
     });
 })
 
@@ -157,11 +163,21 @@ app
             });
         } else {
             res.render('game', {
-                game: game
+                game: game,
+                testVar: 'coucou',
             });
         }
     });
 })
+
+.post('/round/add', isAuth, (req, res) => {
+    
+})
+
+.post('/round/update', isAuth, (req, res) => {
+    
+})
+
 
 // 401
 .get('/forbidden', (req, res) => {

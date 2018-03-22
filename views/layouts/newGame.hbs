@@ -26,15 +26,12 @@
         <input type="text" name="newPlayers" placeholder="Joueur1 Joueur2 Joueur3...">
         <br>
         Joueurs existants <br>
-        <label class="input-players" for="hce">
-            <input type="checkbox" name="players" value="HCE" id="hce">
-            <div class="player">HCE</div>
+        {{#each group.players}}
+        <label class="input-players" for="player_{{name}}">
+            <input type="checkbox" name="players" value="{{name}}" id="player_{{name}}">
+            <div class="player">{{name}}</div>
         </label>
-        <label class="input-players" for="hce2">
-            <input type="checkbox" name="players" value="HCE2" id="hce2">
-            <div class="player">HCE2</div>
-        </label>
-        <div class="info"></div>
+        {{/each}}
     </div>
     
     <input type="submit" value="Nouvelle partie !" class="button">
