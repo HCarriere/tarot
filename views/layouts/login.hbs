@@ -9,43 +9,19 @@
     </blockquote>
 </div>
 {{/if}}
-<!--
-<div class="hideable-section hidden">
-    <div class="title">
-        <img class="icon" src="/icons/plus.png">
-        Nouveau groupe
-    </div>
-    <div class="content">
-        <form action="/group/add" method="POST">
-            <div class="input-component text">
-                <label>Groupe</label>
-                <input type="text" name="name" placeholder="Ce Super groupe" required>
-                <div class="info"></div>
-            </div>
-
-            <div class="input-component text optionnal">
-                <label>Mot de passe (optionnel)</label>
-                <input type="password" name="password">
-                <div class="info">Optionnel</div>
-            </div>
-            
-            <input type="submit" value="Créer" class="button">
-        </form>
-    </div>
-</div> -->
 <div class="row">
     <form action="/login" method="POST" class="col s12 m8 offset-m2 z-depth-1">
         <div class="row">
             <div class="input-field col s10 offset-s1">
-                <input id="name" name="name" type="text" class="validate">
-                <label for="name">Group</label>
+                <input id="name" name="name" type="text" class="validate" required>
+                <label for="name">Nom du groupe</label>
             </div>
         </div>
 
         <div class="row">
             <div class="input-field col s10 offset-s1">
                 <input id="password" type="password" name="password">
-                <label for="password">Password (optionnal)</label>
+                <label for="password">Mot de passe (optionnel)</label>
             </div>
         </div>
 
@@ -60,20 +36,20 @@
             <form action="/group/add" method="POST">
                 <div class="row">
                     <div class="input-field col s10 offset-s1">
-                        <input id="add_name" name="name" type="text" class="validate">
-                        <label for="add_name">Group</label>
+                        <input id="add_name" name="name" type="text" class="validate" required>
+                        <label for="add_name">Nom du groupe</label>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="input-field col s10 offset-s1">
                         <input id="add_password" type="password" name="password">
-                        <label for="add_password">Password (optionnal)</label>
+                        <label for="add_password">Mot de passe (optionnel)</label>
                     </div>
                 </div>
 
                 <div class="row">
-                    <button formaction="/group/add" type="submit" class="waves-effect waves-light btn offset-s1 col">Se connecter</button> 
+                    <button formaction="/group/add" type="submit" class="waves-effect waves-light btn offset-s1 col">Créer le groupe</button> 
                 </div>
             </form>
         </div>
