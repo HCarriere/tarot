@@ -1,4 +1,4 @@
-$(document).ready(()=>{
+/*$(document).ready(()=>{
     addEffects();
 });
 
@@ -13,4 +13,16 @@ function addEffects() {
         $(this).parent('.hideable-section').toggleClass('hidden');
     });
     
-}
+}*/
+
+(function ($) {
+    $(function () {
+
+        //initialize all modals
+        $('.modal').modal();
+
+        // triggers
+        $('.trigger-modal').modal();
+
+    }); // end of document ready
+})(jQuery); // end of jQuery name space

@@ -27,6 +27,7 @@ class Game {
         
         // name
         let name = params.name || 'Untitled';
+        name = name.replace(' ','-');
         // players number
         let playersNumber = parseInt(params.playersNumber) || 5;
         // create new players

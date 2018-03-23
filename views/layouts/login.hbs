@@ -1,8 +1,15 @@
-<h1>Tarot</h1>
-{{#if error}}
-    <div class="warning error">{{error}}</div>
-{{/if}}
+<div class="row">
+    <h1 class="col offset-m3">Tarot</h1>
+</div>
 
+{{#if error}}
+<div class="row">
+    <blockquote class="col offset-m3">
+        {{error}}
+    </blockquote>
+</div>
+{{/if}}
+<!--
 <div class="hideable-section hidden">
     <div class="title">
         <img class="icon" src="/icons/plus.png">
@@ -25,29 +32,52 @@
             <input type="submit" value="Créer" class="button">
         </form>
     </div>
-</div>
-
-<div class="hideable-section hidden">
-    <div class="title">
-        <img class="icon" src="/icons/group.png">
-        Mon groupe
-    </div>
-    <div class="content">
-        <form action="/login" method="POST">
-            <div class="input-component text">
-                <label>Groupe</label>
-                <input type="text" name="name" placeholder="Mon Super groupe" required>
-                <div class="info"></div>
+</div> -->
+<div class="row">
+    <form action="/login" method="POST" class="col s12 m8 offset-m2 z-depth-1">
+        <div class="row">
+            <div class="input-field col s10 offset-s1">
+                <input id="name" name="name" type="text" class="validate">
+                <label for="name">Group</label>
             </div>
+        </div>
 
-            <div class="input-component text optionnal">
-                <label>Mot de passe (optionnel)</label>
-                <input type="password" name="password">
-                <div class="info"></div>
+        <div class="row">
+            <div class="input-field col s10 offset-s1">
+                <input id="password" type="password" name="password">
+                <label for="password">Password (optionnal)</label>
             </div>
-            
-            <input type="submit" value="Se connecter" class="button">
-        </form>
+        </div>
+
+        <div class="row">
+            <button  type="submit" class="waves-effect waves-light btn offset-s1 col">Se connecter</button> 
+            <a class="modal-trigger right-link" href="#add">Créer un groupe</a>
+        </div>
+    </form>
+    
+    <div id="add" class="modal">
+        <div class="modal-content">
+            <form action="/group/add" method="POST">
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <input id="add_name" name="name" type="text" class="validate">
+                        <label for="add_name">Group</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="input-field col s10 offset-s1">
+                        <input id="add_password" type="password" name="password">
+                        <label for="add_password">Password (optionnal)</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <button formaction="/group/add" type="submit" class="waves-effect waves-light btn offset-s1 col">Se connecter</button> 
+                </div>
+            </form>
+        </div>
     </div>
+    
 </div>
 
