@@ -25,7 +25,9 @@ function addEffects() {
         $('.trigger-modal').modal();
         
         // collapsibles
-        $('.collapsible').collapsible();
+        $('.collapsible').collapsible({
+            accordion: false,
+        });
         
         // chips
         $('.chips').chips();
@@ -33,10 +35,10 @@ function addEffects() {
             placeholder: 'Entrer un nom',
             secondaryPlaceholder: '+Nom',
             onChipAdd: function(a) {
-                $('#newPlayers').val(a[0].textContent.split('close').join('|*|*|'));
+                $('#newPlayers').val(a[0].textContent.split('close').join('|*^*|'));
             },
             onChipDelete: function(a) {
-                $('#newPlayers').val(a[0].textContent.split('close').join('|*|*|'));
+                $('#newPlayers').val(a[0].textContent.split('close').join('|*^*|'));
             }
         });
         

@@ -1,20 +1,43 @@
-<h1><a href="/">&lsaquo;</a>Partie {{game.name}}</h1>
+<h2><a href="/">&lsaquo;</a>Partie {{game.name}}</h2>
 
-{{> tarot }}
+<a class="waves-effect waves-light btn modal-trigger right-link" href="#add">
+    <i class="material-icons left">add_circle_outline</i>
+    Nouveau tour
+</a>
 
-Tours:
-<ul>
-    <li> > tour1 (edit)</li>
-    <li> > tour2 (edit)</li>
-    <li> > tour3 (edit)</li>
+<div id="add" class="modal">
+    <div class="modal-content">
+        {{> tarot }}
+    </div>
+</div>
+
+
+<h3>Tours</h3>
+<ul class="collapsible">
+    <li>
+        <div class="collapsible-header">Tour #1 <a href="#!" class="secondary-content"><i class="material-icons">edit</i></a></div>
+        <div class="collapsible-body">
+            <span>Lorem ipsum dolor sit amet.</span>
+        </div>
+    </li>
 </ul>
 
-Scores:<br>
-HCE: 154 | ABC: 50 | A1: -50 | A2: 254 | A3: 1544<br>
->(dépliable)<br>
+<h3>Scores</h3>
 
-Graph:<br>
-[]<br>
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            {{#each game.players}}
+            <th>{{.}}</th>
+            {{/each}}
+        </tr>
+    </thead>
+    <tbody>
+        
+    </tbody>
+</table>
 
+<h3>Graphique</h3>
 
 

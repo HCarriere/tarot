@@ -26,14 +26,14 @@ class Game {
         if(!groupName) return callback('Erreur non reconnue');
         
         // name
-        let name = params.name || 'Untitled';
+        let name = params.name || 'cool';
         name = name.replace(' ','-');
         // players number
         let playersNumber = parseInt(params.playersNumber) || 5;
         // create new players
         let players = [];
         if(params.newPlayers) {
-            let newPlayers = params.newPlayers.trim().split('|*|*|');
+            let newPlayers = params.newPlayers.trim().split('|*^*|');
             for(let p of newPlayers) {
                 players.push(p);
                 // add player to group
