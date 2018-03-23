@@ -18,11 +18,27 @@ function addEffects() {
 (function ($) {
     $(function () {
 
-        //initialize all modals
+        // initialize all modals
         $('.modal').modal();
 
         // triggers
         $('.trigger-modal').modal();
-
+        
+        // collapsibles
+        $('.collapsible').collapsible();
+        
+        // chips
+        $('.chips').chips();
+        $('.new-player-selector').chips({
+            placeholder: 'Entrer un nom',
+            secondaryPlaceholder: '+Nom',
+            onChipAdd: function(a) {
+                $('#newPlayers').val(a[0].textContent.split('close').join('|*|*|'));
+            },
+            onChipDelete: function(a) {
+                $('#newPlayers').val(a[0].textContent.split('close').join('|*|*|'));
+            }
+        });
+        
     }); // end of document ready
 })(jQuery); // end of jQuery name space

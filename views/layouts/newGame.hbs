@@ -1,38 +1,56 @@
-<h1>Nouvelle partie</h1>
+<h2>Nouvelle partie</h2>
 
 {{#if error}}
-    <div class="warning error">{{error}}</div>
+<blockquote>
+    {{error}}
+</blockquote>
 {{/if}}
 
-<form method="POST" action="/new/game">
-    
-    <div class="input-component text">
-        <label>Nom</label>
-        <input type="text" name="name" value="{{defaultName}}">
-        <div class="info"></div>
+<form method="POST" action="/new/game" class="row z-depth-1">
+    <div class="row">
+        <div class="input-field col s10 offset-s1">
+            <p class="caption">Nom de la partie</p>
+            <input value="{{defaultName}}" id="name" name="name" type="text" class="validate" required>
+        </div>
+
+        <div class="switch col s10 offset-s1">
+            <p class="caption">Nombre de joueurs</p>
+            <span>
+                <label>
+                    <input value="4" name="playersNumber" type="radio" />
+                    <span>4</span>
+                </label>
+            </span>
+            <span>
+                <label>
+                    <input value="5" name="playersNumber" type="radio" checked/>
+                    <span>5</span>
+                </label>
+            </span>
+        </div>
+
+        <div class="col s10 offset-s1">
+            <p class="caption">Nouveaux joueurs</p>
+            <div class="chips new-player-selector"></div>
+        </div>
+        <input id="newPlayers" type="text" name="newPlayers" class="hide">
+
+        <div class="switch col s10 offset-s1">
+            <p class="caption">Joueurs existants</p>
+            {{#each group.players}}
+            <span>
+                <label>
+                    <input type="checkbox" value="{{name}}" name="players"/>
+                    <span>{{name}}</span>
+                </label>
+            </span>    
+            {{/each}}
+        </div>
     </div>
     
-    <div class="input-component">
-        <label>Nombre de joueur</label>
-        4 : <input type="radio" name="playersNumber" value="4">
-        <!-- Sorry JCN ! -->
-        5 : <input type="radio" name="playersNumber" value="5" checked>
-        <div class="info"></div>
+    <div class="row">
+    <button type="submit" class="waves-effect waves-light btn offset-s1 col">Nouvelle partie !</button> 
     </div>
-    
-    <div class="input-component text">
-        <label>Joueurs</label>
-        Nouveaux joueurs
-        <input type="text" name="newPlayers" placeholder="Joueur1 Joueur2 Joueur3...">
-        <br>
-        Joueurs existants <br>
-        {{#each group.players}}
-        <label class="input-players" for="player_{{name}}">
-            <input type="checkbox" name="players" value="{{name}}" id="player_{{name}}">
-            <div class="player">{{name}}</div>
-        </label>
-        {{/each}}
-    </div>
-    
-    <input type="submit" value="Nouvelle partie !" class="button">
+   <!-- 
+    <input type="submit" value="Nouvelle partie !" class="button">-->
 </form>

@@ -11,6 +11,7 @@ const groupSchema = mongoose.Schema({
     games: [{
         name: String,
         id: String,
+        players: [],
     }],
 });
 const GroupModel = mongoose.model('Group', groupSchema);
@@ -86,6 +87,9 @@ class Group {
     }
     
     static addPlayerToGroup(playerName, groupName) {
+        if(!playerName || !groupName) {
+            return;
+        }
         GroupModel.findOne({
             name: groupName
         }, (err, group) => {
@@ -105,13 +109,14 @@ class Group {
         });
     }
     
-    static addGameToGroup(name, id, groupName) {
+    static addGameToGroup(game, groupName) {
         GroupModel.findOne({
             name: groupName
         }, (err, group) => {
             group.games.push({
-                name: name,
-                id: id,
+                name: game.name,
+                id: game._id,
+                players: game.players,
             });
             
             group.save((err, res) => {

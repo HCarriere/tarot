@@ -33,7 +33,7 @@ class Game {
         // create new players
         let players = [];
         if(params.newPlayers) {
-            let newPlayers = params.newPlayers.split(/[\s,;]+/);
+            let newPlayers = params.newPlayers.trim().split('|*|*|');
             for(let p of newPlayers) {
                 players.push(p);
                 // add player to group
@@ -41,8 +41,15 @@ class Game {
             }
         }
         // get selected players
-        players = players.concat(params.player);
+        players = players.concat(params.players);
+        // del empty
+        players = players.filter((el)=>{return el!=null && el.trim().length > 0});
+        // to upper
+        players = players.map(val => val.toUpperCase());
+        // doublons
+        players = [ ...new Set(players)];
         
+        console.log('players:'+JSON.stringify(players));
         let newGame = new GameModel({
             name: name,
             type: 'tarot',
@@ -55,7 +62,7 @@ class Game {
             if(err) {
                 console.error(err);
             }
-            Group.addGameToGroup(name, object._id, groupName);
+            Group.addGameToGroup(object, groupName);
             callback(null, object);
         });
     }

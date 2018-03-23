@@ -1,33 +1,35 @@
-<h1>Groupe {{group.name}}</h1>
+<h2>Groupe {{group.name}}</h2>
 
 {{#if error}}
-    <div class="warning error">{{error}}</div>
+<blockquote>
+    {{error}}
+</blockquote>
 {{/if}}
 
-<a class="button" href="/new/game">Nouvelle partie</a>
+<a class="waves-effect waves-light btn" href="/new/game"><i class="material-icons left">add_circle_outline</i>Nouvelle partie</a>
 
-<div class="hideable-section hidden">
-    <div class="title">
-        <img class="icon" src="/icons/game.png">
-        Parties
-    </div>
-    <div class="content">
-        {{#each group.games}}
-        <a href="/game/{{name}}?id={{id}}">{{name}}</a>
+<h2>Parties</h2>
+<div class="collection">
+{{#each group.games}}
+    <a class="collection-item" href="/game/{{name}}?id={{id}}">
+        <i class="material-icons left">create</i>
+        {{name}}
+        {{#each players}}
+            <span class="new badge" data-badge-caption="{{.}}"></span>
         {{/each}}
-    </div>
+    </a>
+{{/each}}
 </div>
 
-<div class="hideable-section hidden">
-    <div class="title">
-        <img class="icon" src="/icons/players.png">
-        Joueurs
-    </div>
-    <div class="content">
-        <ul>
-            {{#each group.players}}
-            <li>{{name}}</li>
-            {{/each}}
-        </ul>
-    </div>
-</div>
+
+<h2>Joueurs</h2>
+<ul class="collapsible">
+{{#each group.players}}
+    <li>
+        <div class="collapsible-header"><i class="material-icons">timeline</i>{{name}}</div>
+        <div class="collapsible-body">
+            <span>Lorem ipsum dolor sit amet.</span>
+        </div>
+    </li>
+{{/each}}
+</ul>
