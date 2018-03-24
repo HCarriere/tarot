@@ -3,3 +3,21 @@
     padding-left:16px;
     padding-top:6px;
 }
+
+.switch span{
+    margin-right:10px;
+}
+
+.edit-btn-collapse {
+    padding: 10px 20px;
+}
+
+.score-table .bonus{
+    color:darkgreen;
+}
+.score-table .malus{
+    color:darkred;
+}
+.score-table .total {
+    font-weight: bold;
+}

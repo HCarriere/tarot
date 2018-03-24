@@ -1,4 +1,4 @@
-<h2><a href="/">&lsaquo;</a>Partie {{game.name}}</h2>
+<h2><a href="/"><i class="edit-btn-collapse material-icons">keyboard_arrow_left</i></a>Partie {{game.name}}</h2>
 
 <a class="waves-effect waves-light btn modal-trigger right-link" href="#add">
     <i class="material-icons left">add_circle_outline</i>
@@ -14,27 +14,54 @@
 
 <h3>Tours</h3>
 <ul class="collapsible">
+    {{#each game.rounds}}
     <li>
-        <div class="collapsible-header">Tour #1 <a href="#!" class="secondary-content"><i class="material-icons">edit</i></a></div>
+        <a href="#!" class="secondary-content"><i class="edit-btn-collapse material-icons">edit</i></a>
+        <div class="collapsible-header">
+            <b>#{{@index}} </b>
+            &nbsp;&nbsp;
+            {{params.player}}<i class="material-icons">person</i>  
+            {{params.called}}<i class="material-icons">person_outline</i>
+            ({{params.contrat}})
+            {{#if won}}
+            <span class="new badge" data-badge-caption="Gagné"></span>
+            {{else}}
+            <span class="new badge red" data-badge-caption="Perdu"></span>
+            {{/if}}
+        </div>
         <div class="collapsible-body">
-            <span>Lorem ipsum dolor sit amet.</span>
+            <span>{{#each journal}} <p>{{.}}</p> {{/each}}</span>
         </div>
     </li>
+    {{/each}}
 </ul>
 
 <h3>Scores</h3>
 
-<table>
+<table class="score-table">
     <thead>
         <tr>
             <th>#</th>
             {{#each game.players}}
-            <th>{{.}}</th>
+            <th>{{name}}</th>
             {{/each}}
         </tr>
     </thead>
     <tbody>
-        
+        {{#each game.rounds}}
+        <tr>
+            <td>{{@index}}</td>
+            {{#each playersScores}}
+            <td class="{{#ifGt mod 0}}bonus{{else}}malus{{/ifGt}}">{{mod}}</td>
+            {{/each}}
+        </tr>
+        {{/each}}
+        <tr>
+            <td class="total">Total</td>
+            {{#each game.players}}
+            <td class="total {{#ifGt score 0}}bonus{{else}}malus{{/ifGt}}">{{score}}</td>
+            {{/each}}
+        </tr>
     </tbody>
 </table>
 

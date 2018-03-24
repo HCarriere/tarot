@@ -1,1 +1,201 @@
-<h2>tarot : {{testVar}}! {{testVar2}}!</h2>
+<form method="POST" action="/round/add">
+    <div class="row">
+        <input type="hidden" name="id" value="{{game._id}}">
+        
+        <div class="switch col s10 offset-s1">
+            <p class="caption">Contrat</p>
+            <span>
+                <label>
+                    <input type="radio" value="prise" name="contrat" checked/>
+                    <span>Prise</span>
+                </label>
+            </span>
+            <span>
+                <label>
+                    <input type="radio" value="garde" name="contrat"/>
+                    <span>Garde</span>
+                </label>
+            </span>
+            <span>
+                <label>
+                    <input type="radio" value="garde_sans" name="contrat"/>
+                    <span>Garde sans</span>
+                </label>
+            </span>
+            <span>
+                <label>
+                    <input type="radio" value="garde_contre" name="contrat"/>
+                    <span>Garde contre</span>
+                </label>
+            </span>
+        </div>
+        
+        
+        <div class="switch col s10 offset-s1">
+            <p class="caption">Prenneur</p>
+            {{#each game.players}}
+            <span>
+                <label>
+                    <input type="radio" value="{{name}}" name="player" required/>
+                    <span>{{name}}</span>
+                </label>
+            </span>    
+            {{/each}}
+        </div>
+        
+        {{#ifEquals game.playersNumber 5}}
+        <div class="switch col s10 offset-s1">
+            <p class="caption">Appelé</p>
+            {{#each ../game.players}}
+            <span>
+                <label>
+                    <input type="radio" value="{{name}}" name="called" required/>
+                    <span>{{name}}</span>
+                </label>
+            </span>    
+            {{/each}}
+        </div>
+        {{/ifEquals}}
+        
+        
+        <div class="switch col s10 offset-s1">
+            <p class="caption">Bouts</p>
+            <span>
+                <label>
+                    <input type="checkbox" value="petit" name="bouts" id="bout_petit"/>
+                    <span>Petit</span>
+                </label>
+            </span>
+            <span>
+                <label>
+                    <input type="checkbox" value="21" name="bouts" id="bout_21"/>
+                    <span>21</span>
+                </label>
+            </span>
+            <span>
+                <label>
+                    <input type="checkbox" value="excuse" name="bouts" id="bout_excuse"/>
+                    <span>Excuse</span>
+                </label>
+            </span>
+        </div>
+        
+        
+        <div class="switch col s10 offset-s1">
+            <p class="caption scores-types">
+                <span class="left">
+                    <a class="btn-floating btn-small" id="score_attk_add"><i class="material-icons">add</i></a> 
+                     Attaque: <span id="score_attk">0</span>
+                </span>
+                <span class="right">
+                    Défense: <span id="score_def">0</span>
+                    <a class="btn-floating btn-small" id="score_def_add"><i class="material-icons">add</i></a>
+                </span>
+            </p>
+            <p class="range-field">
+                <input type="range" name="score" id="score_range" min="0" max="91" value="45"/>
+            </p>
+        </div>
+        
+        
+        <div class="switch col s10 offset-s1">
+            <ul class="collapsible">
+                <li>
+                    <div class="collapsible-header">
+                        <i class="material-icons">details</i>
+                        Autres options
+                    </div>
+                    <div class="collapsible-body">
+                        <div class="switch">
+                            <p class="caption">Petit au bout</p>
+                            <span>
+                                <label>
+                                    <input type="radio" value="attq" name="none"/>
+                                    <span>Aucun</span>
+                                </label>
+                            </span>
+                            <span>
+                                <label>
+                                    <input type="radio" value="attq" name="petit_au_bout"/>
+                                    <span>Attaque</span>
+                                </label>
+                            </span>
+                            <span>
+                                <label>
+                                    <input type="radio" value="def" name="petit_au_bout"/>
+                                    <span>Défense</span>
+                                </label>
+                            </span>
+                        </div>
+                        
+                        <div class="switch">
+                            <p class="caption">Poignée</p>
+                            <span>
+                                <label>
+                                    <input type="radio" value="none" name="poignee"/>
+                                    <span>Aucune</span>
+                                </label>
+                            </span>
+                            <span>
+                                <label>
+                                    <input type="radio" value="simple" name="poignee"/>
+                                    <span>Simple</span>
+                                </label>
+                            </span>
+                            <span>
+                                <label>
+                                    <input type="radio" value="double" name="poignee"/>
+                                    <span>Double</span>
+                                </label>
+                            </span>
+                            <span>
+                                <label>
+                                    <input type="radio" value="triple" name="poignee"/>
+                                    <span>Triple</span>
+                                </label>
+                            </span>
+                        </div>
+                        
+                        <!--<div class="switch">
+                            <p class="caption">Misère de points</p>
+                            {{#each game.players}}
+                            <span>
+                                <label>
+                                    <input type="checkbox" value="{{name}}" name="misere"/>
+                                    <span>{{name}}</span>
+                                </label>
+                            </span>    
+                            {{/each}}
+                        </div>-->
+                        
+                        <div class="switch">
+                            <p class="caption">Chelem</p>
+                            <span>
+                                <label>
+                                    <input type="checkbox" value="annonce" name="chelem"/>
+                                    <span>Annoncé</span>
+                                </label>
+                            </span>
+                            <span>
+                                <label>
+                                    <input type="checkbox" value="realise" name="chelem"/>
+                                    <span>Réalisé</span>
+                                </label>
+                            </span>
+                            <span>
+                                <label>
+                                    <input type="checkbox" value="defense_realise" name="chelem"/>
+                                    <span>Réalisé (défense)</span>
+                                </label>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="row">
+    <button type="submit" class="waves-effect waves-light btn offset-s1 col">Enregistrer</button> 
+    </div>
+</form>

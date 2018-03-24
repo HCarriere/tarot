@@ -1,34 +1,19 @@
-/*$(document).ready(()=>{
-    addEffects();
-});
-
-function addEffects() {
+(function(){
     
-    // hideable sections
-    // TODO https://stackoverflow.com/questions/38213329/how-to-add-css3-transition-with-html5-details-summary-tag-reveal
-    $('.hideable-section .title').click(function(e) {
-        $(this).siblings('.content').slideToggle({
-            queue: false
-        });
-        $(this).parent('.hideable-section').toggleClass('hidden');
-    });
-    
-}*/
 
-(function ($) {
-    $(function () {
+    $(document).ready(function(){
 
         // initialize all modals
         $('.modal').modal();
 
         // triggers
         $('.trigger-modal').modal();
-        
+
         // collapsibles
         $('.collapsible').collapsible({
             accordion: false,
         });
-        
+
         // chips
         $('.chips').chips();
         $('.new-player-selector').chips({
@@ -42,5 +27,35 @@ function addEffects() {
             }
         });
         
-    }); // end of document ready
-})(jQuery); // end of jQuery name space
+        initScoreRange();
+    
+    });
+    
+    function initScoreRange() {
+        
+        function onScoreRangeUpdate(value, max) {
+            $('#score_attk').text(value);
+            $('#score_def').text(max - value);
+        }
+        
+        let range = $('#score_range');
+        
+        range.on('input change', function(e){
+            onScoreRangeUpdate(e.target.value, e.target.max)
+        });
+        
+        $('#score_attk_add').on('click', function() {
+            range.val(parseInt(range.val())+1);
+            onScoreRangeUpdate(range[0].value, range[0].max)
+        });
+        
+        $('#score_def_add').on('click', function() {
+            range.val(parseInt(range.val())-1);
+            onScoreRangeUpdate(range[0].value, range[0].max)
+        });
+    }
+    
+    
+    
+})();
+

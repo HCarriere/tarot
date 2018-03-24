@@ -1,15 +1,29 @@
 const mongoose = require('mongoose');
 const utils = require('./utils');
 const Group = require('./group');
+const Rules = require('./rules');
+
 
 const gameSchema = mongoose.Schema({
     name: String,
     type: String,
     group: String,
     playersNumber: Number,
-    players: [String],
+    players: [{
+        name:String, 
+        fake:Boolean, 
+        score: Number
+    }],
     date: Date,
-    round:[mongoose.Schema.Types.Mixed],
+    rounds:[{
+        playersScores: [{
+            player: String,
+            mod: Number,
+        }],
+        params: mongoose.Schema.Types.Mixed,
+        won: Boolean,
+        journal: [String],
+    }],
 });
 const GameModel = mongoose.model('Game', gameSchema);
 
@@ -48,6 +62,8 @@ class Game {
         players = players.map(val => val.toUpperCase());
         // doublons
         players = [ ...new Set(players)];
+        // objectify
+        players = players.map(val => {return {name: val, fake: false}});
         
         console.log('players:'+JSON.stringify(players));
         let newGame = new GameModel({
@@ -72,6 +88,15 @@ class Game {
             if(err) return console.error(err);
             if(!game) return callback('game does not exist');
             if(game.group != groupName) return callback('group does not belong to you');
+            // if no enough player, populate with fake players
+            if(game.players.length < game.playersNumber) {
+                for(let i = game.players.length; i<game.playersNumber; i++) {
+                    game.players.push({
+                        name: 'Joueur '+(i+1),
+                        fake: true,
+                    });
+                }
+            }
             return callback(null, game);
         });
     }
@@ -89,14 +114,32 @@ class Game {
         });
     }
     
+    static addRoundToGame(req, callback) {
+        let params = utils.getRequestParams(req, [
+            'id',
+        ]);
+        if(!params.id) {
+            return callback('id empty');
+        }
+        this.getGame(params.id, req.session.currentGroup, (err, game) => {
+            
+            if(err) return callback(err);
+            Rules.applyRule(game, req, (err, result) => {
+                return callback(err, result, game);
+            });
+            
+        });
+    }
+    
     static getRandomName() {
         let name = 'P';
-        let allowedChars = 'AZERTYUIOPQSDFGHJKLMWXCVBN1234567890';
+        let allowedChars = 'AZERTYUIOPQSDFGHJKLMWXCVBN-1234567890';
         for(let i = 0; i<5; i++) {
             name += allowedChars[Math.floor(Math.random()*allowedChars.length)];
         }
         return name;
     }
+    
 }
 
 module.exports = Game;

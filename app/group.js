@@ -31,15 +31,16 @@ class Group {
         if(!params.name) {
             return callback('name is needed');
         }
+        let name = toGrpName(params.name);
         GroupModel.findOne({
-            name: params.name,
+            name: name,
         }, (err, result) => {
             if(result) {
                 // already exists
                 return callback('group already exists');
             }
             let newGroup = new GroupModel({
-                name: params.name,
+                name: name,
                 password: utils.hashPassword(params.password),
                 players: [],
             });
@@ -51,8 +52,9 @@ class Group {
     }
     
     static getGroup(groupName, callback) {
+        let name = toGrpName(groupName);
         GroupModel.findOne({
-            name: groupName,
+            name: name,
         }, (err, result) => {
             if(err) return console.error(err);
             callback(err, result);
@@ -67,9 +69,10 @@ class Group {
         if(!params.name) {
             return callback('name is needed');
         }
+        let name = toGrpName(params.name);
         
         GroupModel.findOne({
-            name: params.name,
+            name: name,
         }, (err, result) => {
             if(err) return console.error(err);
             if(!result) return callback('invalid group');
@@ -91,7 +94,7 @@ class Group {
             return;
         }
         GroupModel.findOne({
-            name: groupName
+            name: toGrpName(groupName)
         }, (err, group) => {
             /* don't add doublons */
             if(group.players.every(el => {
@@ -111,7 +114,7 @@ class Group {
     
     static addGameToGroup(game, groupName) {
         GroupModel.findOne({
-            name: groupName
+            name: toGrpName(groupName)
         }, (err, group) => {
             group.games.push({
                 name: game.name,
@@ -124,6 +127,10 @@ class Group {
             });
         });
     }
+}
+
+function toGrpName(name) {
+    return name.toUpperCase().trim();
 }
 
 module.exports = Group;

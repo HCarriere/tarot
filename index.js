@@ -25,6 +25,14 @@ let handlebars = exphbs.create({
     extname: '.hbs',
     layoutsDir: path.join(__dirname, 'views/layouts'),
     partialsDir: path.join(__dirname, 'views/partials'),
+    helpers: {
+        ifEquals: (arg1, arg2, options) => {
+            return (arg1 == arg2) ? options.fn(this) : options.inverse(this);
+        },
+        ifGt: (arg1, arg2, options) => {
+            return (arg1 > arg2) ? options.fn(this) : options.inverse(this);
+        },
+    }
 });
 
 // general middlewares
@@ -171,7 +179,10 @@ app
 })
 
 .post('/round/add', isAuth, (req, res) => {
-    
+    Game.addRoundToGame(req, (err, result, game) => {
+        if(err) console.log(err);
+        res.redirect('/game/'+game.name+'?id='+game._id);
+    });
 })
 
 .post('/round/update', isAuth, (req, res) => {
