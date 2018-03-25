@@ -10,8 +10,8 @@ function applyRule(game, req, callback) {
         console.log('rule not implmented')
         return callback('rule not implemented');
     }
-    rules[game.type].processParameters(req, game, (err, result) => {
-        return callback(err, result);
+    rules[game.type].processParameters(req, game, (err, round) => {
+        return callback(err, round);
     });
 }
 

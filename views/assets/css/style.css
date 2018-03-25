@@ -21,3 +21,7 @@
 .score-table .total {
     font-weight: bold;
 }
+
+#modal-edit-button {
+    display: none;
+}

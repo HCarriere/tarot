@@ -32,6 +32,9 @@ let handlebars = exphbs.create({
         ifGt: (arg1, arg2, options) => {
             return (arg1 > arg2) ? options.fn(this) : options.inverse(this);
         },
+        json: (ctx) => {
+            return JSON.stringify(ctx);
+        },
     }
 });
 
@@ -179,14 +182,17 @@ app
 })
 
 .post('/round/add', isAuth, (req, res) => {
-    Game.addRoundToGame(req, (err, result, game) => {
+    Game.addRoundToGame(req, (err, game) => {
         if(err) console.log(err);
         res.redirect('/game/'+game.name+'?id='+game._id);
     });
 })
 
-.post('/round/update', isAuth, (req, res) => {
-    
+.post('/round/edit', isAuth, (req, res) => {
+    Game.editRoundFromGame(req, (err, game) => {
+        if(err) console.log(err);
+        res.redirect('/game/'+game.name+'?id='+game._id);
+    });
 })
 
 

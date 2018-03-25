@@ -1,11 +1,17 @@
 <h2><a href="/"><i class="edit-btn-collapse material-icons">keyboard_arrow_left</i></a>Partie {{game.name}}</h2>
 
-<a class="waves-effect waves-light btn modal-trigger right-link" href="#add">
+{{#if error}}
+<blockquote>
+    {{error}}
+</blockquote>
+{{/if}}
+
+<a class="waves-effect waves-light right-link btn button-reset-game-params" href="#add">
     <i class="material-icons left">add_circle_outline</i>
     Nouveau tour
 </a>
 
-<div id="add" class="modal">
+<div id="params-modal" class="modal game-params-modal">
     <div class="modal-content">
         {{> tarot }}
     </div>
@@ -16,7 +22,7 @@
 <ul class="collapsible">
     {{#each game.rounds}}
     <li>
-        <a href="#!" class="secondary-content"><i class="edit-btn-collapse material-icons">edit</i></a>
+        <a href="#edit" edit-id="{{id}}" current-data="{{json params}}" class="secondary-content button-edit-game-params"><i class="edit-btn-collapse material-icons">edit</i></a>
         <div class="collapsible-header">
             <b>#{{@index}} </b>
             &nbsp;&nbsp;

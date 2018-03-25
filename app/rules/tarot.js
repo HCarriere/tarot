@@ -35,7 +35,6 @@ function processParameters(req, game, callback) {
     chelem : ["annonce","realise","defense_realise"]
     misere : ["HCE", "Joueur 1"]
     */
-    
     let round = {
         params: {
             contrat : params.contrat,
@@ -105,24 +104,27 @@ function processParameters(req, game, callback) {
     
     
     // chelems
-    if(params.chelem && params.chelem.length > 0){
-        if(params.chelem.indexOf('realise') != -1){
-            if(params.chelem.indexOf('annonce') != -1) {
-                // annoncé, réalisé
-                journal.push(`Chelem annoncé et réalisé : +400 à l'attaquant`);
-                score.contrat+=400;
-            } else {
-                // non annoncé, réalisé
-                journal.push(`Chelem non annoncé et réalisé : +200 à l'attaquant`);
-                score.contrat+=200;
-            }
+    if(score.table >= 91){
+        if(params.chelem && params.chelem.indexOf('annonce') != -1) {
+            // annoncé, réalisé
+            journal.push(`Chelem annoncé et réalisé : +400 à l'attaquant`);
+            score.contrat += 400;
         } else {
-            if(params.chelem.indexOf('annonce') != -1) {
-                // annoncé, non réalisé
-                journal.push(`Chelem annoncé et non réalisé : -200 à l'attaquant`);
-                score.contrat-=200;
-            }
+            // non annoncé, réalisé
+            journal.push(`Chelem non annoncé et réalisé : +200 à l'attaquant`);
+            score.contrat += 200;
         }
+    } else {
+        if(params.chelem && params.chelem.indexOf('annonce') != -1) {
+            // annoncé, non réalisé
+            journal.push(`Chelem annoncé et non réalisé : -200 à l'attaquant`);
+            score.contrat -= 200;
+        }
+    }
+    if(score.table <= 0) {
+        // defense réussit un chelem
+        journal.push(`La défense réussit un chelem (GG) : +200 points à la défense`);
+        score.contrat -= 200;
     }
     
     // poignées
@@ -194,6 +196,8 @@ function processParameters(req, game, callback) {
     let scoreDef = -scoreFinal;
     journal.push(`Bilan défense : -score final(${scoreFinal}) = ${scoreDef}`);
     
+    round.journal = journal;
+    
     // attribute score to players
     for(let p of game.players) {
         if(!newScoresByPlayer[p.name]) {
@@ -214,29 +218,36 @@ function processParameters(req, game, callback) {
     }
     
     
-    // update game score
+    // update player round score
     for(let p of game.players) {
-        if(!p.score) {
-            p.score = 0;
-        }
+        
         round.playersScores.push({
             player: p.name,
             mod: newScoresByPlayer[p.name],
         });
-        p.score += newScoresByPlayer[p.name];
+        
     }
-    round.journal = journal;
+    console.log(journal);
+    // update game
+    /*for(let p of game.players) {
+        if(!p.score) {
+            p.score = 0;
+        }
+        
+        p.score += newScoresByPlayer[p.name];
+    }*/
     
-    if(!game.rounds) {
+    /*if(!game.rounds) {
         game.rounds = [];
     }
-    game.rounds.push(round);
+    game.rounds.push(round);*/
     
     
-    game.save((err, res) => {
+   /* game.save((err, res) => {
         if(err) return console.error(err);
         return callback(null, res);
-    });
+    });*/
+    return callback(null, round);
 }
 
 

@@ -10,9 +10,9 @@ const gameSchema = mongoose.Schema({
     group: String,
     playersNumber: Number,
     players: [{
-        name:String, 
-        fake:Boolean, 
-        score: Number
+        name: String, 
+        fake: Boolean, 
+        score: Number,
     }],
     date: Date,
     rounds:[{
@@ -114,21 +114,58 @@ class Game {
         });
     }
     
-    static addRoundToGame(req, callback) {
+    static addRoundToGame(req, callback, existingRoundId) {
         let params = utils.getRequestParams(req, [
-            'id',
+            'gameId',
         ]);
-        if(!params.id) {
-            return callback('id empty');
+        if(!params.gameId) {
+            return callback('gameId is empty');
         }
-        this.getGame(params.id, req.session.currentGroup, (err, game) => {
+        this.getGame(params.gameId, req.session.currentGroup, (err, game) => {
             
             if(err) return callback(err);
-            Rules.applyRule(game, req, (err, result) => {
-                return callback(err, result, game);
+            Rules.applyRule(game, req, (err, round) => {
+                // add round to game
+                if(err) return callback(err);
+                if(!round) return callback('erreur inconnue');
+                if(!existingRoundId) {
+                    // add
+                    if(!game.rounds) {
+                        game.rounds = [];
+                    }
+                    game.rounds.push(round);
+                } else {
+                    // edit round
+                    for(let r in game.rounds) {
+                        if(game.rounds[r]._id == existingRoundId) {
+                            game.rounds[r] = round;
+                        }
+                    }
+                }
+                
+                // count each player score
+                game.players = this.getScoresFromRounds(game.players, game.rounds);
+                
+                game.save((err, res) => {
+                    if(err) return console.error(err);
+                    return callback(err, res);
+                });
+                // return callback(err, game);
             });
             
         });
+    }
+    
+    static editRoundFromGame(req, callback) {
+        let params = utils.getRequestParams(req, [
+            'existingRoundId',
+        ]);
+        if(!params.existingRoundId) {
+            return callback('existingRoundId is empty');
+        }
+        this.addRoundToGame(req, (err, game) => {
+            return callback(err, game);
+        }, params.existingRoundId);
     }
     
     static getRandomName() {
@@ -140,6 +177,25 @@ class Game {
         return name;
     }
     
+    
+    static getScoresFromRounds(players, rounds) {
+        let finalScore = [];
+        for(let round of rounds) {
+            for(let entry of round.playersScores) {
+                if(!finalScore[entry.player]) {
+                    finalScore[entry.player] = 0;
+                }
+                finalScore[entry.player] += entry.mod;
+            }
+        }
+        for(let player of players) {
+            if(!player.score) {
+                player.score = 0;
+            }
+            player.score = finalScore[player.name];
+        }
+        return players;
+    }
 }
 
 module.exports = Game;

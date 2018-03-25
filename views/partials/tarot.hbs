@@ -1,12 +1,13 @@
-<form method="POST" action="/round/add">
+<form method="POST">
     <div class="row">
-        <input type="hidden" name="id" value="{{game._id}}">
+        <input type="hidden" name="gameId" value="{{game._id}}">
+        <input type="hidden" name="existingRoundId" value="">
         
         <div class="switch col s10 offset-s1">
             <p class="caption">Contrat</p>
             <span>
                 <label>
-                    <input type="radio" value="prise" name="contrat" checked/>
+                    <input type="radio" value="prise" name="contrat"  default checked/>
                     <span>Prise</span>
                 </label>
             </span>
@@ -84,11 +85,11 @@
         <div class="switch col s10 offset-s1">
             <p class="caption scores-types">
                 <span class="left">
-                    <a class="btn-floating btn-small" id="score_attk_add"><i class="material-icons">add</i></a> 
-                     Attaque: <span id="score_attk">0</span>
+                    <a class="btn-floating btn-small" id="score_attk_add"><i class="material-icons">remove</i></a> 
+                     Attaque: <span id="score_attk">45</span>
                 </span>
                 <span class="right">
-                    Défense: <span id="score_def">0</span>
+                    Défense: <span id="score_def">46</span>
                     <a class="btn-floating btn-small" id="score_def_add"><i class="material-icons">add</i></a>
                 </span>
             </p>
@@ -110,7 +111,7 @@
                             <p class="caption">Petit au bout</p>
                             <span>
                                 <label>
-                                    <input type="radio" value="attq" name="none"/>
+                                    <input type="radio" value="attq" name="none"  default />
                                     <span>Aucun</span>
                                 </label>
                             </span>
@@ -132,7 +133,7 @@
                             <p class="caption">Poignée</p>
                             <span>
                                 <label>
-                                    <input type="radio" value="none" name="poignee"/>
+                                    <input type="radio" value="none" name="poignee"  default />
                                     <span>Aucune</span>
                                 </label>
                             </span>
@@ -176,7 +177,7 @@
                                     <span>Annoncé</span>
                                 </label>
                             </span>
-                            <span>
+                            <!--<span>
                                 <label>
                                     <input type="checkbox" value="realise" name="chelem"/>
                                     <span>Réalisé</span>
@@ -187,7 +188,7 @@
                                     <input type="checkbox" value="defense_realise" name="chelem"/>
                                     <span>Réalisé (défense)</span>
                                 </label>
-                            </span>
+                            </span>-->
                         </div>
                     </div>
                 </li>
@@ -196,6 +197,7 @@
     </div>
     
     <div class="row">
-    <button type="submit" class="waves-effect waves-light btn offset-s1 col">Enregistrer</button> 
+    <button type="submit" formaction="/round/add" class="waves-effect waves-light btn offset-s1 col" id="modal-default-button">Enregistrer</button> 
+    <button type="submit" formaction="/round/edit" class="waves-effect waves-light btn offset-s1 col" id="modal-edit-button">Modifier</button> 
     </div>
 </form>
