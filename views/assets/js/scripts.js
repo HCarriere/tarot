@@ -30,6 +30,8 @@
         initScoreRange();
         
         initEditModal();
+        
+        initCharts();
     });
 
     
@@ -120,6 +122,59 @@
             instance.open();
         });
     }
+    
+    function initCharts() {
+        // get charts
+        
+        $('canvas.chart').each(function(i) {
+            let id = $(this).attr('id');
+            let ctx = document.getElementById(id).getContext('2d');
+            // let canvas= document.getElementById(id);
+            let type = $(this).attr('chart-type');
+            let data = JSON.parse($(this).attr('chart-data'));
+            let options = JSON.parse($(this).attr('chart-options') || '{}');
+            
+            if(data && type && data.datasets) {
+                if(type == 'bar' || type == 'pie') {
+                    // colors
+                    for(let dataset of data.datasets) {
+                        dataset.backgroundColor = [];
+                        for(let key in dataset.data) {
+                            dataset.backgroundColor.push(getRandomChartColor(data.labels[key]))
+                        }
+                    }
+                } else if(type == 'line') {
+                    for(let dataset of data.datasets) {
+                        dataset.borderColor = getRandomChartColor(dataset.label);
+                        dataset.lineTension= 0;
+                        dataset.backgroundColor= 'transparent';
+                    }
+                }
+                new Chart(ctx, {
+                    type: type,
+                    data: data,
+                    options: options,
+                });
+            }
+        });
+        
+        function getRandomChartColor(seed) {
+            let val = seed.length;
+            for(let i=0; i<seed.length; i++) {
+                val+= seed.charCodeAt(i);
+            }
+            let colors = [
+                'rgba(255, 99, 132, 0.8)',
+                'rgba(54, 162, 235, 0.8)',
+                'rgba(255, 206, 86, 0.8)',
+                'rgba(75, 192, 192, 0.8)',
+                'rgba(153, 102, 255, 0.8)',
+                'rgba(255, 159, 64, 0.8)',
+            ];
+            return colors[Math.floor(val % colors.length)];
+        }
+    }
+    
     
 })();
 

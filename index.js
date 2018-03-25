@@ -91,6 +91,7 @@ let isAuth = utils.mustBeAuthentified(sessionSecret);
 // models 
 const Group = require('./app/group');
 const Game = require('./app/game');
+const chart = require('./app/chart');
 
 /*
 * ROUTES
@@ -176,6 +177,14 @@ app
             res.render('game', {
                 game: game,
                 testVar: 'coucou',
+                charts: [
+                    chart.getChart('pointsParPersonnes', game.rounds),
+                    chart.getChart('prisesParPersonnes', game.rounds),
+                    chart.getChart('priseParContrats', game.rounds),
+                ],
+                additionalJS: [
+                    '/js/Chart.min.js'
+                ]
             });
         }
     });

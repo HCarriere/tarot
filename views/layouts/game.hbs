@@ -71,6 +71,12 @@
     </tbody>
 </table>
 
-<h3>Graphique</h3>
+<h3>Graphiques</h3>
 
-
+{{#each charts}}
+    <canvas id="chart_{{@index}}" class="chart" 
+            chart-type="{{type}}" 
+            chart-data="{{json data}}" 
+            chart-options="{{json options}}" 
+            width="400" height="150"></canvas>
+{{/each}}
