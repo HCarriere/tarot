@@ -159,7 +159,7 @@
         });
         
         function getRandomChartColor(seed) {
-            let val = seed.length;
+            let val = 0;
             for(let i=0; i<seed.length; i++) {
                 val+= seed.charCodeAt(i);
             }
@@ -170,6 +170,12 @@
                 'rgba(75, 192, 192, 0.8)',
                 'rgba(153, 102, 255, 0.8)',
                 'rgba(255, 159, 64, 0.8)',
+                'rgba(50, 50, 212, 0.8)',
+                'rgba(65, 212, 235, 0.8)',
+                'rgba(45, 154, 50, 0.8)',
+                'rgba(240, 50, 192, 0.8)',
+                'rgba(158, 212, 50, 0.8)',
+                'rgba(100, 50, 212, 0.8)',
             ];
             return colors[Math.floor(val % colors.length)];
         }

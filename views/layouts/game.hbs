@@ -74,6 +74,7 @@
 <h3>Graphiques</h3>
 
 {{#each charts}}
+<h4>{{label}}</h4>
     <canvas id="chart_{{@index}}" class="chart" 
             chart-type="{{type}}" 
             chart-data="{{json data}}" 

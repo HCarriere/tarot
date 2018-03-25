@@ -34,6 +34,7 @@ function prisesParContrats(rounds) {
             }],
         },
         options: {},
+        label: 'Prises par contrats',
     };
 }
 
@@ -68,6 +69,7 @@ function prisesParPersonnes(rounds) {
                 }]
             }
         },
+        label: 'Prises par joueurs',
     };
 }
 
@@ -111,6 +113,7 @@ function pointsParPersonnes(rounds) {
             datasets: datasets,
         },
         options: {},
+        label: 'Points',
    };
 }
 

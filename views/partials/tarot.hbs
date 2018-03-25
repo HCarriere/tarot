@@ -3,7 +3,7 @@
         <input type="hidden" name="gameId" value="{{game._id}}">
         <input type="hidden" name="existingRoundId" value="">
         
-        <div class="switch col s10 offset-s1">
+        <div class="switch col s12">
             <p class="caption">Contrat</p>
             <span>
                 <label>
@@ -32,7 +32,7 @@
         </div>
         
         
-        <div class="switch col s10 offset-s1">
+        <div class="switch col s12">
             <p class="caption">Prenneur</p>
             {{#each game.players}}
             <span>
@@ -45,7 +45,7 @@
         </div>
         
         {{#ifEquals game.playersNumber 5}}
-        <div class="switch col s10 offset-s1">
+        <div class="switch col s12">
             <p class="caption">Appelé</p>
             {{#each ../game.players}}
             <span>
@@ -59,7 +59,7 @@
         {{/ifEquals}}
         
         
-        <div class="switch col s10 offset-s1">
+        <div class="switch col s12">
             <p class="caption">Bouts</p>
             <span>
                 <label>
@@ -82,7 +82,7 @@
         </div>
         
         
-        <div class="switch col s10 offset-s1">
+        <div class="switch col s12">
             <p class="caption scores-types">
                 <span class="left">
                     <a class="btn-floating btn-small" id="score_attk_add"><i class="material-icons">remove</i></a> 
@@ -99,7 +99,7 @@
         </div>
         
         
-        <div class="switch col s10 offset-s1">
+        <div class="switch col s12">
             <ul class="collapsible">
                 <li>
                     <div class="collapsible-header">
