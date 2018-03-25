@@ -24,19 +24,19 @@
     <li>
         <a href="#edit" edit-id="{{id}}" current-data="{{json params}}" class="secondary-content button-edit-game-params"><i class="edit-btn-collapse material-icons">edit</i></a>
         <div class="collapsible-header">
-            <b>#{{@index}} </b>
+            <b class="{{#if won}}bonus{{else}}malus{{/if}}">#{{@index}} </b>
             &nbsp;&nbsp;
             {{params.player}}<i class="material-icons">person</i>  
-            {{params.called}}<i class="material-icons">person_outline</i>
+            {{#if params.called}}{{params.called}}<i class="material-icons">person_outline</i>{{/if}}
             ({{params.contrat}})
-            {{#if won}}
-            <span class="new badge" data-badge-caption="Gagné"></span>
-            {{else}}
-            <span class="new badge red" data-badge-caption="Perdu"></span>
-            {{/if}}
+            
+            
         </div>
         <div class="collapsible-body">
-            <span>{{#each journal}} <p>{{.}}</p> {{/each}}</span>
+            <h5>Paramètres</h5>
+            <pre>{{json params 4}}</pre>
+            <h5>Journal</h5>
+            <blockquote class="journal">{{#each journal}}{{.}}<br>{{/each}}</blockquote>
         </div>
     </li>
     {{/each}}

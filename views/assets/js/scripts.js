@@ -95,8 +95,6 @@
             let data = JSON.parse($(this).attr('current-data'));
             let id = $(this).attr('edit-id');
             
-            console.log(data);
-            
             for(let d in data) {
                 if(Array.isArray(data[d])) {
                     for(let v of data[d]) {

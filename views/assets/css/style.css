@@ -12,10 +12,10 @@
     padding: 10px 20px;
 }
 
-.score-table .bonus{
+.bonus{
     color:darkgreen;
 }
-.score-table .malus{
+.malus{
     color:darkred;
 }
 .score-table .total {
@@ -24,4 +24,8 @@
 
 #modal-edit-button {
     display: none;
+}
+
+blockquote.journal {
+    border-left: 5px solid #2bbbad;
 }

@@ -225,9 +225,7 @@ function processParameters(req, game, callback) {
             player: p.name,
             mod: newScoresByPlayer[p.name],
         });
-        
     }
-    console.log(journal);
     // update game
     /*for(let p of game.players) {
         if(!p.score) {
