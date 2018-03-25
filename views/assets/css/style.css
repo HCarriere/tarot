@@ -1,3 +1,13 @@
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+}
+
+main {
+    flex: 1 0 auto;
+}   
+
 .right-link {
     vertical-align: middle;
     padding-left:16px;
@@ -28,4 +38,8 @@
 
 blockquote.journal {
     border-left: 5px solid #2bbbad;
+}
+
+footer.page-footer {
+    background-color: #26a69a;
 }
