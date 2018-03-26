@@ -62,16 +62,22 @@ function processParameters(req, game, callback) {
     journal.push('Points attaquant(s) : '+score.table);
     
     // win ?
+	
     if(params.bouts) {
-        if(params.bouts.length == 0) {
-            score.contrat = score.table - 56;
-        } else if(params.bouts.length == 1) {
-            score.contrat = score.table - 51;
-        } else if(params.bouts.length == 2) {
-            score.contrat = score.table - 41;
-        } else if(params.bouts.length == 3) {
-            score.contrat = score.table - 36;
-        }
+		if(!Array.isArray(params.bouts)){
+			score.contrat = score.table - 56;
+		} else {
+			if(params.bouts.length == 0) {
+				score.contrat = score.table - 56;
+			} else if(params.bouts.length == 1) {
+				score.contrat = score.table - 51;
+			} else if(params.bouts.length == 2) {
+				score.contrat = score.table - 41;
+			} else if(params.bouts.length == 3) {
+				score.contrat = score.table - 36;
+			}
+		}
+        
     } else {
         score.contrat = score.table - 56;
     }
