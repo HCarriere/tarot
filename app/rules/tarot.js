@@ -62,25 +62,19 @@ function processParameters(req, game, callback) {
     journal.push('Points attaquant(s) : '+score.table);
     
     // win ?
-	
-    if(params.bouts) {
-		if(!Array.isArray(params.bouts)){
-			score.contrat = score.table - 56;
-		} else {
-			if(params.bouts.length == 0) {
-				score.contrat = score.table - 56;
-			} else if(params.bouts.length == 1) {
-				score.contrat = score.table - 51;
-			} else if(params.bouts.length == 2) {
-				score.contrat = score.table - 41;
-			} else if(params.bouts.length == 3) {
-				score.contrat = score.table - 36;
-			}
-		}
-        
-    } else {
-        score.contrat = score.table - 56;
+	let valContrat = 56;
+    if(params.bouts && Array.isArray(params.bouts)) {
+        if(params.bouts.length == 1) {
+            valContrat = 51;
+        } else if(params.bouts.length == 2) {
+            valContrat = 41;
+        } else if(params.bouts.length == 3) {
+            valContrat = 36;
+        }
     }
+    journal.push(`Points à faire : ${valContrat}`);
+    journal.push(`Points déduits : ${score.table}-${valContrat} = ${score.table - valContrat}`);
+    score.contrat = score.table - valContrat;
     win = score.contrat >= 0;
     
     if(win) {
@@ -96,7 +90,6 @@ function processParameters(req, game, callback) {
     round.won = win;
     
     
-    journal.push(`Contrat : ${params.contrat}`);
     
     // calcul pts
     let multiplicator = 1;
@@ -105,6 +98,7 @@ function processParameters(req, game, callback) {
     if(params.contrat == 'garde_sans') multiplicator = 4;
     if(params.contrat == 'garde_contre') multiplicator = 6;
     
+    journal.push(`Contrat : ${params.contrat} (x${multiplicator})`);
     journal.push(`Score : ${score.contrat} * ${multiplicator} = ${score.contrat*multiplicator}`);
     score.contrat*= multiplicator;
     
