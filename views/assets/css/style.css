@@ -42,4 +42,11 @@ blockquote.journal {
 
 footer.page-footer {
     background-color: #26a69a;
+    padding: 10px 0;
+}
+
+footer.page-footer a{
+    color: white;
+    margin-left: 20px;
+    text-decoration: underline;
 }

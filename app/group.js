@@ -89,21 +89,25 @@ class Group {
         });
     }
     
-    static addPlayerToGroup(playerName, groupName) {
-        if(!playerName || !groupName) {
+    static addPlayersToGroup(players, groupName) {
+        if(!players || !groupName) {
             return;
         }
         GroupModel.findOne({
             name: toGrpName(groupName)
         }, (err, group) => {
             /* don't add doublons */
-            if(group.players.every(el => {
-                return el.name.toUpperCase() != playerName.toUpperCase();
-            })) {
-                group.players.push({
-                    name: playerName.toUpperCase(),
-                    date: new Date(),
-                });
+            
+            for(let player of players) {
+                if(group.players.every(el => {
+                    return el.name.toUpperCase().trim() 
+                    != player.toUpperCase().trim();
+                })) {
+                    group.players.push({
+                        name: player.toUpperCase().trim(),
+                        date: new Date(),
+                    });
+                }
             }
             
             group.save((err, res) => {

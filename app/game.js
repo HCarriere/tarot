@@ -50,8 +50,6 @@ class Game {
             let newPlayers = params.newPlayers.trim().split('|*^*|');
             for(let p of newPlayers) {
                 players.push(p);
-                // add player to group
-                Group.addPlayerToGroup(p, groupName);
             }
         }
         // get selected players
@@ -62,8 +60,20 @@ class Game {
         players = players.map(val => val.toUpperCase());
         // doublons
         players = [ ...new Set(players)];
-        // objectify
-        players = players.map(val => {return {name: val, fake: false}});
+        
+        // check player numbers
+        if(players.length > playersNumber) {
+            return callback('Trop de joueurs !');
+        }
+        
+        // add players to group
+        Group.addPlayersToGroup(players, groupName);
+        
+        // objectify players
+        players = players.map(val => {return {
+            name: val, 
+            fake: false
+        }});
         
         console.log('players:'+JSON.stringify(players));
         let newGame = new GameModel({

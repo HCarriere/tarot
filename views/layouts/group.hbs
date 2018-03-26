@@ -14,9 +14,14 @@
     <a class="collection-item" href="/game/{{name}}?id={{id}}">
         <i class="material-icons left">create</i>
         {{name}}
+        {{#if players}}
         {{#each players}}
-            <span class="new badge" data-badge-caption="{{name}}"></span>
+            <span class="new badge hide-on-small-only" data-badge-caption="{{name}}"></span>
         {{/each}}
+        <span class="new badge grey hide-on-med-and-up" data-badge-caption="{{#each players}}{{name}} - {{/each}}"></span>
+        {{/if}}
+            
+        
     </a>
 {{/each}}
 </div>

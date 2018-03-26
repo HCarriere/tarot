@@ -1,3 +1,5 @@
+'use strict';
+
 (function(){
     
 
@@ -21,9 +23,11 @@
             secondaryPlaceholder: '+Nom',
             onChipAdd: function(a) {
                 $('#newPlayers').val(a[0].textContent.split('close').join('|*^*|'));
+                $('#newPlayers').trigger('change');
             },
             onChipDelete: function(a) {
                 $('#newPlayers').val(a[0].textContent.split('close').join('|*^*|'));
+                $('#newPlayers').trigger('change');
             }
         });
         
@@ -32,6 +36,8 @@
         initEditModal();
         
         initCharts();
+        
+        initNewGameValidator();
     });
 
     
@@ -181,6 +187,42 @@
         }
     }
     
-    
+    function initNewGameValidator() {
+        let playerNumber = 0;
+        let validPlayersNumber = 0;
+        let block = false;
+        
+        setValidPlayersNumber();
+        setPlayersNumber();
+        $('#new-game-form input[name="playersNumber"]').on('change', function() {
+            setValidPlayersNumber();
+        });
+        $('#new-game-form input[name="players"]').on('change', function() {
+            setPlayersNumber();
+        });
+        
+        function setValidPlayersNumber() {
+            validPlayersNumber = $('#new-game-form input[name="playersNumber"]:checked').val();
+            validatePlayersNumber();
+        }
+        
+        function setPlayersNumber() {
+            playerNumber = $('#new-game-form input[name="players"]:checked').length;
+            validatePlayersNumber();
+        }
+        
+        function validatePlayersNumber() {
+            if(!block && playerNumber >= validPlayersNumber) {
+                // block
+                block = true; 
+                $('#new-game-form input[name="players"]:not(:checked)').prop('disabled', true);
+            }
+            else if(block && playerNumber < validPlayersNumber) {
+                // unblock
+                block = false;
+                $('#new-game-form input[name="players"]:not(:checked)').prop('disabled', false);
+            }
+        }
+    }
 })();
 
