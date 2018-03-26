@@ -29,6 +29,10 @@ const GameModel = mongoose.model('Game', gameSchema);
 
 class Game {
     
+    static find(arg, callback) {
+        return GameModel.find(arg, callback);
+    }
+    
     static addGame(req, callback) {
         let params = utils.getRequestParams(req, [
             'name',

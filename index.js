@@ -92,6 +92,7 @@ let isAuth = utils.mustBeAuthentified(sessionSecret);
 const Group = require('./app/group');
 const Game = require('./app/game');
 const chart = require('./app/chart');
+const rules = require('./app/rules');
 
 /*
 * ROUTES
@@ -204,6 +205,10 @@ app
     });
 })
 
+.get('/updateGameRules', isAuth, (req, res) => {
+    rules.updateGameRules();
+    res.json('command launched');
+})
 
 // 401
 .get('/forbidden', (req, res) => {

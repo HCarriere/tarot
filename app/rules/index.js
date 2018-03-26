@@ -1,7 +1,22 @@
+const utils = require('../utils');
+// rules
 const tarot = require('./tarot');
 
 const rules = {
-    'tarot': tarot
+    'tarot': {
+        logic: tarot,
+        params: [
+            'contrat',
+            'player',
+            'called',
+            'bouts',
+            'score',
+            'petit_au_bout',
+            'poignee',
+            'chelem',
+            'misere',
+        ]
+    }
 }
 
 // callback(err, result)
@@ -10,11 +25,56 @@ function applyRule(game, req, callback) {
         console.log('rule not implmented')
         return callback('rule not implemented');
     }
-    rules[game.type].processParameters(req, game, (err, round) => {
+    
+    applyRuleWithParams(
+        game, 
+        utils.getRequestParams(req, rules[game.type].params),
+        callback
+    );
+}
+
+function applyRuleWithParams(game, params, callback) {
+    if(!rules[game.type]) {
+        console.log('rule not implmented')
+        return callback('rule not implemented');
+    }
+    
+    rules[game.type].logic.processParameters(
+        params, 
+        game, 
+        (err, round) => {
         return callback(err, round);
     });
 }
 
+
+function updateGameRules() {
+    const Game = require('../game');
+    console.log('updating all rounds from all games with new rules...');
+    
+    Game.find({}, (err, games) => {
+        for(let game of games) {
+            let n = 0;
+            for(let i = 0; i<game.rounds.length; i++) {
+                applyRuleWithParams(game, game.rounds[i].params, (err, nRound) => {
+                    
+                    if(nRound) {
+                        game.rounds[i] = nRound;
+                        n++;
+                    }
+                        
+                });
+            }
+
+            game.save((err, result) => {
+                if(result) console.log(n+' rounds of game '+result.name+' updated')
+            });    
+        }
+    });
+}
+
 module.exports = {
-    applyRule
+    applyRule,
+    applyRuleWithParams,
+    updateGameRules,
 }

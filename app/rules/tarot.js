@@ -1,18 +1,7 @@
-const utils = require('../utils');
 
 
-function processParameters(req, game, callback) {
-    let params = utils.getRequestParams(req, [
-        'contrat',
-        'player',
-        'called',
-        'bouts',
-        'score',
-        'petit_au_bout',
-        'poignee',
-        'chelem',
-        'misere',
-    ]);
+
+function processParameters(params, game, callback) {
     /*
     console.log('contrat : '+JSON.stringify(params.contrat));
     console.log('player : '+JSON.stringify(params.player));
