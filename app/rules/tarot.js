@@ -52,13 +52,17 @@ function processParameters(params, game, callback) {
     
     // win ?
 	let valContrat = 56;
-    if(params.bouts && Array.isArray(params.bouts)) {
-        if(params.bouts.length == 1) {
+    if(params.bouts) {
+        if(Array.isArray(params.bouts)) {
+            if(params.bouts.length == 1) {
+                valContrat = 51;
+            } else if(params.bouts.length == 2) {
+                valContrat = 41;
+            } else if(params.bouts.length == 3) {
+                valContrat = 36;
+            }
+        } else {
             valContrat = 51;
-        } else if(params.bouts.length == 2) {
-            valContrat = 41;
-        } else if(params.bouts.length == 3) {
-            valContrat = 36;
         }
     }
     journal.push(`Points à faire : ${valContrat}`);
@@ -67,11 +71,15 @@ function processParameters(params, game, callback) {
     win = score.contrat >= 0;
     
     if(win) {
-        journal.push('Victoire des attaquants');
+        if(params.player == 'HCE') {
+            journal.push('Le créateur est victorieux ! Vive le créateur !');
+        } else {
+            journal.push('Attaque victorieuse');
+        }
         journal.push(`Contrat : ${score.contrat} + 25 = ${score.contrat+25}`);
         score.contrat += 25;
     } else {
-        journal.push('Victoire des défenseurs');
+        journal.push('Défense victorieuse');
         journal.push(`Contrat : ${score.contrat} - 25 = ${score.contrat-25}`);
         score.contrat -= 25;
     }
