@@ -146,12 +146,13 @@
                     for(let dataset of data.datasets) {
                         dataset.backgroundColor = [];
                         for(let key in dataset.data) {
-                            dataset.backgroundColor.push(getRandomChartColor(data.labels[key]))
+                            dataset.backgroundColor.push(getCyclicChartColor(key))
                         }
                     }
                 } else if(type == 'line') {
+                    let i = 0;
                     for(let dataset of data.datasets) {
-                        dataset.borderColor = getRandomChartColor(dataset.label);
+                        dataset.borderColor = getCyclicChartColor(i++);
                         dataset.lineTension= 0;
                         dataset.backgroundColor= 'transparent';
                     }
@@ -164,11 +165,7 @@
             }
         });
         
-        function getRandomChartColor(seed) {
-            let val = 0;
-            for(let i=0; i<seed.length; i++) {
-                val+= seed.charCodeAt(i);
-            }
+        function getCyclicChartColor(i) {
             let colors = [
                 'rgba(255, 99, 132, 0.8)',
                 'rgba(54, 162, 235, 0.8)',
@@ -183,7 +180,8 @@
                 'rgba(158, 212, 50, 0.8)',
                 'rgba(100, 50, 212, 0.8)',
             ];
-            return colors[Math.floor(val % colors.length)];
+            let val = Math.floor(i % colors.length);
+            return colors[val];
         }
     }
     
