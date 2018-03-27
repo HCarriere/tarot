@@ -65,6 +65,9 @@ function updateGameRules() {
                         
                 });
             }
+            
+            // count each player score
+            game.players = Game.getScoresFromRounds(game.players, game.rounds);
 
             game.save((err, result) => {
                 if(result) console.log(n+' rounds of game '+result.name+' updated')
