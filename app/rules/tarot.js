@@ -26,9 +26,9 @@ function processParameters(params, game, callback) {
     */
     let round = {
         params: {
-            contrat : params.contrat,
+            contrat : params.contrat || 'prise',
             player : params.player,
-            called :params.called,
+            called : params.called,
             bouts : params.bouts,
             score : params.score,
             petit_au_bout :params.petit_au_bout,
@@ -95,7 +95,7 @@ function processParameters(params, game, callback) {
     if(params.contrat == 'garde_sans') multiplicator = 4;
     if(params.contrat == 'garde_contre') multiplicator = 6;
     
-    journal.push(`Contrat : ${params.contrat} (x${multiplicator})`);
+    journal.push(`Contrat : ${round.params.contrat} (x${multiplicator})`);
     journal.push(`Score : ${score.contrat} * ${multiplicator} = ${score.contrat*multiplicator}`);
     score.contrat*= multiplicator;
     
