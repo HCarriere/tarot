@@ -146,9 +146,11 @@ app
 
 .get('/new/game', isAuth, (req, res) => {
     Group.getGroup(req.session.currentGroup, (err, group) => {
-        res.render('newGame', {
-            defaultName : Game.getRandomName(),
-            group: group,
+        Game.getDefaultGameName((name) => {
+            res.render('newGame', {
+                defaultName : name,
+                group: group,
+            });
         });
     });
 })

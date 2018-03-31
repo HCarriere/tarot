@@ -41,6 +41,14 @@ function mustBeAuthentified(secret) {
     }
 }
 
+function getReadableDate(date) {
+    function pad(n) {
+        return n<10?'0'+n : n;
+    }
+    let name = `${pad(date.getDate())}-${pad(date.getMonth()+1)}-${date.getFullYear()}`;
+    return name;
+
+}
 
 function getSessionKey(grp, secret) {
     return md5(secret + '-' + grp + '==');
@@ -51,4 +59,5 @@ module.exports = {
     getRequestParams,
     setConnected,
     mustBeAuthentified,
+    getReadableDate,
 }

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
+const request = require('request');
 const utils = require('./utils');
 const Group = require('./group');
 const Rules = require('./rules');
-
 
 const gameSchema = mongoose.Schema({
     name: String,
@@ -182,13 +182,19 @@ class Game {
         }, params.existingRoundId);
     }
     
-    static getRandomName() {
-        let name = 'P';
-        let allowedChars = 'AZERTYUIOPQSDFGHJKLMWXCVBN-1234567890';
-        for(let i = 0; i<5; i++) {
-            name += allowedChars[Math.floor(Math.random()*allowedChars.length)];
-        }
-        return name;
+    static getDefaultGameName(callback) {
+        let url = 'http://fr.wikipedia.org/w/api.php?action=query&format=json&prop=&list=random&meta=&formatversion=1&rnnamespace=0&rnlimit=1&maxlag=5'; 
+        request(url, (err, res, rawdata) => {
+            if(err) {
+                return callback('');
+            } 
+            let data = JSON.parse(rawdata);
+            if(data && data.query && data.query.random) {
+                return callback(data.query.random[0].title);
+            }
+            console.log(JSON.stringify(data, null, 4));
+            return callback('');
+        });
     }
     
     
