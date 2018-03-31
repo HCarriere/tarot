@@ -140,19 +140,20 @@
             let data = JSON.parse($(this).attr('chart-data'));
             let options = JSON.parse($(this).attr('chart-options') || '{}');
             
+            console.log(id)
+            
             if(data && type && data.datasets) {
                 if(type == 'bar' || type == 'pie') {
                     // colors
                     for(let dataset of data.datasets) {
                         dataset.backgroundColor = [];
                         for(let key in dataset.data) {
-                            dataset.backgroundColor.push(getCyclicChartColor(key))
+                            dataset.backgroundColor.push(randomColorPicker(data.labels[key]))
                         }
                     }
                 } else if(type == 'line') {
-                    let i = 0;
                     for(let dataset of data.datasets) {
-                        dataset.borderColor = getCyclicChartColor(i++);
+                        dataset.borderColor = randomColorPicker(dataset.label);
                         dataset.lineTension= 0;
                         dataset.backgroundColor= 'transparent';
                     }
@@ -165,7 +166,7 @@
             }
         });
         
-        function getCyclicChartColor(i) {
+        /*function getCyclicChartColor(i) {
             let colors = [
                 'rgba(255, 99, 132, 0.8)',
                 'rgba(54, 162, 235, 0.8)',
@@ -182,6 +183,15 @@
             ];
             let val = Math.floor(i % colors.length);
             return colors[val];
+        }*/
+        
+        
+        
+        function randomColorPicker(seed) {
+            if(customColors[seed]) {
+                return customColors[seed];
+            }
+            return '#'+(rand(seed)*0xFFFFFF<<0).toString(16)+'CC';
         }
     }
     
@@ -222,5 +232,24 @@
             }
         }
     }
+    
+    function rand(seed) {
+        let s = 0;
+        for(let i=0; i<seed.length; i++) {
+            s+=seed.charCodeAt(i);
+        }
+        while(s>1) {
+            s /= 7;
+        }
+        s = s*0xFFFFFF<<2;
+        console.log(seed+' - > 0.'+s);
+        return parseFloat('0.'+s);
+        //return Math.random();
+    }
+    
+    const customColors = {
+        HCE:'#ffe30e',
+        BRT:'#ffa1fb',
+    };
 })();
 
