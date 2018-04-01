@@ -148,12 +148,12 @@
                     for(let dataset of data.datasets) {
                         dataset.backgroundColor = [];
                         for(let key in dataset.data) {
-                            dataset.backgroundColor.push(randomColorPicker(data.labels[key]))
+                            dataset.backgroundColor.push(colors.fromSeed(data.labels[key]))
                         }
                     }
                 } else if(type == 'line') {
                     for(let dataset of data.datasets) {
-                        dataset.borderColor = randomColorPicker(dataset.label);
+                        dataset.borderColor = colors.fromSeed(dataset.label);
                         dataset.lineTension= 0;
                         dataset.backgroundColor= 'transparent';
                     }
@@ -187,12 +187,7 @@
         
         
         
-        function randomColorPicker(seed) {
-            if(customColors[seed]) {
-                return customColors[seed];
-            }
-            return '#'+(rand(seed)*0xFFFFFF<<0).toString(16)+'CC';
-        }
+        
     }
     
     function initNewGameValidator() {
@@ -233,6 +228,17 @@
         }
     }
     
+    
+    
+    
+})();
+
+let colors = (function() {
+    const customColors = {
+        HCE:'#ffe30e',
+        BRT:'#ffa1fb',
+    };
+    
     function rand(seed) {
         let s = 0;
         for(let i=0; i<seed.length; i++) {
@@ -247,9 +253,16 @@
         //return Math.random();
     }
     
-    const customColors = {
-        HCE:'#ffe30e',
-        BRT:'#ffa1fb',
-    };
+    function fromSeed(seed) {
+        if(customColors[seed]) {
+            return customColors[seed];
+        }
+        return '#'+(rand(seed)*0xFFFFFF<<0).toString(16)+'CC';
+    }
+    
+    return {
+        fromSeed,
+    }
+    
 })();
 

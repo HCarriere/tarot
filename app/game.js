@@ -88,11 +88,12 @@ class Game {
             players : players,
             date: new Date(),
         });
+        console.log(JSON.stringify(newGame, null, 4));
         newGame.save((err, object) => {
             if(err) {
                 console.error(err);
             }
-            Group.addGameToGroup(object, groupName);
+            Group.addGameToGroup(object, groupName, object.date);
             callback(null, object);
         });
     }
@@ -190,7 +191,10 @@ class Game {
             } 
             let data = JSON.parse(rawdata);
             if(data && data.query && data.query.random) {
-                return callback(data.query.random[0].title);
+                return callback({
+                    title:data.query.random[0].title,
+                    id:data.query.random[0].id,
+                });
             }
             console.log(JSON.stringify(data, null, 4));
             return callback('');
