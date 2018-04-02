@@ -38,6 +38,8 @@
         initCharts();
         
         initNewGameValidator();
+        
+        colorPlayerBadges();
     });
 
     
@@ -139,9 +141,7 @@
             let type = $(this).attr('chart-type');
             let data = JSON.parse($(this).attr('chart-data'));
             let options = JSON.parse($(this).attr('chart-options') || '{}');
-            
-            console.log(id)
-            
+                        
             if(data && type && data.datasets) {
                 if(type == 'bar' || type == 'pie') {
                     // colors
@@ -229,35 +229,48 @@
     }
     
     
+    function colorPlayerBadges() {
+        $('.badge.player').each( function(i) {
+            let name = $(this).attr('data-badge-caption');
+            $(this).css('background-color', colors.fromSeed(name));
+        });
+    }
     
     
 })();
 
 let colors = (function() {
     const customColors = {
-        HCE:'#ffe30e',
+        HCE:'#0b1c00',
         BRT:'#ffa1fb',
     };
     
     function rand(seed) {
-        let s = 0;
+        /*let s = 0;
         for(let i=0; i<seed.length; i++) {
-            s+=seed.charCodeAt(i);
+            s+=seed.charCodeAt(i)+(i+3);
         }
         while(s>1) {
             s /= 7;
         }
         s = s*0xFFFFFF<<2;
-        console.log(seed+' - > 0.'+s);
-        return parseFloat('0.'+s);
-        //return Math.random();
+        return parseFloat('0.'+s); */
+        let rng = new Math.seedrandom(seed);
+        return rng.quick();
     }
     
     function fromSeed(seed) {
         if(customColors[seed]) {
             return customColors[seed];
         }
-        return '#'+(rand(seed)*0xFFFFFF<<0).toString(16)+'CC';
+        let col = '#'+(rand(seed)*0xFFFFFF<<0).toString(16);
+        while(col.length < 7) {
+            col = col+'8';
+        }
+        col = col.substr(0, 7);
+        col+='CC';
+        customColors[seed] = col; // caching
+        return col;
     }
     
     return {
