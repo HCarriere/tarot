@@ -100,12 +100,13 @@ const rules = require('./app/rules');
 
 app
 .get('/', isAuth, (req, res) => {
-    Group.getGroup(req.session.currentGroup, (err, group) => {
+    Group.getGroupWithGames(req.session.currentGroup, result => {
         res.render('group', {
             titleSuffix: ' - '+req.session.currentGroup,
-            group: group,
+            group: result.group,
+            games: result.games,
         });
-    });
+    }, req);
 })
 
 .get('/login', (req, res) => {
@@ -145,7 +146,7 @@ app
 })
 
 .get('/new/game', isAuth, (req, res) => {
-    Group.getGroup(req.session.currentGroup, (err, group) => {
+    Group.getGroup(req.session.currentGroup, (group) => {
         Game.getDefaultGameName((name) => {
             res.render('newGame', {
                 defaultName : name,

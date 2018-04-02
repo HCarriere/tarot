@@ -45,9 +45,26 @@ function getReadableDate(date) {
     function pad(n) {
         return n<10?'0'+n : n;
     }
+    if(isSameDay(date)) {
+        return `Aujourd'hui`;
+    }
+    let yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    if(isSameDay(date, yesterday)) {
+        return 'Hier';
+    }
     let name = `${pad(date.getDate())}-${pad(date.getMonth()+1)}-${date.getFullYear()}`;
     return name;
+}
 
+function isSameDay(date, date2) {
+    if(!date2) {
+        date2 = new Date();
+    }
+    if(date.setHours(0,0,0,0) == date2.setHours(0,0,0,0)) {
+        return true;
+    }
+    return false;
 }
 
 function getSessionKey(grp, secret) {

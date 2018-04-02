@@ -8,11 +8,16 @@
 
 <a class="waves-effect waves-light btn" href="/new/game"><i class="material-icons left">add_circle_outline</i>Nouvelle partie</a>
 
-<h2>Parties</h2>
+<h2>
+    Parties
+</h2>
+
+{{#each games}}
+{{date}}
 <div class="collection">
-{{#each group.games}}
+    
+    {{#each games}}
     <a class="collection-item" href="/game/{{name}}?id={{id}}">
-        <i class="material-icons left">create</i>
         {{name}}
         {{#if players}}
         {{#each players}}
@@ -20,12 +25,17 @@
         {{/each}}
         <span class="new badge grey hide-on-med-and-up" data-badge-caption="{{#each players}}{{name}} - {{/each}}"></span>
         {{/if}}
-            
-        
     </a>
-{{/each}}
+    {{/each}}
 </div>
+{{/each}}
 
+<div class="filter-panel">
+    <form method="GET" action="/">
+        <input placeholder="2018-03" id="month" type="month" class="validate" name="month" pattern="\d{4}-\d{2}">
+        <button class="waves-effect waves-light btn"><i class="material-icons left">search</i>Rechercher</button>
+    </form>
+</div>
 
 <h2>Joueurs</h2>
 <ul class="collapsible">
