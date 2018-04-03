@@ -44,7 +44,6 @@ function processParameters(params, game, callback) {
         table: parseInt(params.score),
         contrat: 0,
     }
-    let misereux = {};
     let win = false;
     let journal = [];
     
@@ -157,11 +156,6 @@ function processParameters(params, game, callback) {
         }
     }
     
-    // miseres
-    if(params.misere) {
-        // TODO (pas supporté par la FFT)
-    }
-    
     
     // final points
     let scoreFinal = 0;
@@ -212,6 +206,24 @@ function processParameters(params, game, callback) {
             // autres joueurs
             newScoresByPlayer[p.name] += scoreDef;
         }
+    }
+    
+    // miseres
+    if(params.misere) {
+		let misere = params.misere;
+        if(!Array.isArray(misere)) {
+			misere = [ misere ];
+		}
+		for(let misereux of misere) {
+			for(let p of game.players) {
+				if(p.name == misereux) {
+					newScoresByPlayer[p.name] += 10;
+				} else {
+					newScoresByPlayer[p.name] -= 10;
+				}
+			}
+			journal.push(`Misère pour ${misereux}`);
+		}
     }
     
     
