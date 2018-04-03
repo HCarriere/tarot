@@ -9,8 +9,10 @@
 <form method="POST" action="/new/game" class="row z-depth-1" id="new-game-form">
     <div class="row">
         <div class="input-field col s10 offset-s1">
-            <p class="caption">Nom de la partie</p>
-            <input value="{{defaultName}}" id="name" name="name" type="text" class="validate" required>
+            <p class="caption">Nom de la partie 
+                {{#if defaultName}}<i style="font-size: 9px;color: #a8a8a8;">source: <a href="https://fr.wikipedia.org/?curid={{defaultName.id}}" target="_blank">Wikipedia</a></i>{{/if}}
+            </p>
+            <input value="{{defaultName.title}}" id="name" name="name" type="text" class="validate" required>
         </div>
 
         <div class="switch col s10 offset-s1">

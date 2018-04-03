@@ -38,6 +38,8 @@
         initCharts();
         
         initNewGameValidator();
+        
+        colorPlayerBadges();
     });
 
     
@@ -139,19 +141,19 @@
             let type = $(this).attr('chart-type');
             let data = JSON.parse($(this).attr('chart-data'));
             let options = JSON.parse($(this).attr('chart-options') || '{}');
-            
+                        
             if(data && type && data.datasets) {
                 if(type == 'bar' || type == 'pie') {
                     // colors
                     for(let dataset of data.datasets) {
                         dataset.backgroundColor = [];
                         for(let key in dataset.data) {
-                            dataset.backgroundColor.push(getRandomChartColor(data.labels[key]))
+                            dataset.backgroundColor.push(colors.fromSeed(data.labels[key]))
                         }
                     }
                 } else if(type == 'line') {
                     for(let dataset of data.datasets) {
-                        dataset.borderColor = getRandomChartColor(dataset.label);
+                        dataset.borderColor = colors.fromSeed(dataset.label);
                         dataset.lineTension= 0;
                         dataset.backgroundColor= 'transparent';
                     }
@@ -164,11 +166,7 @@
             }
         });
         
-        function getRandomChartColor(seed) {
-            let val = 0;
-            for(let i=0; i<seed.length; i++) {
-                val+= seed.charCodeAt(i);
-            }
+        /*function getCyclicChartColor(i) {
             let colors = [
                 'rgba(255, 99, 132, 0.8)',
                 'rgba(54, 162, 235, 0.8)',
@@ -183,8 +181,13 @@
                 'rgba(158, 212, 50, 0.8)',
                 'rgba(100, 50, 212, 0.8)',
             ];
-            return colors[Math.floor(val % colors.length)];
-        }
+            let val = Math.floor(i % colors.length);
+            return colors[val];
+        }*/
+        
+        
+        
+        
     }
     
     function initNewGameValidator() {
@@ -224,5 +227,55 @@
             }
         }
     }
+    
+    
+    function colorPlayerBadges() {
+        $('.badge.player').each( function(i) {
+            let name = $(this).attr('data-badge-caption');
+            $(this).css('background-color', colors.fromSeed(name));
+        });
+    }
+    
+    
+})();
+
+let colors = (function() {
+    const customColors = {
+        HCE:'#0b1c00',
+        BRT:'#ffa1fb',
+    };
+    
+    function rand(seed) {
+        /*let s = 0;
+        for(let i=0; i<seed.length; i++) {
+            s+=seed.charCodeAt(i)+(i+3);
+        }
+        while(s>1) {
+            s /= 7;
+        }
+        s = s*0xFFFFFF<<2;
+        return parseFloat('0.'+s); */
+        let rng = new Math.seedrandom(seed);
+        return rng.quick();
+    }
+    
+    function fromSeed(seed) {
+        if(customColors[seed]) {
+            return customColors[seed];
+        }
+        let col = '#'+(rand(seed)*0xFFFFFF<<0).toString(16);
+        while(col.length < 7) {
+            col = col+'8';
+        }
+        col = col.substr(0, 7);
+        col+='CC';
+        customColors[seed] = col; // caching
+        return col;
+    }
+    
+    return {
+        fromSeed,
+    }
+    
 })();
 

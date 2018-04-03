@@ -26,9 +26,9 @@ function processParameters(params, game, callback) {
     */
     let round = {
         params: {
-            contrat : params.contrat,
+            contrat : params.contrat || 'prise',
             player : params.player,
-            called :params.called,
+            called : params.called,
             bouts : params.bouts,
             score : params.score,
             petit_au_bout :params.petit_au_bout,
@@ -52,13 +52,17 @@ function processParameters(params, game, callback) {
     
     // win ?
 	let valContrat = 56;
-    if(params.bouts && Array.isArray(params.bouts)) {
-        if(params.bouts.length == 1) {
+    if(params.bouts) {
+        if(Array.isArray(params.bouts)) {
+            if(params.bouts.length == 1) {
+                valContrat = 51;
+            } else if(params.bouts.length == 2) {
+                valContrat = 41;
+            } else if(params.bouts.length == 3) {
+                valContrat = 36;
+            }
+        } else {
             valContrat = 51;
-        } else if(params.bouts.length == 2) {
-            valContrat = 41;
-        } else if(params.bouts.length == 3) {
-            valContrat = 36;
         }
     }
     journal.push(`Points à faire : ${valContrat}`);
@@ -67,11 +71,15 @@ function processParameters(params, game, callback) {
     win = score.contrat >= 0;
     
     if(win) {
-        journal.push('Victoire des attaquants');
+        if(params.player == 'HCE') {
+            journal.push('Le créateur est victorieux ! Vive le créateur !');
+        } else {
+            journal.push('Attaque victorieuse');
+        }
         journal.push(`Contrat : ${score.contrat} + 25 = ${score.contrat+25}`);
         score.contrat += 25;
     } else {
-        journal.push('Victoire des défenseurs');
+        journal.push('Défense victorieuse');
         journal.push(`Contrat : ${score.contrat} - 25 = ${score.contrat-25}`);
         score.contrat -= 25;
     }
@@ -87,7 +95,7 @@ function processParameters(params, game, callback) {
     if(params.contrat == 'garde_sans') multiplicator = 4;
     if(params.contrat == 'garde_contre') multiplicator = 6;
     
-    journal.push(`Contrat : ${params.contrat} (x${multiplicator})`);
+    journal.push(`Contrat : ${round.params.contrat} (x${multiplicator})`);
     journal.push(`Score : ${score.contrat} * ${multiplicator} = ${score.contrat*multiplicator}`);
     score.contrat*= multiplicator;
     
@@ -128,11 +136,11 @@ function processParameters(params, game, callback) {
         }
         
         if(win) {
-            score.poignee += prime;
-            journal.push(`Poignée ${params.poignee} de l'attaquant (réalisé): +${prime} pour l'attaquant`);
+            score.poignee = prime;
+            journal.push(`Poignée ${params.poignee} de l'attaquant (réalisé): +${score.poignee} pour l'attaquant`);
         } else {
-            score.poignee -= prime;
-            journal.push(`Poignée ${params.poignee} de l'attaquant (non réalisé): +${prime} pour la défense`);
+            score.poignee = -prime;
+            journal.push(`Poignée ${params.poignee} de l'attaquant (non réalisé): ${score.poignee} pour la défense`);
         }
     }
     

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Game = require('./game');
 const utils = require('./utils');
 
 const groupSchema = mongoose.Schema({
@@ -8,134 +9,171 @@ const groupSchema = mongoose.Schema({
         name: String,
         date: Date,
     }],
-    games: [{
-        name: String,
-        id: String,
-        players: [],
-    }],
 });
 const GroupModel = mongoose.model('Group', groupSchema);
 
-class Group {
-    
-    static get schema() {
-        return groupSchema;
+
+function addGroup(req, callback) {
+    let params = utils.getRequestParams(req, ['name', 'password']);
+    if(!params.name) {
+        return callback('name is needed');
     }
-    
-    static get model() {
-        return GroupModel;
-    }
-    
-    static addGroup(req, callback) {
-        let params = utils.getRequestParams(req, ['name', 'password']);
-        if(!params.name) {
-            return callback('name is needed');
+    let name = toGrpName(params.name);
+    GroupModel.findOne({
+        name: name,
+    }, (err, result) => {
+        if(result) {
+            // already exists
+            return callback('group already exists');
         }
-        let name = toGrpName(params.name);
-        GroupModel.findOne({
+        let newGroup = new GroupModel({
             name: name,
-        }, (err, result) => {
-            if(result) {
-                // already exists
-                return callback('group already exists');
-            }
-            let newGroup = new GroupModel({
-                name: name,
-                password: utils.hashPassword(params.password),
-                players: [],
-            });
-            newGroup.save((err, object) => {
-                if(err) console.error(err);
-                callback(err, object);
-            }); 
+            password: utils.hashPassword(params.password),
+            players: [],
         });
-    }
-    
-    static getGroup(groupName, callback) {
-        let name = toGrpName(groupName);
-        GroupModel.findOne({
-            name: name,
-        }, (err, result) => {
-            if(err) return console.error(err);
-            callback(err, result);
-        });
-    }
-    
-    static logonToGroup(req, callback) {
-        let params = utils.getRequestParams(req, [
-            'name', 
-            'password'
-        ]);
-        if(!params.name) {
-            return callback('name is needed');
-        }
-        let name = toGrpName(params.name);
-        
-        GroupModel.findOne({
-            name: name,
-        }, (err, result) => {
-            if(err) return console.error(err);
-            if(!result) return callback('invalid group');
-            if(result.password) {
-                if(result.password == utils.hashPassword(params.password)) {
-                    // good password
-                    return callback(null, result);
-                } else {
-                    // bad password
-                    return callback('wrong password');
-                }
-            }
-            return callback(null, result);
-        });
-    }
-    
-    static addPlayersToGroup(players, groupName) {
-        if(!players || !groupName) {
-            return;
-        }
-        GroupModel.findOne({
-            name: toGrpName(groupName)
-        }, (err, group) => {
-            /* don't add doublons */
-            
-            for(let player of players) {
-                if(group.players.every(el => {
-                    return el.name.toUpperCase().trim() 
-                    != player.toUpperCase().trim();
-                })) {
-                    group.players.push({
-                        name: player.toUpperCase().trim(),
-                        date: new Date(),
-                    });
-                }
-            }
-            
-            group.save((err, res) => {
-                if(err) console.log(err);
-            });
-        });
-    }
-    
-    static addGameToGroup(game, groupName) {
-        GroupModel.findOne({
-            name: toGrpName(groupName)
-        }, (err, group) => {
-            group.games.push({
-                name: game.name,
-                id: game._id,
-                players: game.players,
-            });
-            
-            group.save((err, res) => {
-                if(err) console.log(err);
-            });
-        });
-    }
-    
+        newGroup.save((err, object) => {
+            if(err) console.error(err);
+            callback(err, object);
+        }); 
+    });
 }
+
+function getGroupWithGames(groupName, callback, req) {
+    let name = toGrpName(groupName);
+    // {"date": {"$gte": new Date(2012, 7, 14), "$lt": new Date(2012, 7, 15)}})
+    let dateFilter;
+
+    if(req && req.query && req.query.month) {
+        // month specified
+        let monthStart = new Date(req.query.month);
+        monthStart.setHours(0,0,0,0);
+        let monthEnd = new Date(req.query.month);
+        monthEnd.setHours(0,0,0,0);
+        monthEnd.setMonth(monthStart.getMonth()+1);
+        dateFilter = {$gte: monthStart, $lt: monthEnd};
+    } else {
+        // default (this week)
+        let startOfWeek = new Date().setDate(new Date().getDate()-5);
+        dateFilter = {$gte: startOfWeek};   
+    }
+    GroupModel.findOne({
+        name: name,
+    }, (err, group) => {
+        if(err) return console.error(err);
+        getGamesFromGroup(group, dateFilter, (games) => {
+            callback({
+                group: group,
+                games: games
+            });
+        });
+    });
+}
+
+function getGroup(groupName, callback) {
+    let name = toGrpName(groupName);
+    GroupModel.findOne({
+        name: name,
+    }, (err, group) => {
+        if(err) return console.error(err);
+        callback(group);
+    });
+}
+
+function logonToGroup(req, callback) {
+    let params = utils.getRequestParams(req, [
+        'name', 
+        'password'
+    ]);
+    if(!params.name) {
+        return callback('name is needed');
+    }
+    let name = toGrpName(params.name);
+
+    GroupModel.findOne({
+        name: name,
+    }, (err, result) => {
+        if(err) return console.error(err);
+        if(!result) return callback('invalid group');
+        if(result.password) {
+            if(result.password == utils.hashPassword(params.password)) {
+                // good password
+                return callback(null, result);
+            } else {
+                // bad password
+                return callback('wrong password');
+            }
+        }
+        return callback(null, result);
+    });
+}
+
+function addPlayersToGroup(players, groupName) {
+    console.log(groupName+' got new players : '+JSON.stringify(players));
+    if(!players || !groupName) {
+        return;
+    }
+    GroupModel.findOne({
+        name: toGrpName(groupName)
+    }, (err, group) => {
+        /* don't add doublons */
+
+        for(let player of players) {
+            if(group.players.every(el => {
+                return el.name.toUpperCase().trim() 
+                != player.toUpperCase().trim();
+            })) {
+                group.players.push({
+                    name: player.toUpperCase().trim(),
+                    date: new Date(),
+                });
+            }
+        }
+
+        group.save((err, res) => {
+            if(err) console.log(err);
+        });
+    });
+}
+
 
 function toGrpName(name) {
     return name.toUpperCase().trim();
 }
 
-module.exports = Group;
+function getGamesFromGroup(group, filter, callback) {
+    Game.getGames({
+        group: group.name,
+        date: filter,
+    }, games => {
+        // by days
+        let datesAssoc = {};
+        let dates = [];
+        for(let game of games) {
+            let d = utils.getReadableDate(game.date);
+            if(!datesAssoc[d]) datesAssoc[d] = {realDate:game.date, games:[]};
+            datesAssoc[d].games.push(game);
+        }
+        
+        for(let d in datesAssoc) {
+            dates.push({
+                date: d,
+                realDate: datesAssoc[d].realDate,
+                games: datesAssoc[d].games,
+            });
+        }
+        dates.sort((a,b) => {
+            return b.realDate - a.realDate;
+        });
+        
+        callback(dates);
+    });
+}
+
+
+module.exports = {
+    addGroup,
+    getGroupWithGames,
+    getGroup,
+    logonToGroup,
+    addPlayersToGroup,
+};
