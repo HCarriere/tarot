@@ -243,6 +243,7 @@ let colors = (function() {
     const customColors = {
         HCE:'#0b1c00',
         BRT:'#ffa1fb',
+		ADN:'#FFBE00',
     };
     
     function rand(seed) {
