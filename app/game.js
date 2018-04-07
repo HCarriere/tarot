@@ -44,7 +44,7 @@ function addGame(req, callback) {
 
     // name
     let name = params.name || 'cool';
-    name = name.replace(' ','-');
+    // name = name.replace(' ','-');
     // players number
     let playersNumber = parseInt(params.playersNumber) || 5;
     // create new players

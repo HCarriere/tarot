@@ -57,12 +57,12 @@
         });
         
         $('#score_attk_add').on('click', function() {
-            range.val(parseInt(range.val())-1);
+            range.val(parseInt(range.val())+1);
             onScoreRangeUpdate(range[0].value, range[0].max)
         });
         
         $('#score_def_add').on('click', function() {
-            range.val(parseInt(range.val())+1);
+            range.val(parseInt(range.val())-1);
             onScoreRangeUpdate(range[0].value, range[0].max)
         });
     }
