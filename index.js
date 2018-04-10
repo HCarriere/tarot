@@ -91,7 +91,7 @@ let isAuth = utils.mustBeAuthentified(sessionSecret);
 // models 
 const Group = require('./app/group');
 const Game = require('./app/game');
-const chart = require('./app/chart');
+const chart = require('./app/charts');
 const rules = require('./app/rules');
 
 /*
@@ -182,9 +182,9 @@ app
                 game: game,
                 testVar: 'coucou',
                 charts: [
-                    chart.getChart('pointsParPersonnes', game.rounds),
-                    chart.getChart('prisesParPersonnes', game.rounds),
-                    chart.getChart('priseParContrats', game.rounds),
+                    chart.getChart('game','pointsParPersonnes', game.rounds),
+                    chart.getChart('game','prisesParPersonnes', game.rounds),
+                    chart.getChart('game','priseParContrats', game.rounds),
                 ],
                 additionalJS: [
                     '/js/Chart.min.js'
@@ -206,6 +206,11 @@ app
         if(err) console.log(err);
         res.redirect('/game/'+game.name+'?id='+game._id);
     });
+})
+
+.get('/stats/player/:player', isAuth, (req, res) => {
+    res.json({});
+    // TODO
 })
 
 .get('/updateGameRules', isAuth, (req, res) => {

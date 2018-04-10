@@ -1,5 +1,5 @@
 
-function getChart(name, data) {
+function processChart(name, data) {
     if(!data) {
         return {};
     }
@@ -120,5 +120,5 @@ function pointsParPersonnes(rounds) {
 
 
 module.exports = {
-    getChart
+    processChart
 };
