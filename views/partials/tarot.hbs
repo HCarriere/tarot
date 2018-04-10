@@ -157,12 +157,24 @@
                             </span>
                         </div>
                         
-                        <div class="switch">
-                            <p class="caption">Misère de points</p>
+                        <div class="switch" id="misere">
+                            <p class="caption">Misère</p>
                             {{#each game.players}}
                             <span>
                                 <label>
                                     <input type="checkbox" value="{{name}}" name="misere"/>
+                                    <span>{{name}}</span>
+                                </label>
+                            </span>    
+                            {{/each}}
+                        </div>
+                        
+                        <div class="switch" id="double_misere">
+                            <p class="caption">Double Misère</p>
+                            {{#each game.players}}
+                            <span>
+                                <label>
+                                    <input type="checkbox" value="{{name}}" name="double_misere"/>
                                     <span>{{name}}</span>
                                 </label>
                             </span>    

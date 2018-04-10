@@ -40,6 +40,8 @@
         initNewGameValidator();
         
         colorPlayerBadges();
+		
+		initTour();
     });
 
     
@@ -237,6 +239,18 @@
     }
     
     
+	function initTour() {
+		$('#double_misere input[name="double_misere"]:not(:checked)').prop("disabled", true);
+		$('#misere input[name="misere"]').each( function(i) {
+			let $this = $(this);
+			let player = $(this).attr('value');
+			$(this).on('change', function() {
+				let check = $this.prop("checked");
+				$(`#double_misere input[name="double_misere"][value="${player}"]`).prop("checked", false);
+				$(`#double_misere input[name="double_misere"][value="${player}"]`).prop("disabled", !check);
+			});
+		});
+	}
 })();
 
 let colors = (function() {
