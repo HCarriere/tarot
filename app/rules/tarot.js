@@ -35,6 +35,7 @@ function processParameters(params, game, callback) {
             poignee :params.poignee,
             chelem : params.chelem,
             misere : params.misere,
+			double_misere : params.double_misere,
         },
         playersScores: [],
         won: false,
@@ -215,15 +216,26 @@ function processParameters(params, game, callback) {
         if(!Array.isArray(misere)) {
 			misere = [ misere ];
 		}
+		let double_misere = [];
+		if(params.double_misere) {
+			double_misere = params.double_misere;
+			if(!Array.isArray(double_misere)) {
+				double_misere = [ double_misere ];
+			}
+		}
 		for(let misereux of misere) {
+			let mult = 1;
+			if(double_misere.indexOf(misereux) > -1) {
+				mult = 2;
+			}
 			for(let p of game.players) {
 				if(p.name == misereux) {
-					newScoresByPlayer[p.name] += pointsMisere;
+					newScoresByPlayer[p.name] += pointsMisere * mult;
 				} else {
-					newScoresByPlayer[p.name] -= 10;
+					newScoresByPlayer[p.name] -= 10 * mult;
 				}
 			}
-			journal.push(`Misère pour ${misereux} : +${pointsMisere} pour lui et -10 pour les autres`);
+			journal.push(`Misère pour ${misereux} : +${pointsMisere * mult} pour lui et -${10 * mult} pour les autres`);
 		}
     }
     

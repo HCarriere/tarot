@@ -15,6 +15,7 @@ const rules = {
             'poignee',
             'chelem',
             'misere',
+            'double_misere',
         ]
     }
 }
