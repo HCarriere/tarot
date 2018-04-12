@@ -143,28 +143,9 @@
             let type = $(this).attr('chart-type');
             let data = JSON.parse($(this).attr('chart-data'));
             let options = JSON.parse($(this).attr('chart-options') || '{}');
-                        
+            
             if(data && type && data.datasets) {
-                if(type == 'bar' || type == 'pie') {
-                    // colors
-                    for(let dataset of data.datasets) {
-                        dataset.backgroundColor = [];
-                        for(let key in dataset.data) {
-                            dataset.backgroundColor.push(colors.fromSeed(data.labels[key]))
-                        }
-                    }
-                } else if(type == 'line') {
-                    for(let dataset of data.datasets) {
-                        dataset.borderColor = colors.fromSeed(dataset.label);
-                        dataset.lineTension= 0;
-                        dataset.backgroundColor= 'transparent';
-                    }
-                }
-                new Chart(ctx, {
-                    type: type,
-                    data: data,
-                    options: options,
-                });
+                setChart(type, data, options, ctx);
             }
         });
         
@@ -293,4 +274,27 @@ let colors = (function() {
     }
     
 })();
+
+function setChart(type, data, options, ctx) {
+    if(type == 'bar' || type == 'pie' || type == 'horizontalBar') {
+        // colors
+        for(let dataset of data.datasets) {
+            dataset.backgroundColor = [];
+            for(let key in dataset.data) {
+                dataset.backgroundColor.push(colors.fromSeed(data.labels[key]))
+            }
+        }
+    } else if(type == 'line') {
+        for(let dataset of data.datasets) {
+            dataset.borderColor = colors.fromSeed(dataset.label);
+            dataset.lineTension= 0;
+            dataset.backgroundColor= 'transparent';
+        }
+    }
+    new Chart(ctx, {
+        type: type,
+        data: data,
+        options: options,
+    });
+}
 

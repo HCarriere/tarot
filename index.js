@@ -106,6 +106,7 @@ app
             group: result.group,
             games: result.games,
             additionalJS:[
+                '/js/Chart.min.js',
                 '/js/statsCall.js'
             ]
         });
@@ -217,8 +218,9 @@ app
 })
 
 .get('/stats/group', isAuth, (req, res) => {
-    res.json({test:'group'});
-    // TODO
+    chart.group.getGroupStats(req.session.currentGroup, (stats) => {
+        res.json(stats); 
+    });
 })
 
 .get('/updateGameRules', isAuth, (req, res) => {
