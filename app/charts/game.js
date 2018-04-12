@@ -1,16 +1,8 @@
 
-function processChart(name, data) {
-    if(!data) {
-        return {};
-    }
-    return charts[name](data);
-}
-
-
-const charts = {
-    priseParContrats: prisesParContrats,
-    prisesParPersonnes: prisesParPersonnes,
-    pointsParPersonnes: pointsParPersonnes,
+module.exports = {
+    prisesParContrats,
+    prisesParPersonnes,
+    pointsParPersonnes,
 };
 
 function prisesParContrats(rounds) {
@@ -118,7 +110,3 @@ function pointsParPersonnes(rounds) {
 }
 
 
-
-module.exports = {
-    processChart
-};

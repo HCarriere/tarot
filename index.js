@@ -105,6 +105,9 @@ app
             titleSuffix: ' - '+req.session.currentGroup,
             group: result.group,
             games: result.games,
+            additionalJS:[
+                '/js/statsCall.js'
+            ]
         });
     }, req);
 })
@@ -182,9 +185,9 @@ app
                 game: game,
                 testVar: 'coucou',
                 charts: [
-                    chart.getChart('game','pointsParPersonnes', game.rounds),
-                    chart.getChart('game','prisesParPersonnes', game.rounds),
-                    chart.getChart('game','priseParContrats', game.rounds),
+                    chart.game.pointsParPersonnes(game.rounds),
+                    chart.game.prisesParPersonnes(game.rounds),
+                    chart.game.prisesParContrats(game.rounds),
                 ],
                 additionalJS: [
                     '/js/Chart.min.js'
@@ -209,7 +212,12 @@ app
 })
 
 .get('/stats/player/:player', isAuth, (req, res) => {
-    res.json({});
+    res.json({test:'player '+req.params.player});
+    // TODO
+})
+
+.get('/stats/group', isAuth, (req, res) => {
+    res.json({test:'group'});
     // TODO
 })
 

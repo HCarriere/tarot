@@ -1,6 +1,6 @@
 'use strict';
 
-(function(){
+(function() {
     
 
     $(document).ready(function(){
