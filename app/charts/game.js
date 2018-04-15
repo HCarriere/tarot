@@ -25,7 +25,11 @@ function prisesParContrats(rounds) {
                 data: stats
             }],
         },
-        options: {},
+        options: {
+            plugins: {
+                drawLabels: false,
+            },
+        },
         label: 'Prises par contrats',
     };
 }
@@ -53,6 +57,9 @@ function prisesParPersonnes(rounds) {
             }],
         },
         options: {
+            plugins: {
+                drawLabels: false,
+            },
             scales: {
                 yAxes: [{
                     ticks: {
@@ -104,7 +111,11 @@ function pointsParPersonnes(rounds) {
             ],*/
             datasets: datasets,
         },
-        options: {},
+        options: {
+            plugins: {
+                drawLabels: false,
+            },
+        },
         label: 'Points',
    };
 }

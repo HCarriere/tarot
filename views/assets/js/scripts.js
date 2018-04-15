@@ -168,7 +168,7 @@
             return colors[val];
         }*/
         
-        
+        setChartsPlugins();
         
         
     }
@@ -242,15 +242,6 @@ let colors = (function() {
     };
     
     function rand(seed) {
-        /*let s = 0;
-        for(let i=0; i<seed.length; i++) {
-            s+=seed.charCodeAt(i)+(i+3);
-        }
-        while(s>1) {
-            s /= 7;
-        }
-        s = s*0xFFFFFF<<2;
-        return parseFloat('0.'+s); */
         let rng = new Math.seedrandom(seed);
         return rng.quick();
     }
@@ -264,16 +255,36 @@ let colors = (function() {
             col = col+'8';
         }
         col = col.substr(0, 7);
-        col+='CC';
         customColors[seed] = col; // caching
         return col;
     }
     
+    function fromContext(context) {
+        let point = context.dataset.data[context.dataIndex];
+        return fromSeed(point.label || '0');
+    }
+    
     return {
         fromSeed,
+        fromContext,
     }
     
 })();
+
+
+let chartLayout = (function() {
+    
+    function pointRadius(context) {
+        let point = context.dataset.data[context.dataIndex];
+        let radius = Math.max(5, (point.v+2000) / 200);
+        return radius;
+    }
+    
+    return {
+        pointRadius,
+    }
+})();
+
 
 function setChart(type, data, options, ctx) {
     if(type == 'bar' || type == 'pie' || type == 'horizontalBar') {
@@ -290,6 +301,13 @@ function setChart(type, data, options, ctx) {
             dataset.lineTension= 0;
             dataset.backgroundColor= 'transparent';
         }
+    } else if(type == 'bubble') {
+        options.elements = {
+            point: {
+                backgroundColor: colors.fromContext.bind(),
+                radius: chartLayout.pointRadius.bind(),
+            }
+        }
     }
     new Chart(ctx, {
         type: type,
@@ -298,3 +316,35 @@ function setChart(type, data, options, ctx) {
     });
 }
 
+function setChartsPlugins () {
+    
+    // Define a plugin to provide data labels
+    Chart.plugins.register({
+        id:'drawLabels',
+        afterDatasetsDraw: function(chart) {
+            var ctx = chart.ctx;
+
+            chart.data.datasets.forEach(function(dataset, i) {
+                var meta = chart.getDatasetMeta(i);
+                if (!meta.hidden) {
+                    meta.data.forEach(function(element, index) {
+                        ctx.fillStyle = 'rgb(0, 0, 0)';
+                        var fontSize = 12;
+                        var fontStyle = 'normal';
+                        var fontFamily = 'Segoe UI';
+                        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                        var dataString = dataset.data[index].label;
+
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        
+                        var position = element.tooltipPosition();
+                        ctx.fillText(dataString, position.x, position.y - (fontSize / 2));
+                    });
+                }
+            });
+        }
+    });
+
+}
