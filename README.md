@@ -2,8 +2,9 @@
 
 Url : https://ctarot.herokuapp.com
 
-Author: HCarriere
+Auteur: HCarriere
 
-Original idea: T. Faure
+D'après une idée originale de T. Faure
 
-Largely inspired by that tarot counting app on google play. Thanks to them.
+L'application de comptage de points au tarot (peut-être) la plus responsive au monde!
+Venez contribuer !
