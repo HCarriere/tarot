@@ -53,7 +53,8 @@ function getGroupStats(groupName, callback) {
         stats.minimumPointsInOneRound=minPts;
         
         // total des points cumulés / joueur (bar, ordered)
-        charts.push(cumulatedPointsBarChart(games));
+        charts.push(cumulatedPointsBarChart(games, 4));
+        charts.push(cumulatedPointsBarChart(games, 5));
         
         // chart Bubble: nombre de victoire en fonction du nombre de prise
         charts.push(priseByWinBubbleChart(games));
@@ -65,18 +66,20 @@ function getGroupStats(groupName, callback) {
     });
 }
 
-function cumulatedPointsBarChart(games) {
+function cumulatedPointsBarChart(games, playersNumber) {
     let statsProcess = {};
     let persons = [];
     let stats = [];
     
     for(let game of games) {
-        for(let player of game.players) {
-            if(!player.fake && player.score) {
-                if(!statsProcess[player.name]) {
-                    statsProcess[player.name] = 0;
+        if(game.playersNumber == playersNumber) {
+            for(let player of game.players) {
+                if(!player.fake && player.score) {
+                    if(!statsProcess[player.name]) {
+                        statsProcess[player.name] = 0;
+                    }
+                    statsProcess[player.name]+=player.score;
                 }
-                statsProcess[player.name]+=player.score;
             }
         }
     }
@@ -110,7 +113,7 @@ function cumulatedPointsBarChart(games) {
             },
             title: {
                 display: true,
-                text: 'Total des points cumulés'
+                text: 'Total des points cumulés ('+playersNumber+')'
             }
         },
         heightRatio:1.5,
