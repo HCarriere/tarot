@@ -1,5 +1,5 @@
 const Game = require('../game');
-
+const utils = require('../utils');
 
 
 function getGroupStats(groupName, callback) {
@@ -181,7 +181,7 @@ function priseByWinBubbleChart(group, args, callback) {
         playersNumber: args.players,
     };
     if(args.week) {
-        let startOfWeek = new Date().setDate(new Date().getDate()-5);
+        let startOfWeek = utils.getMonday(new Date());
         
         filter.date = {
             $gte: startOfWeek,

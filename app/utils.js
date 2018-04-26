@@ -71,10 +71,18 @@ function getSessionKey(grp, secret) {
     return md5(secret + '-' + grp + '==');
 }
 
+function getMonday(date) {
+    date = new Date(date);
+    let day = date.getDay();
+    let diff = date.getDate() - day + (day == 0 ? -6:0); // adjust when day is sunday
+    return new Date(date.setDate(diff));
+}
+
 module.exports = {
     hashPassword,
     getRequestParams,
     setConnected,
     mustBeAuthentified,
     getReadableDate,
+    getMonday,
 }

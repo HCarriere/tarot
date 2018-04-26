@@ -53,7 +53,7 @@ function getGroupWithGames(groupName, callback, req) {
         dateFilter = {$gte: monthStart, $lt: monthEnd};
     } else {
         // default (this week)
-        let startOfWeek = new Date().setDate(new Date().getDate()-5);
+        let startOfWeek = utils.getMonday(new Date());
         dateFilter = {$gte: startOfWeek};   
     }
     GroupModel.findOne({
