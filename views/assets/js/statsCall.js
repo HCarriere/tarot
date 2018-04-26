@@ -9,9 +9,19 @@
     function initStatsCall() {
         $('.async-stats-player').on('click', function() {
             getPlayerStats({}, function(result) {
-                console.log('result:'+result);
             });
         });
+        
+        $('.async-charts-group').on('click', function() {
+            if($(this).attr('chart-lock') == 'true') {
+                return;
+            }
+            $(this).attr('chart-lock', 'true');
+            let div = $(this).next('.collapsible-body');
+            getGroupChart($(this).attr('chart-name'), function(data) {
+                addChart(div, data);
+            });
+        })
         
         $('.async-stats-group').each(function(i) {
             let div = $(this);
@@ -20,11 +30,15 @@
                 for(let stat in result.stats) {
                     addStatLabel(stat, result.stats[stat]);
                 }
-                
-                for(let chart of result.charts) {
-                    addChart(div, chart);
-                }
             });
+        });
+    }
+    
+    function getGroupChart(chart, callback) {
+        $.get('/stats/chart/group/'+chart)
+        .done(callback)
+        .fail(function(err) {
+            console.log(err);
         });
     }
     
@@ -54,7 +68,7 @@
         .width(width)
         .height(height);
         let ctx = canvas[0].getContext('2d');
-        div.append(canvas);
+        div.html(canvas);
         
         setChart(chart.type, chart.data, chart.options, ctx);
     }

@@ -15,7 +15,12 @@
         $('.collapsible').collapsible({
             accordion: false,
         });
-
+        
+        // tabs
+        $(document).ready(function(){
+            $('.tabs').tabs();
+        });
+        
         // chips
         $('.chips').chips();
         $('.new-player-selector').chips({
@@ -236,9 +241,10 @@
 
 let colors = (function() {
     const customColors = {
-        HCE:'#0b1c00',
+        HCE:'#00ffff',
         BRT:'#ffa1fb',
 		ADN:'#FFBE00',
+        TFE:'#ff7600'
     };
     
     function rand(seed) {

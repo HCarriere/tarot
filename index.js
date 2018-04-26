@@ -223,6 +223,14 @@ app
     });
 })
 
+.get('/stats/chart/group/:chart', isAuth, (req, res) => {
+    chart.group.getChart(req.session.currentGroup, 
+                         req.params.chart, 
+                         (data) => {
+        res.json(data);
+    });
+})
+
 .get('/updateGameRules', isAuth, (req, res) => {
     rules.updateGameRules();
     res.json('command launched');
