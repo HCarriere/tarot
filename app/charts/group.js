@@ -113,7 +113,7 @@ function cumulatedPointsBarChart(group, args, callback) {
         playersNumber: args.players,
     };
     if(args.week) {
-        let startOfWeek = new Date().setDate(new Date().getDate()-5);
+        let startOfWeek = utils.getMonday(new Date());
         
         filter.date = {
             $gte: startOfWeek,
@@ -180,13 +180,6 @@ function priseByWinBubbleChart(group, args, callback) {
         group: group,
         playersNumber: args.players,
     };
-    if(args.week) {
-        let startOfWeek = utils.getMonday(new Date());
-        
-        filter.date = {
-            $gte: startOfWeek,
-        }
-    }
     
     Game.find(filter, (err, games) => {
     
