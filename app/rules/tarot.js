@@ -146,14 +146,12 @@ function processParameters(params, game, callback) {
     
     // petit au bout
     if(params.petit_au_bout) {
-        if(params.petit_au_bout == 'attq') {
+        if(win) {
             journal.push(`Petit au bout pour l'attaquant : 10*${multiplicator} = ${multiplicator*10}`);
-            if(win) score.contrat += 10*multiplicator;
-            else score.contrat -= 10*multiplicator;
-        } else if(params.petit_au_bout == 'def') {
+            score.contrat += 10*multiplicator;
+        } else {
             journal.push(`Petit au bout pour la défense : 10*${multiplicator} = ${multiplicator*10}`);
-            if(win) score.contrat -= 10*multiplicator;
-            else score.contrat += 10*multiplicator;
+            score.contrat -= 10*multiplicator;
         }
     }
     
