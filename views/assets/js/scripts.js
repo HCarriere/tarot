@@ -340,7 +340,7 @@ function setChartsPlugins () {
                         var fontFamily = 'Segoe UI';
                         ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
 
-                        var dataString = dataset.data[index].label;
+                        var dataString = dataset.data[index].label || dataset.label || 'unknown';
 
                         ctx.textAlign = 'center';
                         ctx.textBaseline = 'middle';

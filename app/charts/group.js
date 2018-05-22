@@ -104,6 +104,9 @@ let charts = {
         func : priseByWinBubbleChart,
         args : {players: 5}
     },
+    tarotTimesCalled: {
+        func: tarotTimesCalled,
+    }
 };
 
 function cumulatedPointsBarChart(group, args, callback) {
@@ -258,6 +261,70 @@ function priseByWinBubbleChart(group, args, callback) {
                     display: true,
                 }
             },
+        });
+    });
+}
+
+function tarotTimesCalled(group, args, callback) {
+    let calledHashMap = {};
+    let persons = [];
+    let dataPercentCalled = [];
+    let dataTotalCalled = [];
+    
+    Game.find({group: group}, (err, games) => {
+        for(let game of games) {
+            for(let round of game.rounds) {
+                for(let player of game.players) {
+                    if(!player.fake) {
+                        if(!calledHashMap[player.name]) {
+                            calledHashMap[player.name] = {
+                                played: 0,
+                                called: 0,
+                            };
+                        }
+                        calledHashMap[player.name].played+=1;
+                    }
+                }
+                if(round.params.called && calledHashMap[round.params.called]) {
+                    calledHashMap[round.params.called].called+=1;
+                } 
+            }
+        }
+        
+        for(let key in calledHashMap) {
+            persons.push(key);
+            dataPercentCalled.push(Math.round(
+                (calledHashMap[key].called / calledHashMap[key].played)*100));
+            dataTotalCalled.push(calledHashMap[key].called);
+        }
+        
+        callback({
+            type: 'horizontalBar',
+            data: {
+                labels: persons,
+                datasets: [
+                    {
+                        label:'% de fois appellé par parties',
+                        backgroundColor: '#225588',
+                        data: dataPercentCalled,
+                        borderColor: '#225588',
+				        borderWidth: 2
+                    },
+                    {
+                        label:'Total des appels',
+                        backgroundColor: '#FFC423',
+                        data: dataTotalCalled,
+                        borderColor: '#FFC423',
+				        borderWidth: 2
+                    }
+                ],
+            },
+            options: {
+                plugins: {
+                    drawLabels: false,
+                }
+            },
+            heightRatio: 1.5,
         });
     });
 }
