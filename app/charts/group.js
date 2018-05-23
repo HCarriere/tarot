@@ -172,7 +172,7 @@ function cumulatedPointsBarChart(group, args, callback) {
                     display: false,
                 }
             },
-            heightRatio:1.5,
+            heightRatio:stats.length/8,
         });
         
     });
@@ -329,7 +329,7 @@ function tarotTimesCalled(group, args, callback) {
                     drawLabels: false,
                 }
             },
-            heightRatio: 1.5,
+            heightRatio: persons.length/4,
         });
     });
 }
