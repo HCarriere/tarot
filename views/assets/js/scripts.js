@@ -353,4 +353,31 @@ function setChartsPlugins () {
         }
     });
 
+    Chart.plugins.register({
+        id:'drawValues',
+        afterDatasetsDraw: function(chart) {
+            var ctx = chart.ctx;
+
+            chart.data.datasets.forEach(function(dataset, i) {
+                var meta = chart.getDatasetMeta(i);
+                if (!meta.hidden) {
+                    meta.data.forEach(function(element, index) {
+                        ctx.fillStyle = 'rgb(0, 0, 0)';
+                        var fontSize = 12;
+                        var fontStyle = 'normal';
+                        var fontFamily = 'Segoe UI';
+                        ctx.font = Chart.helpers.fontString(fontSize, fontStyle, fontFamily);
+
+                        var dataString = dataset.data[index] ||  '';
+
+                        ctx.textAlign = 'left';
+                        ctx.textBaseline = 'middle';
+                        
+                        var position = element.tooltipPosition();
+                        ctx.fillText(dataString, position.x, position.y - (fontSize / 2));
+                    });
+                }
+            });
+        }
+    });
 }

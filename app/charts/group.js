@@ -159,6 +159,7 @@ function cumulatedPointsBarChart(group, args, callback) {
                 legend: false,
                 plugins: {
                     drawLabels: false,
+                    drawValues: true,
                 },
                 scales: {
                     yAxes: [{
@@ -235,6 +236,10 @@ function priseByWinBubbleChart(group, args, callback) {
                 aspectRatio: 1,
                 legend: false,
                 tooltips: false,
+                plugins: {
+                    drawLabels: true,
+                    drawValues: false,
+                },
                 scales: {
                     xAxes: [{
                         ticks: {
