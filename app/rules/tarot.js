@@ -175,12 +175,18 @@ function processParameters(params, game, callback) {
         journal.push(`Bilan prenneur : contrat X 3 = ${scorePrenneur}`);
         
     } else {
-        scorePrenneur = Math.floor(scoreFinal * 3 * (2/3));
-        journal.push(`Bilan prenneur : contrat X 3 X (2/3) = ${scorePrenneur}`);
-        
-        scoreCalled = Math.floor(scoreFinal * 3 * (1/3));
-        journal.push(`Bilan appelé : score prenneur(${scorePrenneur}) * (1/3) = ${scoreCalled}`);
-        
+        if(params.player == params.called) {
+            journal.push(`Le joueur s'est appelé tout seul`);
+            scorePrenneur = scoreFinal * 4;
+            journal.push(`Bilan prenneur : ${scoreFinal} X 4 = ${scorePrenneur}`);
+            scoreCalled = 0;
+        } else {
+            scorePrenneur = Math.floor(scoreFinal * 2);
+            journal.push(`Bilan prenneur : ${scoreFinal} X 2 = ${scorePrenneur}`);
+
+            scoreCalled = Math.floor(scoreFinal * 3 * (1/3));
+            journal.push(`Bilan appelé : ${scoreFinal}`);   
+        }
     }
     
     let scoreDef = -scoreFinal;
