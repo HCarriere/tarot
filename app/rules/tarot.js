@@ -139,10 +139,10 @@ function processParameters(params, game, callback) {
         
         if(win) {
             score.poignee = prime;
-            journal.push(`Poignée ${params.poignee} de l'attaquant (réalisé): +${score.poignee} pour l'attaquant`);
+            journal.push(`Poignée ${params.poignee} de l'attaquant (réalisé): +${score.poignee} pour l'attaque`);
         } else {
             score.poignee = -prime;
-            journal.push(`Poignée ${params.poignee} de l'attaquant (non réalisé): -${score.poignee} pour la défense`);
+            journal.push(`Poignée ${params.poignee} de l'attaquant (non réalisé): ${score.poignee} pour l'attaque`);
         }
     }
     
