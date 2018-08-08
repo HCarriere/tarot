@@ -75,7 +75,7 @@ function getChart(group, name, callback) {
             callback(data);
         });
     } else {
-        return callback({messagae: 'empty'})
+        return callback({message: 'empty'})
     }
 }
 

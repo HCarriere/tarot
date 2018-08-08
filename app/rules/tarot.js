@@ -73,6 +73,8 @@ function processParameters(params, game, callback) {
     if(win) {
         if(params.player == 'HCE') {
             journal.push('Le créateur est victorieux ! Vive le créateur !');
+        } else if(params.player == 'BPR') {
+            journal.push('Attaque victorieuse, quelle chance ce commercial...');
         } else {
             journal.push('Attaque victorieuse');
         }
@@ -140,7 +142,7 @@ function processParameters(params, game, callback) {
             journal.push(`Poignée ${params.poignee} de l'attaquant (réalisé): +${score.poignee} pour l'attaquant`);
         } else {
             score.poignee = -prime;
-            journal.push(`Poignée ${params.poignee} de l'attaquant (non réalisé): ${score.poignee} pour la défense`);
+            journal.push(`Poignée ${params.poignee} de l'attaquant (non réalisé): -${score.poignee} pour la défense`);
         }
     }
     
