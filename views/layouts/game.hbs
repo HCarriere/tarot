@@ -1,4 +1,5 @@
-<h2><a href="/"><i class="edit-btn-collapse material-icons">keyboard_arrow_left</i></a>{{game.name}}</h2>
+<h2><a href="/"><i class="edit-btn-collapse material-icons">keyboard_arrow_left</i></a>{{game.name}} {{#if game.disabled}}<i class="material-icons">block</i>{{/if}}</h2>
+
 {{#if error}}
 <blockquote>
     {{error}}
@@ -80,3 +81,25 @@
             chart-options="{{json options}}" 
             width="400" height="300"></canvas>
 {{/each}}
+
+<h4>Options</h4>
+{{#ifEmpty game.rounds}}
+<button class="waves-effect waves-light right-link btn" onclick="gameManager.deleteGame('{{../game.id}}')">
+    <i class="material-icons left">delete_forever</i>
+    Supprimer la partie
+</button>
+{{/ifEmpty}}
+{{#if game.disabled}}
+<button class="waves-effect waves-light right-link btn" onclick="gameManager.toggleDisabledGame('{{game.id}}')">
+    <i class="material-icons left">block</i>
+    Réactiver la partie
+</button>
+{{else}}
+<button class="waves-effect waves-light right-link btn" onclick="gameManager.toggleDisabledGame('{{game.id}}')">
+    <i class="material-icons left">check_circle</i>
+    Désactiver la partie
+</button>
+{{/if}}
+<br><br>
+
+

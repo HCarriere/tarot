@@ -32,6 +32,9 @@ let handlebars = exphbs.create({
         ifGt: (arg1, arg2, options) => {
             return (arg1 > arg2) ? options.fn(this) : options.inverse(this);
         },
+        ifEmpty: (arg1, options) => {
+            return (arg1.length == 0) ? options.fn(this) : options.inverse(this);
+        },
         json: (ctx, options) => {
             return JSON.stringify(ctx, null, options);
         },
@@ -194,7 +197,8 @@ app
                     chart.game.prisesParContrats(game.rounds),
                 ],
                 additionalJS: [
-                    '/js/Chart.min.js'
+                    '/js/Chart.min.js',
+                    '/js/gameManagerScripts.js',
                 ]
             });
         }
@@ -214,6 +218,21 @@ app
         res.redirect('/game/'+game.name+'?id='+game._id);
     });
 })
+
+.post('/game/delete', isAuth, (req, res) => {
+    Game.deleteGame(req, err => {
+        if(err) res.redirect('/?error='+err);
+        else res.redirect('/');
+    });
+})
+
+.post('/game/toggleDisabled', isAuth, (req, res) => {
+    Game.toggleDisabled(req, (err, game) => {
+        if(err) console.log(err);
+        res.redirect('/game/'+game.name+'?id='+game._id);
+    })
+})
+
 
 .get('/stats/player/:player', isAuth, (req, res) => {
     res.json({test:'player '+req.params.player});

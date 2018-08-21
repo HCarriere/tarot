@@ -7,7 +7,8 @@ function getGroupStats(groupName, callback) {
    // let charts = [];
     
     Game.find({
-        group: groupName
+        group: groupName,
+        $or:[{disabled: false}, {disabled: undefined}],
     }, (err, games) => {
         if(err) {
             return callback({err: 'erreur de type erreur.'});
@@ -114,6 +115,7 @@ function cumulatedPointsBarChart(group, args, callback) {
     let filter = {
         group: group,
         playersNumber: args.players,
+        $or:[{disabled: false}, {disabled: undefined}],
     };
     if(args.week) {
         let startOfWeek = utils.getMonday(new Date());
@@ -183,6 +185,7 @@ function priseByWinBubbleChart(group, args, callback) {
     let filter = {
         group: group,
         playersNumber: args.players,
+        $or:[{disabled: false}, {disabled: undefined}],
     };
     
     Game.find(filter, (err, games) => {
@@ -276,7 +279,10 @@ function tarotTimesCalled(group, args, callback) {
     let dataPercentCalled = [];
     let dataTotalCalled = [];
     
-    Game.find({group: group}, (err, games) => {
+    Game.find({
+        group: group,
+        $or:[{disabled: false}, {disabled: undefined}],
+    }, (err, games) => {
         for(let game of games) {
             for(let round of game.rounds) {
                 for(let player of game.players) {

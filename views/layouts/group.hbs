@@ -18,6 +18,7 @@
     
     {{#each games}}
     <a class="collection-item" href="/game/{{name}}?id={{id}}">
+        {{#if disabled}}<i class="material-icons left" style="font-size:22px;">block</i>{{/if}}
         {{name}}
         {{#if players}}
         {{#each players}}

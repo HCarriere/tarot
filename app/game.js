@@ -24,6 +24,7 @@ const gameSchema = mongoose.Schema({
         won: Boolean,
         journal: [String],
     }],
+    disabled: Boolean,
 });
 const GameModel = mongoose.model('Game', gameSchema);
 
@@ -86,6 +87,7 @@ function addGame(req, callback) {
         playersNumber: playersNumber,
         players : players,
         date: new Date(),
+        disabled: false,
     });
     newGame.save((err, object) => {
         if(err) {
@@ -212,6 +214,41 @@ function getScoresFromRounds(players, rounds) {
     return players;
 }
 
+function deleteGame(req, callback) {
+    if(!req.body || !req.body.id) {
+        return callback('Bad parameters');
+    }
+    let id = req.body.id;
+    let groupName = req.session.currentGroup;
+    
+    getGame(id, groupName, (err, game) => {
+        if(err) return callback(err);
+        if(game.rounds && game.rounds.length > 0) {
+            return callback('Impossible de supprimer une partie ayant des rounds');
+        } else {
+            GameModel.deleteOne({_id:id}, (err, res) => {
+                if(err) return callback(err);
+                return callback();
+            });
+        }
+    });
+
+}
+
+function toggleDisabled(req, callback) {
+    let id = req.body.id;
+    let groupName = req.session.currentGroup;
+    
+    getGame(id, groupName, (err, game) => {
+        if(err) return callback(err);
+        game.disabled = !game.disabled;
+        
+        game.save((err, res) => {
+            if(err) return callback(err);
+            return callback(err, res);
+        });
+    });
+}
 
 module.exports = {
     find,
@@ -222,4 +259,6 @@ module.exports = {
     editRoundFromGame,
     getDefaultGameName,
     getScoresFromRounds,
+    deleteGame,
+    toggleDisabled,
 };
