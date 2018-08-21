@@ -35,6 +35,9 @@ let handlebars = exphbs.create({
         json: (ctx, options) => {
             return JSON.stringify(ctx, null, options);
         },
+        add1: (ctx, options) => {
+            return parseInt(ctx) + 1;
+        },
     }
 });
 

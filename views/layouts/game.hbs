@@ -23,7 +23,7 @@
     <li>
         <a href="#edit" edit-id="{{id}}" current-data="{{json params}}" class="secondary-content button-edit-game-params"><i class="edit-btn-collapse material-icons">edit</i></a>
         <div class="collapsible-header">
-            <b class="{{#if won}}bonus{{else}}malus{{/if}}">#{{@index}} </b>
+            <b class="{{#if won}}bonus{{else}}malus{{/if}}">#{{add1 @index}} </b>
             &nbsp;&nbsp;
             {{params.player}}<i class="material-icons">person</i>  
             {{#if params.called}}{{params.called}}<i class="material-icons">person_outline</i>{{/if}}
@@ -55,7 +55,7 @@
     <tbody>
         {{#each game.rounds}}
         <tr>
-            <td>{{@index}}</td>
+            <td>{{add1 @index}}</td>
             {{#each playersScores}}
             <td class="{{#ifGt mod 0}}bonus{{else}}malus{{/ifGt}}">{{mod}}</td>
             {{/each}}
