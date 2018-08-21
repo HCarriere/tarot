@@ -151,7 +151,7 @@ function getGamesFromGroup(group, filter, callback) {
         for(let game of games) {
             let d = utils.getReadableDate(game.date);
             if(!datesAssoc[d]) datesAssoc[d] = {realDate:game.date, games:[]};
-            datesAssoc[d].games.push(game);
+            datesAssoc[d].games.unshift(game);
         }
         
         for(let d in datesAssoc) {
