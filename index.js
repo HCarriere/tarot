@@ -155,6 +155,13 @@ app
     });
 })
 
+.post('/group/selectplayers', isAuth, (req,res) => {
+    Group.setActivePlayers(req, err => {
+        if(err) console.log(err);
+        res.redirect('/');
+    });
+})
+
 .get('/new/game', isAuth, (req, res) => {
     Group.getGroup(req.session.currentGroup, (group) => {
         Game.getDefaultGameName((name) => {

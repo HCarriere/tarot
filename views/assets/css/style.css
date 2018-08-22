@@ -32,6 +32,11 @@ main {
     font-weight: bold;
 }
 
+.group-player-selector label {
+    min-width:69px;
+    display:inline-block;
+}
+
 #modal-edit-button {
     display: none;
 }

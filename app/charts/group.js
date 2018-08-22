@@ -1,6 +1,6 @@
 const Game = require('../game');
 const utils = require('../utils');
-
+const Group = require('../group');
 
 function getGroupStats(groupName, callback) {
     let stats = {};
@@ -69,11 +69,13 @@ function getGroupStats(groupName, callback) {
     });
 }
 
-function getChart(group, name, callback) {
+function getChart(groupName, name, callback) {
     if(charts[name]) {
         // chart exists
-        charts[name].func(group, charts[name].args, (data) => {
-            callback(data);
+        Group.find(groupName, (err, group) => {
+            charts[name].func(groupName, charts[name].args, (data) => {
+                callback(data);
+            }, group);
         });
     } else {
         return callback({message: 'empty'})
@@ -110,10 +112,10 @@ let charts = {
     }
 };
 
-function cumulatedPointsBarChart(group, args, callback) {
+function cumulatedPointsBarChart(groupName, args, callback, group) {
     
     let filter = {
-        group: group,
+        group: groupName,
         playersNumber: args.players,
         $or:[{disabled: false}, {disabled: undefined}],
     };
@@ -144,8 +146,11 @@ function cumulatedPointsBarChart(group, args, callback) {
 
         // to arrays
         for(let key in statsProcess) {
-            persons.push(key);
-            stats.push(statsProcess[key]);
+            // exclude disabled players
+            if(!utils.isPlayerExcluded(group,key)) {
+                persons.push(key);
+                stats.push(statsProcess[key]);
+            }
         }
 
         callback({
@@ -180,10 +185,10 @@ function cumulatedPointsBarChart(group, args, callback) {
     });
 }
 
-function priseByWinBubbleChart(group, args, callback) {
+function priseByWinBubbleChart(groupName, args, callback, group) {
     
     let filter = {
-        group: group,
+        group: groupName,
         playersNumber: args.players,
         $or:[{disabled: false}, {disabled: undefined}],
     };
@@ -220,12 +225,15 @@ function priseByWinBubbleChart(group, args, callback) {
         }
         // to array
         for(let key in players) {
-            data.push({
-                x: players[key].takes*100/players[key].rounds,
-                y: players[key].win*100/players[key].rounds,
-                v: players[key].score, 
-                label: key,
-            });
+            // exclude disabled players
+            if(!utils.isPlayerExcluded(group,key)) {
+                data.push({
+                    x: players[key].takes*100/players[key].rounds,
+                    y: players[key].win*100/players[key].rounds,
+                    v: players[key].score, 
+                    label: key,
+                });
+            }
         }
         callback({
             type: 'bubble',
@@ -273,14 +281,14 @@ function priseByWinBubbleChart(group, args, callback) {
     });
 }
 
-function tarotTimesCalled(group, args, callback) {
+function tarotTimesCalled(groupName, args, callback, group) {
     let calledHashMap = {};
     let persons = [];
     let dataPercentCalled = [];
     let dataTotalCalled = [];
     
     Game.find({
-        group: group,
+        group: groupName,
         $or:[{disabled: false}, {disabled: undefined}],
     }, (err, games) => {
         for(let game of games) {
@@ -303,10 +311,13 @@ function tarotTimesCalled(group, args, callback) {
         }
         
         for(let key in calledHashMap) {
-            persons.push(key);
-            dataPercentCalled.push(Math.round(
-                (calledHashMap[key].called / calledHashMap[key].played)*100));
-            dataTotalCalled.push(calledHashMap[key].called);
+            // exclude disabled players
+            if(!utils.isPlayerExcluded(group,key)) {
+                persons.push(key);
+                dataPercentCalled.push(Math.round(
+                    (calledHashMap[key].called / calledHashMap[key].played)*100));
+                dataTotalCalled.push(calledHashMap[key].called);
+            }
         }
         
         callback({

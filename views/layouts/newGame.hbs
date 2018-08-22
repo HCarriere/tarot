@@ -40,12 +40,14 @@
         <div class="switch col s10 offset-s1">
             <p class="caption">Joueurs existants</p>
             {{#each group.players}}
+            {{#if disabled}}{{else}}
             <span>
                 <label>
                     <input type="checkbox" value="{{name}}" name="players"/>
                     <span>{{name}}</span>
                 </label>
             </span>    
+            {{/if}}
             {{/each}}
         </div>
     </div>

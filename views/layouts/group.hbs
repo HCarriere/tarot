@@ -96,16 +96,17 @@
     </li>
 </ul>
 
-<h2>Joueurs</h2>
-<p>Fonctionnalité prévue pour novembre 2019.</p>
-<!--
-<ul class="collapsible">
-{{#each group.players}}
-    <li>
-        <div class="collapsible-header"><i class="material-icons">timeline</i>{{name}}</div>
-        <div class="collapsible-body">
-            <span>Lorem ipsum dolor sit amet.</span>
-        </div>
-    </li>
-{{/each}}
-</ul>-->
+<h2>Joueurs actifs</h2>
+<div class="group-player-selector">
+    <form method="post" action="/group/selectplayers">
+        {{#each group.players}}
+        <label>
+            <input type="checkbox" value="{{name}}" {{#if disabled}}{{else}}checked{{/if}} name="playersToInclude"/>
+            <span>{{name}}</span>
+        </label>
+        {{/each}}
+        <br>
+        <button type="submit" class="waves-effect waves-light btn offset-s1 col" >Enregistrer</button> 
+    </form>
+</div>
+<br>

@@ -8,10 +8,16 @@ const groupSchema = mongoose.Schema({
     players: [{
         name: String,
         date: Date,
+        disabled: Boolean,
     }],
 });
 const GroupModel = mongoose.model('Group', groupSchema);
 
+function find(name, callback) {
+    return GroupModel.findOne({
+        name: name
+    }, callback);
+}
 
 function addGroup(req, callback) {
     let params = utils.getRequestParams(req, ['name', 'password']);
@@ -169,11 +175,39 @@ function getGamesFromGroup(group, filter, callback) {
     });
 }
 
+function setActivePlayers(req, callback) {
+    let groupName = req.session.currentGroup;
+    if(!groupName || !req.body) {
+        return callback('Bad parameters');
+    }
+    let playersToInclude = req.body.playersToInclude || [];
+    GroupModel.findOne({
+        name: groupName,
+    }, (err,group) => {
+        if(err) {
+            return callback(err);
+        }
+        for(let player of group.players) {
+            if(!playersToInclude.includes(player.name)) {
+                // set player as "disabled"
+                player.disabled = true;
+            } else {
+                player.disabled = false;
+            }
+        }
+        group.save((err, res) => {
+            if(err) console.log(err);
+            callback();
+        });
+    });
+}
 
 module.exports = {
+    find,
     addGroup,
     getGroupWithGames,
     getGroup,
     logonToGroup,
     addPlayersToGroup,
+    setActivePlayers,
 };

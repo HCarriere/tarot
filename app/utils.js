@@ -78,6 +78,15 @@ function getMonday(date) {
     return new Date(date.setDate(diff));
 }
 
+function isPlayerExcluded(group, playerName) {
+    for(let player of group.players) {
+        if(player.disabled && player.name == playerName) {
+            return true;
+        }
+    }
+    return false;
+}
+
 module.exports = {
     hashPassword,
     getRequestParams,
@@ -85,4 +94,5 @@ module.exports = {
     mustBeAuthentified,
     getReadableDate,
     getMonday,
+    isPlayerExcluded,
 }

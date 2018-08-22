@@ -17,7 +17,7 @@ let gameManager = (function() {
             `Partie 1. Cliquez sur OK pour commencer.`,
             `Cliquez sur OK pour ne PAS commencer.`,
             `Vous venez de cliquer sur OK, vous acceptez donc de ne PAS commencer. Cliquez sur OK pour confirmer.`,
-            `Vous venez d'accepter une ordre d'un script JavaScript. Cliquez sur OK si vous vous sentez mal.`,
+            `Vous venez d'accepter un ordre d'un script JavaScript. Cliquez sur OK si vous vous sentez mal.`,
             `Peut-être que supprimer la partie vous fera plaisir, vous qui vous sentez mal?`,
             `Très bien, suppression en cours...`,
             `3...`,
