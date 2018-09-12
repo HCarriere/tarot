@@ -171,6 +171,18 @@ function cumulatedPointsBarChart(groupName, args, callback, group) {
             }
         }
 
+        let sortable = [];
+        for(let player in statsProcess) {
+            sortable.push([player, statsProcess[player]]);
+        }
+        sortable.sort((a, b) => {
+            return b[1] - a[1];
+        });
+        statsProcess = {};
+        for(let s of sortable) {
+            statsProcess[s[0]] = s[1];
+        }
+        
         // to arrays
         for(let key in statsProcess) {
             // exclude disabled players
