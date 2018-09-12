@@ -78,6 +78,12 @@ function getMonday(date) {
     return new Date(date.setDate(diff));
 }
 
+function getStartOfMonth(date) {
+    date = new Date(date);
+    return new Date(date.getFullYear(), date.getMonth(), 1);
+}
+
+
 function isPlayerExcluded(group, playerName) {
     for(let player of group.players) {
         if(player.disabled && player.name == playerName) {
@@ -94,5 +100,6 @@ module.exports = {
     mustBeAuthentified,
     getReadableDate,
     getMonday,
+    getStartOfMonth,
     isPlayerExcluded,
 }

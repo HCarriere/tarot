@@ -91,13 +91,21 @@ let charts = {
         func : cumulatedPointsBarChart,
         args : {players: 5}
     },
-    weekPointsTarot4 : {
+    seasonPointsTarot4 : {
         func : cumulatedPointsBarChart,
-        args : {players: 4, week: true}
+        args : {players: 4, season: true}
     },
-    weekPointsTarot5 : {
+    seasonPointsTarot5 : {
         func : cumulatedPointsBarChart,
-        args : {players: 5, week: true}
+        args : {players: 5, season: true}
+    },
+    previousSeasonPointsTarot4 : {
+        func : cumulatedPointsBarChart,
+        args : {players: 4, season: true, previous: true}
+    },
+    previousSeasonPointsTarot5 : {
+        func : cumulatedPointsBarChart,
+        args : {players: 5, season: true, previous: true}
     },
     prisesVictoire4 : {
         func : priseByWinBubbleChart,
@@ -119,11 +127,30 @@ function cumulatedPointsBarChart(groupName, args, callback, group) {
         playersNumber: args.players,
         $or:[{disabled: false}, {disabled: undefined}],
     };
-    if(args.week) {
-        let startOfWeek = utils.getMonday(new Date());
+    if(args.season) {
+        let startOfSeason;
+        let endOfSeason;
+        
+        if(args.previous) {
+            startOfSeason = new Date();
+            startOfSeason.setDate(1);
+            startOfSeason.setMonth(startOfSeason.getMonth()-1);
+            startOfSeason.setHours(1);
+            
+            endOfSeason = new Date(startOfSeason);
+            endOfSeason.setMonth(endOfSeason.getMonth()+1);
+            endOfSeason.setDate(0);
+            endOfSeason.setHours(23);
+            
+        } else {
+            startOfSeason = utils.getStartOfMonth(new Date());
+            endOfSeason = new Date();
+        }
+        // let startOfWeek = utils.getMonday(new Date());
         
         filter.date = {
-            $gte: startOfWeek,
+            $gte: startOfSeason,
+            $lte: endOfSeason,
         }
     }
     
