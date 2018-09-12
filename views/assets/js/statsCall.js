@@ -32,6 +32,41 @@
                 }
             });
         });
+        
+        $('.hall-of-fame').each(function(i) {
+            let div = $(this);
+            $.get('/stats/group')
+            .done(function(result) {
+                for(let f in result.fames) {
+                    console.log(f+' -> ');
+                    console.log(result.fames[f])
+                    let fame = `
+                    <div class="fame">
+                        <span class="new badge player left" data-badge-caption="${f}"></span>
+                    `;
+                    for(let badge of result.fames[f]) {
+                        fame+=   
+                        `<div class="name">
+                            ${badge.name}
+                        </div>
+                        <div class="badge">
+                            <i class="material-icons">${badge.icon}</i>
+                        </div>
+                        <div class="descr">
+                            ${badge.description}
+                        </div>
+                        `;
+                    }
+                    fame+=`</div>`;
+                    div.append(fame);
+                }
+                // build fame !
+                
+            })
+            .fail(function(err) {
+                console.log(err);
+            });
+        })
     }
     
     function getGroupChart(chart, callback) {

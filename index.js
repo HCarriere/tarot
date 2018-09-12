@@ -99,6 +99,7 @@ const Group = require('./app/group');
 const Game = require('./app/game');
 const chart = require('./app/charts');
 const rules = require('./app/rules');
+const hallOfFame = require('./app/charts/halloffame');
 
 /*
 * ROUTES
@@ -247,7 +248,7 @@ app
 })
 
 .get('/stats/group', isAuth, (req, res) => {
-    chart.group.getGroupStats(req.session.currentGroup, (stats) => {
+    hallOfFame.getGroupStats(req.session.currentGroup, (stats) => {
         res.json(stats); 
     });
 })
