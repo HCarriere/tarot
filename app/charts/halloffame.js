@@ -63,7 +63,7 @@ function getGroupStats(groupName, callback) {
                     if(hasWonRound(round, score.player)) {
                         playersStats[score.player].winInCurrentGame += 1;
                         // win without bout
-                        if(!round.params.bouts || round.params.bouts.length == 0 
+                        if((!round.params.bouts || round.params.bouts.length == 0 )
                            && round.params.player == score.player) {
                             giveBadgeToPlayer(players, score.player, BADGES.VARYS());
                         }
