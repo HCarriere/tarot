@@ -78,3 +78,22 @@ input[type="month"] {
     transition: box-shadow .3s, border .3s;
     transition: box-shadow .3s, border .3s, -webkit-box-shadow .3s;
 }
+
+/* fames */
+.fame {
+    margin-bottom: 5px;
+}
+.fame .hf {
+    display: inline-block;
+    border: 1px solid black;
+    border-radius: 5px;
+    margin-left: 5px;
+}
+.fame .hf .icon {
+    display: inline-block;
+}
+.fame .hf .name {
+    display: inline-block;
+    vertical-align: top;
+    margin:3px;
+}

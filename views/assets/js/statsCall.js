@@ -44,24 +44,26 @@
                     <div class="fame">
                         <span class="new badge player left" data-badge-caption="${f}"></span>
                     `;
-                    for(let badge of result.fames[f]) {
+                    for(let badgeName in result.fames[f]) {
+                        let badge = result.fames[f][badgeName];
                         fame+=   
-                        `<div class="name">
-                            ${badge.name}
-                        </div>
-                        <div class="badge">
+                        `<div class="hf tooltipped" data-position="top" data-tooltip="${badge.description}">
+                        <div class="icon">
                             <i class="material-icons">${badge.icon}</i>
                         </div>
-                        <div class="descr">
-                            ${badge.description}
+                        <div class="name">
+                            ${badge.title}
+                        </div>
                         </div>
                         `;
                     }
                     fame+=`</div>`;
                     div.append(fame);
                 }
-                // build fame !
                 
+                // post init
+                colorPlayerBadges();
+                $('.tooltipped').tooltip();
             })
             .fail(function(err) {
                 console.log(err);

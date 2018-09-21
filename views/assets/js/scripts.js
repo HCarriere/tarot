@@ -217,12 +217,7 @@
     }
     
     
-    function colorPlayerBadges() {
-        $('.badge.player').each( function(i) {
-            let name = $(this).attr('data-badge-caption');
-            $(this).css('background-color', colors.fromSeed(name));
-        });
-    }
+    
     
     
 	function initTour() {
@@ -381,3 +376,10 @@ function setChartsPlugins () {
         }
     });
 }
+
+function colorPlayerBadges() {
+        $('.badge.player').each( function(i) {
+            let name = $(this).attr('data-badge-caption');
+            $(this).css('background-color', colors.fromSeed(name));
+        });
+    }
