@@ -31,16 +31,18 @@ function getGroupStats(groupName, callback) {
             gameName: ''
         };
         
+        let playersStats = {};
+        
         for(let game of games) {
             for(let round of game.rounds) {
                 for(let score of round.playersScores) {
-                    if(score.mod > maxPts.value) {
+                    if(score.mod > maxPts.value) {  
                         // max
                         maxPts = {
                             value: score.mod,
                             player: score.player,
                             gameName: game.name,
-                        }
+                        };
                     }
                     if(score.mod < minPts.value) {
                         // min
@@ -48,9 +50,46 @@ function getGroupStats(groupName, callback) {
                             value: score.mod,
                             player: score.player,
                             gameName: game.name,
+                        };
+                    }
+                    if(!playersStats[score.player]) {
+                        playersStats[score.player] = {
+                            totalScore: 0,
+                            winInCurrentGame: 0,
+                            loseInCurrentGame: 0,
+                        };
+                    }
+                    playersStats[score.player].totalScore += score.mod;
+                    if(hasWonRound(round, score.player)) {
+                        playersStats[score.player].winInCurrentGame += 1;
+                        // win without bout
+                        if(!round.params.bouts || round.params.bouts.length == 0 
+                           && round.params.player == score.player) {
+                            giveBadgeToPlayer(players, score.player, BADGES.VARYS());
                         }
+                    } else {
+                        playersStats[score.player].loseInCurrentGame += 1;
                     }
                 }
+            }
+            // reset game related stats
+            for(let p in playersStats) {
+                if(playersStats[p].winInCurrentGame >= 10) {
+                    giveBadgeToPlayer(players, p, BADGES.PENTAKILL());
+                }
+                if(playersStats[p].loseInCurrentGame >= 10) {
+                    giveBadgeToPlayer(players, p, BADGES.AMI_GREC());
+                }
+                playersStats[p].winInCurrentGame = 0;
+                playersStats[p].loseInCurrentGame = 0;
+            }
+        }
+        for(let p in playersStats) {
+            if(playersStats[p].totalScore > 9000) {
+                giveBadgeToPlayer(players, p, BADGES.GOKU());
+            }
+            if(playersStats[p].totalScore < -4277) {
+                giveBadgeToPlayer(players, p, BADGES.AIME());
             }
         }
         
@@ -59,7 +98,7 @@ function getGroupStats(groupName, callback) {
         
         // max score
         giveBadgeToPlayer(players, maxPts.player, BADGES.MAX_SCORE(maxPts.value, maxPts.gameName));
-        
+                
         return callback({
             fames: players
         });
@@ -73,8 +112,14 @@ const BADGES = {
     MIN_SCORE: function(score, gameName) {
         return getBadge('Pire score', 'star', 'A marqué '+score+' points lors de la partie '+gameName);
     },
+    GOKU: function() {
+        return getBadge('Goku', 'star', 'IT\' OVER 9000!');
+    },
+    AIME: function() {
+        return getBadge('L\'aimé', 'star', 'Etre en dessous de -4277 au classement général');
+    },
     AMI_GREC: function() {
-        return getBadge('L\'ami grec', 'star', '10 défaites consécutives en une partie');
+        return getBadge('L\'ami grec', 'star', '10 défaites en une partie');
     },
     PENTAKILL: function() {
         return getBadge('Pentakill', 'star', 'Gagner 10 rounds ou plus sur une partie à 5');
@@ -89,16 +134,10 @@ const BADGES = {
         return getBadge('As de carreaux', 'star', 'Second de la saison précédente');
     },
     SEASON_3RD: function() {
-        return getBadge('As de trèfle', 'star', 'Triosième de la saison précédente');
+        return getBadge('As de trèfle', 'star', 'Troisième de la saison précédente');
     },
     VETERAN: function() {
         return getBadge('Vétéran', 'star', 'Vainqueur d\'une saison');
-    },
-    GOKU: function() {
-        return getBadge('Goku', 'star', 'IT\' OVER 9000!');
-    },
-    AIME_GREC: function() {
-        return getBadge('L\'aimé', 'star', 'Etre en dessous de -4277 au classement général');
     },
     CHELEM: function() {
         return getBadge('Chelem', 'star', 'Obtenir la totalité des points sur un round');
@@ -124,7 +163,15 @@ function giveBadgeToPlayer(players, playerName, badge) {
     if(!players[playerName]) {
         players[playerName] = {};
     }
-    players[playerName][badge.name] = badge;
+    players[playerName][badge.title] = badge;
+}
+
+function hasWonRound(round, player) {
+    if(round.params.called == player || round.params.player == player) {
+        return round.won;
+    } else {
+        return !round.won;
+    }
 }
 
 module.exports = {
