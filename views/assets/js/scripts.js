@@ -299,9 +299,14 @@ function setChart(type, data, options, ctx) {
     } else if(type == 'line') {
         for(let dataset of data.datasets) {
             dataset.borderColor = colors.fromSeed(dataset.label);
-            dataset.lineTension= 0;
+            dataset.lineTension = 0;
             dataset.backgroundColor= 'transparent';
         }
+        options.layout = {
+            padding : {
+                right: 50
+            }
+        };
     } else if(type == 'bubble') {
         options.elements = {
             point: {

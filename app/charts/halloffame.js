@@ -67,6 +67,12 @@ function getGroupStats(groupName, callback) {
                             if((!round.params.bouts || round.params.bouts.length == 0 )){
                                 giveBadgeToPlayer(players, score.player, BADGES.VARYS());
                             }
+                            // petits bras
+                            if(round.params.bouts && round.params.bouts.length == 3 
+                               && round.params.contrat=="prise"
+                               && round.params.score >= 70) {
+                                giveBadgeToPlayer(players, score.player, BADGES.PETIT_BRAS(game.name));
+                            }
                         }
                     } else {
                         playersStats[score.player].loseInCurrentGame += 1;
@@ -153,6 +159,9 @@ const BADGES = {
     },
     FAIL: function(gameName) {
         return getBadge('Fail', 'star', 'Annoncer un Chelem et le rater ('+gameName+')');
+    },
+    PETIT_BRAS: function(gameName) {
+        return getBadge('Petits bras', 'star', 'Tout les bouts, plus de 70 points, faire une petite. ('+gameName+')');
     },
     /*SEASON_1ST: function() {
         return getBadge('As de pique', 'star', 'Vainqueur de la saison précédente');
