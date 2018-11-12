@@ -62,13 +62,31 @@ function getGroupStats(groupName, callback) {
                     playersStats[score.player].totalScore += score.mod;
                     if(hasWonRound(round, score.player)) {
                         playersStats[score.player].winInCurrentGame += 1;
-                        // win without bout
-                        if((!round.params.bouts || round.params.bouts.length == 0 )
-                           && round.params.player == score.player) {
-                            giveBadgeToPlayer(players, score.player, BADGES.VARYS());
+                        if(round.params.player == score.player) {
+                            // win without bout
+                            if((!round.params.bouts || round.params.bouts.length == 0 )){
+                                giveBadgeToPlayer(players, score.player, BADGES.VARYS());
+                            }
                         }
                     } else {
                         playersStats[score.player].loseInCurrentGame += 1;
+                    }
+                    
+                    if(round.params.player == score.player) {
+                    // chelem
+                        if(round.params.score == 91) {
+                            giveBadgeToPlayer(players, score.player, BADGES.CHELEM(game.name));
+
+                            // grand chelem
+                            if(round.params.chelem) {
+                                giveBadgeToPlayer(players, score.player, BADGES.GRAND_CHELEM(game.name));
+                            }
+                        } else {
+                            // chelem raté
+                            if(round.params.chelem) {
+                                giveBadgeToPlayer(players, score.player, BADGES.FAIL(game.name));
+                            }
+                        }
                     }
                 }
             }
@@ -127,7 +145,16 @@ const BADGES = {
     VARYS: function() {
         return getBadge('Lord Varys', 'star', 'Partir sans bout et gagner');
     },
-    SEASON_1ST: function() {
+    CHELEM: function(gameName) {
+        return getBadge('Chelem', 'star', 'Obtenir la totalité des points sur un round ('+gameName+')');
+    },
+    GRAND_CHELEM: function(gameName) {
+        return getBadge('Grand Chelem', 'star', 'Annoncer et réussir un Grand Chelem('+gameName+')');
+    },
+    FAIL: function(gameName) {
+        return getBadge('Fail', 'star', 'Annoncer un Chelem et le rater ('+gameName+')');
+    },
+    /*SEASON_1ST: function() {
         return getBadge('As de pique', 'star', 'Vainqueur de la saison précédente');
     },
     SEASON_2ND: function() {
@@ -138,16 +165,7 @@ const BADGES = {
     },
     VETERAN: function() {
         return getBadge('Vétéran', 'star', 'Vainqueur d\'une saison');
-    },
-    CHELEM: function() {
-        return getBadge('Chelem', 'star', 'Obtenir la totalité des points sur un round');
-    },
-    GRAND_CHELEM: function() {
-        return getBadge('Grand Chelem', 'star', 'Annoncer et réussir un Grand Chelem');
-    },
-    FAIL: function() {
-        return getBadge('Fail', 'star', 'Annoncer un Chelem et le rater');
-    },
+    },*/
 };
 
 
