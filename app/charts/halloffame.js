@@ -122,10 +122,21 @@ function getGroupStats(groupName, callback) {
         
         // max score
         giveBadgeToPlayer(players, maxPts.player, BADGES.MAX_SCORE(maxPts.value, maxPts.game));
-                
-        return callback({
-            fames: players
+        
+        // exclude excluded players
+        Group.find(groupName, (err, group) => {
+            
+            // utils.isPlayerExcluded(group, name)
+            for(let p in players) {
+                if(utils.isPlayerExcluded(group, p)) {
+                    delete players[p];
+                }
+            }
+            return callback({
+                fames: players
+            });
         });
+        
     });
 }
 
