@@ -47,7 +47,7 @@
                     for(let badgeName in result.fames[f]) {
                         let badge = result.fames[f][badgeName];
                         fame+=   
-                        `<div class="hf tooltipped" data-position="top" data-tooltip="${badge.description}">
+                        `<div class="hf tooltipped" data-position="top" data-tooltip="${badge.description}${badge.gameName?' ('+badge.gameName+')':''}">
                         <div class="icon">
                             <i class="material-icons">${badge.icon}</i>
                         </div>

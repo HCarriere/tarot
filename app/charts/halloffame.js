@@ -23,12 +23,12 @@ function getGroupStats(groupName, callback) {
         let minPts = {
             value: 0,
             player: '',
-            gameName: ''
+            game: {},
         };
         let maxPts = {
             value: 0,
             player: '',
-            gameName: ''
+            game: {},
         };
         
         let playersStats = {};
@@ -41,7 +41,7 @@ function getGroupStats(groupName, callback) {
                         maxPts = {
                             value: score.mod,
                             player: score.player,
-                            gameName: game.name,
+                            game: game,
                         };
                     }
                     if(score.mod < minPts.value) {
@@ -49,7 +49,7 @@ function getGroupStats(groupName, callback) {
                         minPts = {
                             value: score.mod,
                             player: score.player,
-                            gameName: game.name,
+                            game: game,
                         };
                     }
                     if(!playersStats[score.player]) {
@@ -65,13 +65,13 @@ function getGroupStats(groupName, callback) {
                         if(round.params.player == score.player) {
                             // win without bout
                             if((!round.params.bouts || round.params.bouts.length == 0 )){
-                                giveBadgeToPlayer(players, score.player, BADGES.VARYS());
+                                giveBadgeToPlayer(players, score.player, BADGES.VARYS(game));
                             }
                             // petits bras
                             if(round.params.bouts && round.params.bouts.length == 3 
                                && round.params.contrat=="prise"
                                && round.params.score >= 70) {
-                                giveBadgeToPlayer(players, score.player, BADGES.PETIT_BRAS(game.name));
+                                giveBadgeToPlayer(players, score.player, BADGES.PETIT_BRAS(game));
                             }
                         }
                     } else {
@@ -81,16 +81,16 @@ function getGroupStats(groupName, callback) {
                     if(round.params.player == score.player) {
                     // chelem
                         if(round.params.score == 91) {
-                            giveBadgeToPlayer(players, score.player, BADGES.CHELEM(game.name));
+                            giveBadgeToPlayer(players, score.player, BADGES.CHELEM(game));
 
                             // grand chelem
                             if(round.params.chelem) {
-                                giveBadgeToPlayer(players, score.player, BADGES.GRAND_CHELEM(game.name));
+                                giveBadgeToPlayer(players, score.player, BADGES.GRAND_CHELEM(game));
                             }
                         } else {
                             // chelem raté
                             if(round.params.chelem) {
-                                giveBadgeToPlayer(players, score.player, BADGES.FAIL(game.name));
+                                giveBadgeToPlayer(players, score.player, BADGES.FAIL(game));
                             }
                         }
                     }
@@ -99,10 +99,10 @@ function getGroupStats(groupName, callback) {
             // reset game related stats
             for(let p in playersStats) {
                 if(playersStats[p].winInCurrentGame >= 10) {
-                    giveBadgeToPlayer(players, p, BADGES.PENTAKILL());
+                    giveBadgeToPlayer(players, p, BADGES.PENTAKILL(game));
                 }
                 if(playersStats[p].loseInCurrentGame >= 10) {
-                    giveBadgeToPlayer(players, p, BADGES.AMI_GREC());
+                    giveBadgeToPlayer(players, p, BADGES.AMI_GREC(game));
                 }
                 playersStats[p].winInCurrentGame = 0;
                 playersStats[p].loseInCurrentGame = 0;
@@ -118,10 +118,10 @@ function getGroupStats(groupName, callback) {
         }
         
         // min score
-        giveBadgeToPlayer(players, minPts.player, BADGES.MIN_SCORE(minPts.value, minPts.gameName));
+        giveBadgeToPlayer(players, minPts.player, BADGES.MIN_SCORE(minPts.value, minPts.game));
         
         // max score
-        giveBadgeToPlayer(players, maxPts.player, BADGES.MAX_SCORE(maxPts.value, maxPts.gameName));
+        giveBadgeToPlayer(players, maxPts.player, BADGES.MAX_SCORE(maxPts.value, maxPts.game));
                 
         return callback({
             fames: players
@@ -130,38 +130,38 @@ function getGroupStats(groupName, callback) {
 }
 
 const BADGES = {
-    MAX_SCORE: function(score, gameName) {
-        return getBadge('Meilleur score', 'star', 'A marqué '+score+' points lors de la partie '+gameName);
+    MAX_SCORE: function(score, game) {
+        return getBadge('Meilleur score', 'arrow_upward', 'A marqué '+score+' points lors d\'une partie', game);
     },
-    MIN_SCORE: function(score, gameName) {
-        return getBadge('Pire score', 'star', 'A marqué '+score+' points lors de la partie '+gameName);
+    MIN_SCORE: function(score, game) {
+        return getBadge('Pire score', 'arrow_downward', 'A marqué '+score+' points lors d\'une partie', game);
     },
     GOKU: function() {
         return getBadge('Goku', 'star', 'IT\' OVER 9000!');
     },
     AIME: function() {
-        return getBadge('L\'aimé', 'star', 'Etre en dessous de -4277 au classement général');
+        return getBadge('L\'aimé', 'star_border', 'Etre en dessous de -4277 au classement général');
     },
-    AMI_GREC: function() {
-        return getBadge('L\'ami grec', 'star', '10 défaites en une partie');
+    AMI_GREC: function(game) {
+        return getBadge('L\'ami grec', 'replay_10', '10 défaites en une partie', game);
     },
-    PENTAKILL: function() {
-        return getBadge('Pentakill', 'star', 'Gagner 10 rounds ou plus sur une partie à 5');
+    PENTAKILL: function(game) {
+        return getBadge('Pentakill', 'forward_10', 'Gagner 10 rounds ou plus sur une partie à 5', game);
     },
-    VARYS: function() {
-        return getBadge('Lord Varys', 'star', 'Partir sans bout et gagner');
+    VARYS: function(game) {
+        return getBadge('Lord Varys', 'invert_colors_off', 'Partir sans bout et gagner', game);
     },
-    CHELEM: function(gameName) {
-        return getBadge('Chelem', 'star', 'Obtenir la totalité des points sur un round ('+gameName+')');
+    CHELEM: function(game) {
+        return getBadge('Chelem', 'attach_money', 'Obtenir la totalité des points sur un round', game);
     },
-    GRAND_CHELEM: function(gameName) {
-        return getBadge('Grand Chelem', 'star', 'Annoncer et réussir un Grand Chelem('+gameName+')');
+    GRAND_CHELEM: function(game) {
+        return getBadge('Grand Chelem', 'thumb_up', 'Annoncer et réussir un Grand Chelem', game);
     },
-    FAIL: function(gameName) {
-        return getBadge('Fail', 'star', 'Annoncer un Chelem et le rater ('+gameName+')');
+    FAIL: function(game) {
+        return getBadge('Fail', 'thumb_down', 'Annoncer un Chelem et le rater', game);
     },
-    PETIT_BRAS: function(gameName) {
-        return getBadge('Petits bras', 'star', 'Tout les bouts, plus de 70 points, faire une petite. ('+gameName+')');
+    PETIT_BRAS: function(game) {
+        return getBadge('Petits bras', 'accessible', 'Tout les bouts, plus de 70 points, faire une petite.', game);
     },
     /*SEASON_1ST: function() {
         return getBadge('As de pique', 'star', 'Vainqueur de la saison précédente');
@@ -178,7 +178,15 @@ const BADGES = {
 };
 
 
-function getBadge(title, icon, description) {
+function getBadge(title, icon, description, game) {
+    if(game) {
+        return {
+            title: title,
+            icon: icon,
+            description: description,
+            gameName: game.name,
+        }
+    }
     return {
         title: title,
         icon: icon,
