@@ -90,6 +90,9 @@ input[type="month"] {
     border-radius: 5px;
     margin-left: 5px;
 }
+.fame .hf .tooltipped {
+    display:inline-block;
+}
 .fame .hf .icon {
     display: inline-block;
 }
@@ -97,4 +100,7 @@ input[type="month"] {
     display: inline-block;
     vertical-align: top;
     margin:3px;
+}
+.fame .hf .badge-link {
+    color: black;
 }

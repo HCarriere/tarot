@@ -196,6 +196,7 @@ function getBadge(title, icon, description, game) {
             icon: icon,
             description: description,
             gameName: game.name,
+            gameId: game.id,
         }
     }
     return {

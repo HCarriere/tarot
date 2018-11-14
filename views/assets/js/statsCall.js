@@ -38,8 +38,8 @@
             $.get('/stats/group')
             .done(function(result) {
                 for(let f in result.fames) {
-                    console.log(f+' -> ');
-                    console.log(result.fames[f])
+                    // console.log(f+' -> ');
+                    // console.log(result.fames[f])
                     let fame = `
                     <div class="fame">
                         <span class="new badge player left" data-badge-caption="${f}"></span>
@@ -47,14 +47,19 @@
                     for(let badgeName in result.fames[f]) {
                         let badge = result.fames[f][badgeName];
                         fame+=   
-                        `<div class="hf tooltipped" data-position="top" data-tooltip="${badge.description}${badge.gameName?' ('+badge.gameName+')':''}">
-                        <div class="icon">
-                            <i class="material-icons">${badge.icon}</i>
-                        </div>
-                        <div class="name">
-                            ${badge.title}
-                        </div>
-                        </div>
+                        `<span class="hf badge-description">
+                            <div class="tooltipped" data-position="top" data-tooltip="${badge.description}${badge.gameName?' ('+badge.gameName+')':''}">
+                                <div class="icon">
+                                    <i class="material-icons">${badge.icon}</i>
+                                </div>
+                                <div class="name">
+                                    ${badge.title}
+                                </div>
+                            </div>
+                            <a class="badge-link" href="/game/${badge.gameName}?id=${badge.gameId}">
+                                <i class="material-icons">link</i>
+                            </a>
+                        </span>
                         `;
                     }
                     fame+=`</div>`;
