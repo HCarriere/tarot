@@ -78,7 +78,7 @@
     </li>
 </ul>
 
-<h2>Temple de la renommée</h2>
+<h2>Hall of fame</h2>
 
 <div class="hall-of-fame">
     <!--<div class="fame">
@@ -97,10 +97,14 @@
         <label>
             <input type="checkbox" value="{{name}}" {{#if disabled}}{{else}}checked{{/if}} name="playersToInclude"/>
             <span>{{name}}</span>
+            <a class="badge-link" href="/player/{{name}}">
+                <i class="material-icons">bar_chart</i>
+            </a>
         </label>
         {{/each}}
         <br>
-        <button type="submit" class="waves-effect waves-light btn offset-s1 col" >Enregistrer</button> 
+        <button type="submit" class="waves-effect waves-light btn offset-s1 col">Enregistrer</button> 
     </form>
 </div>
+
 <br>

@@ -1,0 +1,11 @@
+<h2><a href="/"><i class="edit-btn-collapse material-icons">keyboard_arrow_left</i></a>{{player.name}}</h2>
+
+
+{{#each charts}}
+<h4>{{label}}</h4>
+    <canvas id="chart_{{@index}}" class="chart" 
+            chart-type="{{type}}" 
+            chart-data="{{json data}}" 
+            chart-options="{{json options}}" 
+            width="400" height="300"></canvas>
+{{/each}}

@@ -202,6 +202,31 @@ function setActivePlayers(req, callback) {
     });
 }
 
+// verify player and get games from his group
+function getAllGamesForPlayer(req, callback){
+    let groupName = req.session.currentGroup;
+    // verif player
+    let playerName = req.params.player;
+
+    GroupModel.findOne({
+        name: groupName,
+    }, (err,group) => {
+        if(err) {
+            return callback(err);
+        }
+
+        if(!group.players.some(p => p.name == playerName)) {
+            return callback('Player not found');
+        }
+        // get games
+        Game.getGames({
+            group: groupName,
+        }, games => {
+            return callback(null, games, playerName);
+        });
+    });
+}
+
 module.exports = {
     find,
     addGroup,
@@ -210,4 +235,5 @@ module.exports = {
     logonToGroup,
     addPlayersToGroup,
     setActivePlayers,
+    getAllGamesForPlayer,
 };

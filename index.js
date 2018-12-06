@@ -241,11 +241,27 @@ app
     })
 })
 
+.get('/player/:player', isAuth, (req, res) => {
+    Group.getAllGamesForPlayer(req, (err, games, player) => {
+        if(err) {
+            console.log(err)
+        }
+        res.render('player', {
+            charts: [
+                chart.player.individualPointsEvolution(games, player),
+            ],
+            additionalJS: [
+                '/js/Chart.min.js',
+            ]
+        });
+    });
+})
 
+/*
 .get('/stats/player/:player', isAuth, (req, res) => {
     res.json({test:'player '+req.params.player});
     // TODO
-})
+})*/
 
 .get('/stats/group', isAuth, (req, res) => {
     hallOfFame.getGroupStats(req.session.currentGroup, (stats) => {
@@ -261,6 +277,7 @@ app
     });
 })
 
+// Replay every rounds of every games with the actual game rules.
 .get('/updateGameRules', isAuth, (req, res) => {
     rules.updateGameRules();
     res.json('command launched');

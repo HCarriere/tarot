@@ -101,6 +101,7 @@ input[type="month"] {
     vertical-align: top;
     margin:3px;
 }
-.fame .hf .badge-link {
+.badge-link {
     color: black;
+    vertical-align: top;
 }
