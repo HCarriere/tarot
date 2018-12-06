@@ -247,6 +247,7 @@ app
             console.log(err)
         }
         res.render('player', {
+            playerName: player,
             charts: [
                 chart.player.individualPointsEvolution(games, player),
             ],

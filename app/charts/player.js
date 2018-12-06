@@ -13,12 +13,12 @@ function individualPointsEvolution(games, player){
     
     for(let game of games) {
         let dateKey = getTimeAggregation(game.date, game.name);
-        if(!pointsMap[dateKey]) {
-            pointsMap[dateKey] = lastValue;
-        }
         for(let round of game.rounds) {
             for(let score of round.playersScores) {
                 if(score.player == player) {
+                    if(!pointsMap[dateKey]) {
+                        pointsMap[dateKey] = lastValue;
+                    }
                     pointsMap[dateKey] += score.mod;
                     lastValue = pointsMap[dateKey];
                 }
