@@ -203,7 +203,7 @@ function setActivePlayers(req, callback) {
 }
 
 // verify player and get games from his group
-function getAllGamesForPlayer(req, callback){
+function getAllGamesForPlayer(req, callback, playersNumber, disabled){
     let groupName = req.session.currentGroup;
     // verif player
     let playerName = req.params.player;
@@ -221,6 +221,8 @@ function getAllGamesForPlayer(req, callback){
         // get games
         Game.getGames({
             group: groupName,
+            playersNumber: playersNumber?playersNumber:5,// default 5
+            $or:[{disabled: disabled?disabled:false}, {disabled: undefined}],
         }, games => {
             return callback(null, games, playerName);
         });

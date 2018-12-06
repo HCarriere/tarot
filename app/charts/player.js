@@ -6,7 +6,7 @@ const moment = require('moment');
  - apports par joueurs : qui apporte combien
 */
 
-function individualPointsEvolution(games, player){
+function individualPointsEvolutionTarot5(games, player){
     
     let pointsMap = {};
     let lastValue = 0;
@@ -47,7 +47,7 @@ function individualPointsEvolution(games, player){
                 drawValues: false,
             },
         },
-        label: 'Points',
+        label: 'Points (Tarot à 5)',
    };
 }
 
@@ -63,5 +63,5 @@ function getTimeAggregation(date, gameName){
 }
 
 module.exports = {
-    individualPointsEvolution,
+    individualPointsEvolutionTarot5,
 }

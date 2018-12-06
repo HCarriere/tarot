@@ -249,13 +249,13 @@ app
         res.render('player', {
             playerName: player,
             charts: [
-                chart.player.individualPointsEvolution(games, player),
+                chart.player.individualPointsEvolutionTarot5(games, player),
             ],
             additionalJS: [
                 '/js/Chart.min.js',
             ]
         });
-    });
+    }, 5, false);
 })
 
 /*
