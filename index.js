@@ -278,6 +278,24 @@ app
     });
 })
 
+.get('/api/group/:group/games', (req, res) => {
+    Group.logonToGroup({body:{
+        name:req.params.group,
+        password:req.query.password,
+    }}, (err, group) => {
+        if(err) {
+            res.status(400);
+            res.json({error:err});
+            return err;
+        }
+        Game.getGames({
+            group: group.name
+        }, games => {
+            res.json(games);
+        });
+    })
+})
+
 // Replay every rounds of every games with the actual game rules.
 .get('/updateGameRules', isAuth, (req, res) => {
     rules.updateGameRules();
