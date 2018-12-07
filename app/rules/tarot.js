@@ -166,11 +166,9 @@ function processParameters(params, game, callback) {
     let scoreCalled = 0;
     scoreFinal = score.contrat;
     journal.push(`Score : contrat (${score.contrat})`);
-    if(win) {
-        if(score.poignee) {
-            scoreFinal += score.poignee;
-            journal.push(`Score : + poignee (${score.poignee}) = ${scoreFinal}`);
-        }
+    if(score.poignee && score.poignee != 0) {
+        scoreFinal += score.poignee;
+        journal.push(`Score : + poignee (${score.poignee}) = ${scoreFinal}`);
     }
     
     
