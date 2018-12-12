@@ -113,7 +113,7 @@ app
             group: result.group,
             games: result.games,
             additionalJS:[
-                '/js/Chart.min.js',
+                '/js/lib/Chart.min.js',
                 '/js/statsCall.js'
             ]
         });
@@ -205,7 +205,7 @@ app
                     chart.game.prisesParContrats(game.rounds),
                 ],
                 additionalJS: [
-                    '/js/Chart.min.js',
+                    '/js/lib/Chart.min.js',
                     '/js/gameManagerScripts.js',
                 ]
             });
@@ -251,8 +251,14 @@ app
             charts: [
                 chart.player.individualPointsEvolutionTarot5(games, player),
             ],
+            heatmaps: [
+                chart.player.gameScoreInYearHeatmapTarot5(games, player),
+            ],
             additionalJS: [
-                '/js/Chart.min.js',
+                '/js/lib/Chart.min.js',
+                '/js/lib/d3.min.js',
+                '/js/lib/d3-tip.js',
+                '/js/heatmap.js',
             ]
         });
     }, 5, false);

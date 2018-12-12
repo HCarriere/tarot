@@ -9,3 +9,9 @@
             chart-options="{{json options}}" 
             width="400" height="300"></canvas>
 {{/each}}
+
+{{#each heatmaps}}
+<h4>{{label}}</h4>
+    <div id="heatmaps_{{@index}}" class="heatmap"
+         heatmap-data="{{json data}}"></div>
+{{/each}}

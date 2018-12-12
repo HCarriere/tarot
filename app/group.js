@@ -218,11 +218,11 @@ function getAllGamesForPlayer(req, callback, playersNumber, disabled){
         if(!group.players.some(p => p.name == playerName)) {
             return callback('Player not found');
         }
-        // get games
         Game.getGames({
             group: groupName,
             playersNumber: playersNumber?playersNumber:5,// default 5
             $or:[{disabled: disabled?disabled:false}, {disabled: undefined}],
+            players: {$elemMatch:{name:playerName}}
         }, games => {
             return callback(null, games, playerName);
         });
