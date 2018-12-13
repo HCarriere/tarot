@@ -52,14 +52,19 @@ function getGroupStats(groupName, callback) {
                             game: game,
                         };
                     }
+                    // general stats
                     if(!playersStats[score.player]) {
                         playersStats[score.player] = {
                             totalScore: 0,
                             winInCurrentGame: 0,
                             loseInCurrentGame: 0,
+                            gameScore: 0,
                         };
                     }
                     playersStats[score.player].totalScore += score.mod;
+                    playersStats[score.player].gameScore += score.mod;
+                    
+                    
                     if(hasWonRound(round, score.player)) {
                         playersStats[score.player].winInCurrentGame += 1;
                         if(round.params.player == score.player) {
@@ -96,6 +101,11 @@ function getGroupStats(groupName, callback) {
                     }
                 }
             }
+            // fifth wheel / alone
+            let lastNegative;
+            let numNegative = 0;
+            let lastPositive;
+            let numPositive = 0;
             // reset game related stats
             for(let p in playersStats) {
                 if(playersStats[p].winInCurrentGame >= 10) {
@@ -104,9 +114,26 @@ function getGroupStats(groupName, callback) {
                 if(playersStats[p].loseInCurrentGame >= 10) {
                     giveBadgeToPlayer(players, p, BADGES.AMI_GREC(game));
                 }
+                if(playersStats[p].gameScore < 0 && game.rounds.length >= 3) {
+                    lastNegative = p;
+                    numNegative++;
+                }
+                if(playersStats[p].gameScore > 0 && game.rounds.length >= 7) {
+                    lastPositive = p;
+                    numPositive++;
+                }
+                
                 playersStats[p].winInCurrentGame = 0;
                 playersStats[p].loseInCurrentGame = 0;
+                playersStats[p].gameScore = 0;
             }
+            if(numNegative == 1) {
+                giveBadgeToPlayer(players, lastNegative, BADGES.FIFTH_WHEEL(game));
+            }
+            if(numPositive == 1) {
+                giveBadgeToPlayer(players, lastPositive, BADGES.ALONE(game));
+            }
+            
         }
         for(let p in playersStats) {
             if(playersStats[p].totalScore > 9000) {
@@ -173,6 +200,12 @@ const BADGES = {
     },
     PETIT_BRAS: function(game) {
         return getBadge('Petits bras', 'accessible', 'Tout les bouts, plus de 70 points, faire une petite.', game);
+    },
+    FIFTH_WHEEL: function(game) {
+        return getBadge('La 5ème roue', 'adjust', 'Tout le monde fini positif, sauf lui', game);
+    },
+    ALONE: function(game) {
+        return getBadge('Last Man', 'colorize', 'Seul à finir positif après 7 parties', game);
     },
     /*SEASON_1ST: function() {
         return getBadge('As de pique', 'star', 'Vainqueur de la saison précédente');
