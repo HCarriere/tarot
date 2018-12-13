@@ -13,9 +13,11 @@ const rules = {
             'score',
             'petit_au_bout',
             'poignee',
+            'poignee_def',
             'chelem',
             'misere',
             'double_misere',
+            'regret',
         ]
     }
 }
@@ -23,7 +25,7 @@ const rules = {
 // callback(err, result)
 function applyRule(game, req, callback) {
     if(!rules[game.type]) {
-        console.log('rule not implmented')
+        console.log('rule not implemented')
         return callback('rule not implemented');
     }
     
@@ -36,7 +38,7 @@ function applyRule(game, req, callback) {
 
 function applyRuleWithParams(game, params, callback) {
     if(!rules[game.type]) {
-        console.log('rule not implmented')
+        console.log('rule not implemented')
         return callback('rule not implemented');
     }
     

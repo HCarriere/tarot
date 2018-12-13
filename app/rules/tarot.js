@@ -21,8 +21,11 @@ function processParameters(params, game, callback) {
     score : "67"
     petit_au_bout : "none" / "attq" / "def"
     poignee : "none" / "simple" / "double" / "triple"
-    chelem : ["annonce","realise","defense_realise"]
+    poignee_def : "none" / "simple" / "double" / "triple"
     misere : ["HCE", "Joueur 1"]
+    double_misere : ["HCE", "Joueur 1"]
+    chelem : ["annonce","realise","defense_realise"]
+    regret: "regrette"
     */
     let round = {
         params: {
@@ -32,10 +35,12 @@ function processParameters(params, game, callback) {
             bouts : params.bouts,
             score : params.score,
             petit_au_bout :params.petit_au_bout,
-            poignee :params.poignee,
+            poignee: params.poignee,
+            poignee_def: params.poignee_def,
             chelem : params.chelem,
             misere : params.misere,
 			double_misere : params.double_misere,
+            regret: params.regret,
         },
         playersScores: [],
         won: false,
@@ -127,22 +132,39 @@ function processParameters(params, game, callback) {
     }
     
     // poignées
-    if(params.poignee) {
-        let prime = 0;
-        if(params.poignee == 'simple') {
-            prime = 20;
-        } else if(params.poignee == 'double') {
-            prime = 30;
-        } else if(params.poignee == 'triple') {
-            prime = 40;
+    function getPoigneeScore(poignee) {
+        if(poignee == 'simple') {
+            return 20;
+        } else if(poignee == 'double') {
+            return 30;
+        } else if(poignee == 'triple') {
+            return 40;
         }
+        return 0;
+    }
+    // poignée attaque
+    score.poignee = 0;
+    if(params.poignee) {
+        let prime = getPoigneeScore(params.poignee);
         
         if(win) {
-            score.poignee = prime;
+            score.poignee += prime;
             journal.push(`Poignée ${params.poignee} de l'attaquant (réalisé): +${score.poignee} pour l'attaque`);
         } else {
-            score.poignee = -prime;
+            score.poignee += -prime;
             journal.push(`Poignée ${params.poignee} de l'attaquant (non réalisé): ${score.poignee} pour l'attaque`);
+        }
+    }
+    // poignée défense
+    if(params.poignee_def) {
+        let prime = getPoigneeScore(params.poignee_def);
+        
+        if(win) {
+            score.poignee += prime;
+            journal.push(`Poignée ${params.poignee} de la défense (réalisé): +${score.poignee} pour l'attaque`);
+        } else {
+            score.poignee += -prime;
+            journal.push(`Poignée ${params.poignee} de la défense (non réalisé): ${score.poignee} pour l'attaque`);
         }
     }
     
