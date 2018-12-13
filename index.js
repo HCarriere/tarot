@@ -284,6 +284,7 @@ app
     });
 })
 
+// default : 5 players
 .get('/api/group/:group/games', (req, res) => {
     Group.logonToGroup({body:{
         name:req.params.group,
@@ -295,7 +296,8 @@ app
             return err;
         }
         Game.getGames({
-            group: group.name
+            group: group.name,
+            playersNumber: req.query.playersNumber || 5,
         }, games => {
             res.json(games);
         });
