@@ -97,6 +97,7 @@ function addGame(req, callback) {
     });
 }
 
+
 function getGame(id, groupName, callback) {
     GameModel.findById(id, (err, game) => {
         if(err) return console.error(err);
@@ -115,10 +116,34 @@ function getGame(id, groupName, callback) {
     });
 }
 
-function getGames(filter, callback) {
-    GameModel.find(filter, (err, games) => {
+/**
+transform(Boolean) : if true, convenient transformation of data happen
+    game name, type,group,playersNumber,date,_id moved in the round
+*/
+function getGames(filter, callback, transform) {
+    GameModel.find(filter, (err, _games) => {
         if(err) return console.error(err);
+        
+        if(!transform) {
+            return callback(_games);
+        }
+               
+        let games = JSON.parse(JSON.stringify(_games));
+        
+        games.forEach(game => {
+            game.rounds.forEach(round => {
+                round.name = game.name;
+                round.type = game.type;
+                round.playersNumber = game.playersNumber;
+                round.gameId = game._id;
+                round.date = {
+                    $date: game.date,
+                };
+            });
+        });
+        
         return callback(games);
+        
     }).sort('date');
 }
 

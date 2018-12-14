@@ -300,7 +300,7 @@ app
             playersNumber: req.query.playersNumber || 5,
         }, games => {
             res.json(games);
-        });
+        }, req.query.transform || false);
     })
 })
 
