@@ -114,7 +114,7 @@ function getGroupStats(groupName, callback) {
                 if(playersStats[p].loseInCurrentGame >= 10) {
                     giveBadgeToPlayer(players, p, BADGES.AMI_GREC(game));
                 }
-                if(playersStats[p].gameScore < 0 && game.rounds.length >= 3) {
+                if(playersStats[p].gameScore < 0 && game.rounds.length >= 7) {
                     lastNegative = p;
                     numNegative++;
                 }
@@ -202,7 +202,7 @@ const BADGES = {
         return getBadge('Petits bras', 'accessible', 'Tout les bouts, plus de 70 points, faire une petite.', game);
     },
     FIFTH_WHEEL: function(game) {
-        return getBadge('La 5ème roue', 'adjust', 'Tout le monde fini positif, sauf lui', game);
+        return getBadge('La 5ème roue', 'adjust', 'Seul à finir négatif après 7 parties', game);
     },
     ALONE: function(game) {
         return getBadge('Last Man', 'colorize', 'Seul à finir positif après 7 parties', game);

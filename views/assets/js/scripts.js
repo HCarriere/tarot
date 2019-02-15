@@ -383,8 +383,55 @@ function setChartsPlugins () {
 }
 
 function colorPlayerBadges() {
-        $('.badge.player').each( function(i) {
-            let name = $(this).attr('data-badge-caption');
-            $(this).css('background-color', colors.fromSeed(name));
-        });
+    $('.badge.player').each( function(i) {
+        let name = $(this).attr('data-badge-caption');
+        $(this).css('background-color', colors.fromSeed(name));
+    });
+}
+
+/* EPIC FEATURES */
+
+function activateEpicMode(num) {
+    if(!num) num = 3;
+    for(let i=0; i<=3; i++) {
+        setTimeout(()=>{
+            $('main.container').append(createAnnoyance());
+        }, i*250);
     }
+}
+function createAnnoyance() {
+    let imgSrc='/images/anoyc/'+(Math.floor(Math.random()*10)+1)+'.png';
+    let size = (Math.floor(Math.random()*100)+10);
+    let x = (Math.floor(Math.random()*$(window).width()-size)+size/2);
+    let y = (Math.floor(Math.random()*$(window).height()-size)+size/2);
+    let annoyanceAnim = (Math.floor(Math.random()*3)+1);
+    let annoyanceAnimDuration = (Math.floor(Math.random()*5)+1);
+    let annoyance = $(
+        `<div class="annoyance" 
+                style="left:${x}px;top:${y}px;width:${size}px;height:${size}px;
+                animation-name:annoyance-anim-${annoyanceAnim};animation-duration:${annoyanceAnimDuration}s;transform-origin:${size/2}px ${size/2}px;"
+                onclick="destroyAnnoyance(this)">
+            <img src="${imgSrc}" style="width: inherit;height: inherit;"></img>
+        </div>`);
+    return annoyance;
+}
+function destroyAnnoyance(annoyance) {
+    $(annoyance).remove();
+    activateEpicMode(Math.floor(Math.random()*10+1));
+}
+function areWheThereYet(){
+    let oneDay = 1000*60*60*24;
+    let target = new Date(2019,3,1).getTime();
+    let today = new Date().getTime();
+    let diff = target - today;
+    if(Math.abs(diff / oneDay) < 2) {
+        return true;
+    } 
+    return false;
+}
+// passive, sneaky epic mode
+if(areWheThereYet()) {
+    setTimeout(()=>{
+        $('main.container').append(createAnnoyance(1));
+    }, 1000+Math.floor(Math.random()*10000));
+}

@@ -13,7 +13,7 @@ const path = require('path');
 
 // general conf
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 13002;
 const server = http.createServer(app);
 const sessionSecret = process.env.SESSION_SECRET || 's3cr3tS355i0nStr1ng';
 const utils = require('./app/utils');
@@ -304,6 +304,10 @@ app
     })
 })
 
+.get('/%F0%9F%98%82', (req, res) => {
+    res.render('hbd');
+})
+
 // Replay every rounds of every games with the actual game rules.
 .get('/updateGameRules', isAuth, (req, res) => {
     rules.updateGameRules();
@@ -322,7 +326,7 @@ app
 
 .get('*', (req, res) => {
     res.status(404);
-    res.json({error:'not found'});
+    res.render('notfound');
 })
 
 // error handler
