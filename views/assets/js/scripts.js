@@ -391,33 +391,54 @@ function colorPlayerBadges() {
 
 /* EPIC FEATURES */
 
-function activateEpicMode(num) {
-    if(!num) num = 3;
-    for(let i=0; i<=3; i++) {
-        setTimeout(()=>{
-            $('main.container').append(createAnnoyance());
-        }, i*250);
+function activateEpicMode(num, origin) {
+    if(!num) {
+        num = 1;
     }
+    if(!origin) {
+        for(let i=0; i<=3; i++) {
+            setTimeout(()=>{
+                $('main.container').append(createAnnoyance(origin));
+            }, i*250);
+        }
+    } else {
+        for(let i=0; i<=3; i++) {
+            $('main.container').append(createAnnoyance(origin));
+        }
+    } 
+    
 }
-function createAnnoyance() {
+function createAnnoyance(origin) {
+    let id = 'anno'+Math.floor(Math.random()*100000000);
     let imgSrc='/images/anoyc/'+(Math.floor(Math.random()*10)+1)+'.png';
     let size = (Math.floor(Math.random()*100)+10);
     let x = (Math.floor(Math.random()*$(window).width()-size)+size/2);
     let y = (Math.floor(Math.random()*$(window).height()-size)+size/2);
+    if(!origin) {
+        origin = {};
+        origin.x = x;
+        origin.y = y;    
+    }
     let annoyanceAnim = (Math.floor(Math.random()*3)+1);
     let annoyanceAnimDuration = (Math.floor(Math.random()*5)+1);
     let annoyance = $(
         `<div class="annoyance" 
                 style="left:${x}px;top:${y}px;width:${size}px;height:${size}px;
-                animation-name:annoyance-anim-${annoyanceAnim};animation-duration:${annoyanceAnimDuration}s;transform-origin:${size/2}px ${size/2}px;"
+                animation:annoyance-anim-${annoyanceAnim} ${annoyanceAnimDuration}s infinite linear,
+                          keyframe-${id} 1s 1;
+                transform-origin:${size/2}px ${size/2}px;"
                 onclick="destroyAnnoyance(this)">
+                <style>@keyframes keyframe-${id} {
+                    from {left:${origin.x}px;top:${origin.y}px;width:${origin.size}px;height:${origin.size}px;}
+                    to {left:${x}px;top:${y}px;width:${size}px;height:${size}px;}
+                }</style>
             <img src="${imgSrc}" style="width: inherit;height: inherit;"></img>
         </div>`);
     return annoyance;
 }
 function destroyAnnoyance(annoyance) {
+    activateEpicMode(Math.floor(Math.random()*10+1), {x:annoyance.offsetLeft,y: annoyance.offsetTop, size:annoyance.clientHeight});
     $(annoyance).remove();
-    activateEpicMode(Math.floor(Math.random()*10+1));
 }
 function areWheThereYet(){
     let oneDay = 1000*60*60*24;
@@ -432,6 +453,6 @@ function areWheThereYet(){
 // passive, sneaky epic mode
 if(areWheThereYet()) {
     setTimeout(()=>{
-        $('main.container').append(createAnnoyance(1));
+        activateEpicMode();
     }, 1000+Math.floor(Math.random()*10000));
 }
