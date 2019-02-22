@@ -16,7 +16,6 @@ const resourceList = [
 
 self.addEventListener('install', event => {
     event.waitUntil(caches.open(CACHE_NAME).then(cache => {
-        console.log('sw installé');
         return cache.addAll(resourceList);
     }));
 });
@@ -29,7 +28,7 @@ function addToCache(cacheName, resourceList) {
 
 this.addEventListener('fetch', event => {
     event.respondWith(caches.match(event.request).then(response => {
-        return response || fetch(event.request);
+        return response || fetch(event.request, {redirect: 'follow'});
     }));
 });
 
