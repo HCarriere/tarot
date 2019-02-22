@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html>
+<html lang="fr">
     <head>
 		<title>Tarot{{titleSuffix}}</title>
 		
@@ -8,15 +8,18 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 		<meta http-equiv="Content-Language" content="fr">
+        <meta name="theme-color" content="#26a69a">
+        
         <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         
+        <link rel="manifest" href="/manifest/manifest.json">;
         <link rel="stylesheet" href="/css/style.css">
         <link type="text/css" rel="stylesheet" href="/css/materialize.min.css"  media="screen,projection"/>
 		{{#each additionalCSS}}
 		 <link rel="stylesheet" href="{{.}}">
 		{{/each}}
-        
+        <meta name="description" content="{{description}}"/>
     </head>
     
     <body>
@@ -40,6 +43,13 @@
         {{#each additionalJS}}
         <script type="text/javascript" src="{{.}}"></script>
         {{/each}}
+        <script>
+        if('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('/js/sw.js')
+            .then(function() { console.log("Service Worker Registered"); });
+        }
+        </script>
     </body>
     
 </html>

@@ -16,6 +16,8 @@ const app = express();
 const port = process.env.PORT || 13002;
 const server = http.createServer(app);
 const sessionSecret = process.env.SESSION_SECRET || 's3cr3tS355i0nStr1ng';
+const env = process.env.NODE_ENV || 'development';
+const forceSsl = env === 'production';
 const utils = require('./app/utils');
 
 // handlebars conf
@@ -45,8 +47,19 @@ let handlebars = exphbs.create({
 });
 
 // general middlewares
+let appForceSsl = (req, res, next) => {
+    if(forceSsl) {      
+        if(req.headers['x-forwarded-proto'] !== 'https') {
+            return res.redirect(['https://', req.get('Host'), req.url].join(''));
+        }
+    }
+    return next();
+};
 
 app
+.use(appForceSsl)
+
+// express
 .use(express.static(path.join(__dirname,'views/assets')))
 .use(session({
     secret: sessionSecret,
@@ -110,6 +123,7 @@ app
     Group.getGroupWithGames(req.session.currentGroup, result => {
         res.render('group', {
             titleSuffix: ' - '+req.session.currentGroup,
+            description: 'Outil de comptage de point au jeu de Tarot',
             group: result.group,
             games: result.games,
             additionalJS:[

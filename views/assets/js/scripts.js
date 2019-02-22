@@ -140,8 +140,9 @@
     
     function initCharts() {
         // get charts
-        
+        let chartPresent = false;
         $('canvas.chart').each(function(i) {
+            chartPresent = true;
             let id = $(this).attr('id');
             let ctx = document.getElementById(id).getContext('2d');
             // let canvas= document.getElementById(id);
@@ -172,9 +173,9 @@
             let val = Math.floor(i % colors.length);
             return colors[val];
         }*/
-        
-        setChartsPlugins();
-        
+        if(chartPresent) {
+            setChartsPlugins();
+        }
         
     }
     
