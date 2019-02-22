@@ -36,6 +36,13 @@
         </footer>
         
         <!-- Copyright HCarriere 2018 -->
+        <script>
+        if('serviceWorker' in navigator) {
+        navigator.serviceWorker
+            .register('/sw.js')
+            .then(function() { console.log("Service Worker Registered"); });
+        }
+        </script>
         <script type="text/javascript" src="/js/lib/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="/js/lib/materialize.min.js"></script>
         <script type="text/javascript" src="/js/pseudoRandom.min.js"></script>
@@ -43,13 +50,7 @@
         {{#each additionalJS}}
         <script type="text/javascript" src="{{.}}"></script>
         {{/each}}
-        <script>
-        if('serviceWorker' in navigator) {
-        navigator.serviceWorker
-            .register('/js/sw.js')
-            .then(function() { console.log("Service Worker Registered"); });
-        }
-        </script>
+        
     </body>
     
 </html>
