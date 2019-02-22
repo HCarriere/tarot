@@ -19,7 +19,6 @@ self.addEventListener('install', e => {
 
 self.addEventListener('fetch', function (event) {
     event.respondWith(caches.match(event.request).then(function (response) {
-        console.log(event.request.url);
         if (response !== undefined) {
             return response;
         } else {
