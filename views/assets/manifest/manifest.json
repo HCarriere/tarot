@@ -29,7 +29,6 @@
         }
     ],
     "start_url": "/login",
-    "scope": "/",
     "display": "standalone",
     "background_color": "#ffffff",
     "theme_color": "#26a69a",
