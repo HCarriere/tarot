@@ -38,9 +38,9 @@ function getSplashscreen() {
         ctx = canvas.getContext('2d');
 
         window.onresize = resizeCanvas;
-        canvas.onmousemove = event => onMouseMove(event);
-        canvas.onmousedown = event => onMouseDown(event);
-        canvas.onmouseup = event => onMouseUp(event);
+        canvas.onmousemove = canvas.ontouchmove = event => onMouseMove(event);
+        canvas.onmousedown = canvas.ontouchstart = event => onMouseDown(event);
+        canvas.onmouseup = canvas.ontouchend =  event => onMouseUp(event);
         width = canvas.width = (window.innerWidth);
         height = canvas.height = (window.innerHeight);
 
