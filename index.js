@@ -340,7 +340,7 @@ app
 
 .get('*', (req, res) => {
     res.status(404);
-    res.render('notfound');
+    res.render('notfound', {layout: false});
 })
 
 // error handler

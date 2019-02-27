@@ -3,6 +3,7 @@ body {
     min-height: 100vh;
     flex-direction: column;
     background-color: white;
+    margin: 0;
 }
 
 main {
@@ -175,4 +176,8 @@ fill: #000;
     position:fixed;
     transition: 1s all;
     cursor: pointer;
+}
+
+#splashscreen {
+    background-color: black;
 }
