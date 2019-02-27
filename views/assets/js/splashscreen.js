@@ -38,9 +38,12 @@ function getSplashscreen() {
         ctx = canvas.getContext('2d');
 
         window.onresize = resizeCanvas;
-        canvas.onmousemove = canvas.ontouchmove = event => onMouseMove(event);
-        canvas.onmousedown = canvas.ontouchstart = event => onMouseDown(event);
-        canvas.onmouseup = canvas.ontouchend =  event => onMouseUp(event);
+        canvas.onmousemove = event => onMouseMove(event);
+        canvas.onmousedown = event => onMouseDown(event);
+        canvas.onmouseup = event => onMouseUp(event);
+        canvas.ontouchmove = event => onTouchMove(event);
+        canvas.ontouchstart = event => onTouchStart(event);
+        canvas.ontouchend = event => onTouchEnd(event); 
         width = canvas.width = (window.innerWidth);
         height = canvas.height = (window.innerHeight);
 
@@ -185,11 +188,29 @@ function getSplashscreen() {
         mouse.x = event.clientX;
         mouse.y = event.clientY;
     }  
-    function onMouseUp() {
+    function onMouseUp(event) {
+        //event.preventDefault();
         mouse.pressed = false;
     }  
-    function onMouseDown() {
+    function onMouseDown(event) {
+        //event.preventDefault();
         mouse.pressed = true;
+    }
+
+    function onTouchMove(event) {
+        event.preventDefault();
+        if(event.changedTouches.length > 0) {
+            mouse.x = event.changedTouches[0].pageX;
+            mouse.y = event.changedTouches[0].pageY;
+        }
+    }
+    function onTouchStart(event) {
+        event.preventDefault();
+        if(event.changedTouches.length > 0) mouse.pressed = true;
+    }
+    function onTouchEnd(event) {
+        event.preventDefault();
+        if(event.changedTouches.length == 0) mouse.pressed = false;
     }
 
     function resizeCanvas() {
