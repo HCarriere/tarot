@@ -56,7 +56,7 @@
                                     ${badge.title}
                                 </div>
                             </div>
-                            <a class="badge-link" href="/game/${badge.gameName}?id=${badge.gameId}">
+                            <a class="badge-link" href="/game/${badge.gameId}">
                                 <i class="material-icons">link</i>
                             </a>
                         </span>

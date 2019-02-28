@@ -195,14 +195,14 @@ app
                 error: err
             });
         } else {
-            res.redirect('/game/'+game.name+'?id='+game._id);
+            res.redirect('/game/'+game._id);
         }
     });
 })
 
-.get('/game/:name', isAuth, (req, res) => {
+.get('/game/:id', isAuth, (req, res) => {
     Game.getGame(
-        req.query.id, 
+        req.params.id, 
         req.session.currentGroup, 
         (err, game) => {
         if(err) {
@@ -230,14 +230,14 @@ app
 .post('/round/add', isAuth, (req, res) => {
     Game.addRoundToGame(req, (err, game) => {
         if(err) console.log(err);
-        res.redirect('/game/'+game.name+'?id='+game._id);
+        res.redirect('/game/'+game._id);
     });
 })
 
 .post('/round/edit', isAuth, (req, res) => {
     Game.editRoundFromGame(req, (err, game) => {
         if(err) console.log(err);
-        res.redirect('/game/'+game.name+'?id='+game._id);
+        res.redirect('/game/'+game._id);
     });
 })
 
@@ -251,7 +251,7 @@ app
 .post('/game/toggleDisabled', isAuth, (req, res) => {
     Game.toggleDisabled(req, (err, game) => {
         if(err) console.log(err);
-        res.redirect('/game/'+game.name+'?id='+game._id);
+        res.redirect('/game/'+game._id);
     })
 })
 
