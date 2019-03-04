@@ -136,7 +136,9 @@ app
 
 .get('/login', (req, res) => {
     res.render('login', {
-        
+        additionalJS: [
+            '/js/loginScripts.js'
+        ]
     });
 })
 
@@ -316,6 +318,10 @@ app
             res.json(games);
         }, req.query.transform || false);
     })
+})
+
+.get('/ping', (req, res) => {
+    res.json('ok');
 })
 
 .get('/%F0%9F%98%82', (req, res) => {

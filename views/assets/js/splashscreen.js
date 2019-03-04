@@ -22,9 +22,9 @@ function getSplashscreen() {
         FLAME_DECAY_MIN: 80, // frames
         FLAME_DECAY_MAX: 160,
         RANDOM_X_SLIDE: 0.3,
-        MAX_PARTICLES: 600,
-        MOUSE_FEAR_SPEED: 0.1,
-        MOUSE_FEAR_DIST: 40,
+        MAX_PARTICLES: 800,
+        MOUSE_FEAR_SPEED: 0.2,
+        MOUSE_FEAR_DIST: 80,
         COLORS: ['#f4ff00','#f8f000','#fbe100','#fcd200','#fcc400','#fdb500',
         '#fda500','#fc9600','#fe8000','#ff6600','#ff4600','#ff0000'], // yellow -> red
     }

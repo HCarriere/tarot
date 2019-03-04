@@ -1,13 +1,13 @@
-'use strict'
+'use strict';
 
 const CACHE_NAME = 'cache-v1';
 // The files we want to cache
 const resourceList = [
-    '/',
     '/login',
     '/css/style.css',
-    '/css/materialize.min.css',
     '/sw.js',
+    '/js/loginScripts.js',
+    '/css/materialize.min.css',
     '/js/lib/jquery-3.3.1.min.js',
     '/js/lib/materialize.min.js',
     '/js/pseudoRandom.min.js',
@@ -20,16 +20,15 @@ self.addEventListener('install', event => {
     }));
 });
 
-function addToCache(cacheName, resourceList) {
-    caches.open(cacheName).then(cache => {
-        return cache.addAll(resourceList);
-    });
-}
 
 this.addEventListener('fetch', event => {
-    event.respondWith(caches.match(event.request).then(response => {
-        return response || fetch(event.request, {redirect: 'follow'});
-    }));
+    const url = new URL(event.request.url);
+    
+    if (url.origin == location.origin && resourceList.includes(url.pathname)) {
+        event.respondWith(caches.match(event.request).then(response => {
+            return response || fetch(event.request, {redirectMode: 'follow'});
+        }));
+    }
 });
 
 /*

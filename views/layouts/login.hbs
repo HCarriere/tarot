@@ -1,6 +1,8 @@
 <div class="row">
-    <h2 class="col offset-m3">Tarot - v0.3.0</h2>
+    <h2 class="col offset-m3">Tarot - v0.4.0</h2>
 </div>
+
+<canvas id="loadingScreen"></canvas>
 
 {{#if error}}
 <div class="row">
@@ -9,7 +11,7 @@
     </blockquote>
 </div>
 {{/if}}
-<div class="row">
+<div class="row" id="loginForm">
     <form action="/login" method="POST" class="col s12 m8 offset-m2 z-depth-1">
         <div class="row">
             <div class="input-field col s10 offset-s1">
