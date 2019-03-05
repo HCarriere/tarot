@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     
     testConnection(() => {
         console.log('server up and running');
-        //loadingScreen.stop();
+        loadingScreen.stop();
     });
 });
 
