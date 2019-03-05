@@ -194,6 +194,6 @@ fill: #000;
 }
 
 #loginForm {
-    display: block;
-    animation: all .5s;
+    display: none;
+    opacity: 0;
 }

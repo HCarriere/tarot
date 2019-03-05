@@ -43,7 +43,8 @@ function getSplashscreen() {
         canvas.onmouseup = event => onMouseUp(event);
         canvas.ontouchmove = event => onTouchMove(event);
         canvas.ontouchstart = event => onTouchStart(event);
-        canvas.ontouchend = event => onTouchEnd(event); 
+        canvas.ontouchend = event => onTouchEnd(event);
+        canvas.ontouchcancel =  event => onTouchEnd(event);
         width = canvas.width = (window.innerWidth);
         height = canvas.height = (window.innerHeight);
 
@@ -210,7 +211,7 @@ function getSplashscreen() {
     }
     function onTouchEnd(event) {
         event.preventDefault();
-        if(event.changedTouches.length == 0) mouse.pressed = false;
+        mouse.pressed = false;
     }
 
     function resizeCanvas() {

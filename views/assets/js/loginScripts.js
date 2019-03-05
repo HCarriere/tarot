@@ -13,15 +13,16 @@ function getLoadingScreen() {
     let delta;
 
     let CONST = {
-        MAX_PARTICLES: 800,
+        MAX_PARTICLES: 500,
         MOUSE_FEAR_SPEED: 0.2,
         MOUSE_FEAR_DIST: 80,
-        PARTICLE_REFLEX: 0.01,
+        PARTICLE_REFLEX: 0.02,
         DECAY_MIN: 100,
         DECAY_MAX: 300,
-        MASTER_PARTICLE_MAX: 100,
+        MASTER_PARTICLE_MAX: 20,
         MASTER_PARTICLE_FREQ: 2,
-        MASTER_PARTICLE_MAX_SPEED: 2,
+        MASTER_PARTICLE_MAX_SPEED: 3,
+        OBJECTIVE_RAD_SPEED: 0.05,
         COLORS: [ '#56c2b8','#4ebdb2','#46b7ac','#3db2a7','#34ada1','#2ea99d','#28a599','#22a195','#1f9d91','#1c998d','#19968a'],
     }
 
@@ -53,20 +54,29 @@ function getLoadingScreen() {
         canvas.ontouchmove = event => onTouchMove(event);
         canvas.ontouchstart = event => onTouchStart(event);
         canvas.ontouchend = event => onTouchEnd(event); 
+        canvas.ontouchcancel = event => onTouchEnd(event); 
+
         width = canvas.width = (window.innerWidth);
         height = canvas.height = (window.innerHeight);
 
+        objective = {
+            x:0, y:0,
+            rad: 0,
+        }
+        objective.x = width/2 + Math.cos(objective.rad) * (180 / Math.PI) * 2;
+        objective.y = height/2 + Math.sin(objective.rad) * (180 / Math.PI) * 2;
         masterParticles = [];
         masterParticle = {
-            x: width/2, y: width/2,
+            x: objective.x, y:objective.y,
             vx: 0, vy: 0,
         };
-        objective = getObjective();
-    
+
         particles = getParticleSystem();
 
         resizeCanvas();
-        run();
+        setTimeout(()=>{
+            run();
+        }, 500);
     }
 
     function stop() {
@@ -76,7 +86,8 @@ function getLoadingScreen() {
         let canvas = document.getElementById('loadingScreen');
         canvas.style.display = 'none'; 
         let loginForm = document.getElementById('loginForm');
-        loginForm.style.display = 'block';
+        // loginForm.style.display = 'block';
+        fadeIn(loginForm);
     }
 
     function run() {
@@ -85,11 +96,16 @@ function getLoadingScreen() {
         delta = 60 / getFPS() || 1;
         
         // master particle
-        moveToPoint(masterParticle, objective.x, objective.y);
+        if(mouse.pressed) moveToObjective(masterParticle, mouse.x, mouse.y);
+        else moveToObjective(masterParticle, objective.x, objective.y);
         moveFromWalls(masterParticle);
-        if(isNear(masterParticle, objective.x, objective.y, 30)) {
+        /*if(isNear(masterParticle, objective.x, objective.y, 30)) {
             objective = getObjective(); // new objective
-        }
+        }*/
+        objective.rad += CONST.OBJECTIVE_RAD_SPEED;
+        objective.x = width/2 + Math.cos(objective.rad) * (180 / Math.PI) * 2;
+        objective.y = height/2 + Math.sin(objective.rad) * (180 / Math.PI) * 2;
+
         if(frameCount%CONST.MASTER_PARTICLE_FREQ == 0) {
             masterParticles.push({x: masterParticle.x, y: masterParticle.y});
             if(masterParticles.length > CONST.MASTER_PARTICLE_MAX) {
@@ -97,37 +113,36 @@ function getLoadingScreen() {
             }
         }
         // cap speed
-        if(masterParticle.vx > CONST.MASTER_PARTICLE_MAX_SPEED) masterParticle.vx = CONST.MASTER_PARTICLE_MAX_SPEED;
-        if(masterParticle.vx < -CONST.MASTER_PARTICLE_MAX_SPEED) masterParticle.vx = -CONST.MASTER_PARTICLE_MAX_SPEED;
-        if(masterParticle.vy > CONST.MASTER_PARTICLE_MAX_SPEED) masterParticle.vy = CONST.MASTER_PARTICLE_MAX_SPEED;
-        if(masterParticle.vy < -CONST.MASTER_PARTICLE_MAX_SPEED) masterParticle.vy = -CONST.MASTER_PARTICLE_MAX_SPEED;
+        normParticleSpeed(masterParticle, CONST.MASTER_PARTICLE_MAX_SPEED);
         // move master particles
         masterParticle.x += masterParticle.vx * delta;
         masterParticle.y += masterParticle.vy * delta;
+
         // (display)
         /*for(let particle of masterParticles) {
             ctx.fillStyle = 'red';
             ctx.fillRect(Math.floor(particle.x), Math.floor(particle.y), 20, 20);
         }
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(Math.floor(masterParticle.x), Math.floor(masterParticle.y), 20, 20);
         ctx.fillStyle = 'green';
-        ctx.fillRect(Math.floor(objective.x), Math.floor(objective.y), 20, 20);*/
+        ctx.fillRect(Math.floor(objective.x), Math.floor(objective.y), 20, 20);
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(Math.floor(masterParticle.x), Math.floor(masterParticle.y), 20, 20);//*/
 
         // move & display particles
         for(let i=0;i<particles.length;i++) {
             let particle = particles[i];
 
-            if(mouse.pressed) moveAwayFromMouse(particle);
+            //if(mouse.pressed) moveAwayFromMouse(particle);
+            let s = Math.floor(map(particle.decay, 0, CONST.DECAY_MAX, 1, CONST.COLORS.length, true));
 
             // move to master
             moveToPoint(particle, masterParticle.x, masterParticle.y);
 
+            normParticleSpeed(particle, (12-s)/5);
+
             // move particles
             particle.x += particle.vx * delta;
             particle.y += particle.vy * delta;
-
-            let s = Math.floor(map(particle.decay, 0, CONST.DECAY_MAX, 1, CONST.COLORS.length, true));
 
             // display
             ctx.fillStyle = CONST.COLORS[Math.floor(s)];
@@ -144,14 +159,14 @@ function getLoadingScreen() {
         for(let i=particlesToRemove.length-1; i>0; i--) {
             particles.splice(particlesToRemove[i], 1);
         }
-        for(let i=0; i<CONST.MAX_PARTICLES - particles.length; i++) {
+        for(let i=0; i<constrain(CONST.MAX_PARTICLES - particles.length, 0, 4) ; i++) {
             particles.push(getNewParticle());
         }
 
-        ctx.textAlign = 'center';
-        ctx.font = '50px Impact';
+        /*ctx.textAlign = 'center';
+        ctx.font = '50px Calibri';
         ctx.fillStyle = 'black';
-        ctx.fillText('Patientez ...', width/2, height/2);
+        ctx.fillText('Chargement ...', width/2, height/2);*/
 
         frameCount++;
         requestAnimationFrame(run);
@@ -162,6 +177,36 @@ function getLoadingScreen() {
         if(particle.x > x) particle.vx -= CONST.PARTICLE_REFLEX;
         if(particle.y > y) particle.vy -= CONST.PARTICLE_REFLEX;
         if(particle.y < y) particle.vy += CONST.PARTICLE_REFLEX;
+    }
+    // more precise than moveToPoint
+    function moveToObjective(particle, x, y) {
+        let d = dist(particle.x, x,particle.y, y);
+        let speed = map(d, 0, 500, 0.01, 0.5);
+        let dx = x - particle.x;
+        let dy = y - particle.y;
+        particle.vx += (dx/100) * speed;
+        particle.vy += (dy/100) * speed;
+        if(d <= 8) {
+            particle.x = x;
+            particle.y = y;
+            particle.vx /= 10;
+            particle.vy /= 10;
+        }
+    }
+
+    function normParticleSpeed(particle, maxSpeed) {
+        // constrain vector speed
+        let mag = particle.vx * particle.vx + particle.vy * particle.vy;
+        if (mag > maxSpeed * maxSpeed) {
+
+            // normalizing vector
+            mag = Math.sqrt(mag);
+            particle.vx /= mag;
+            particle.vy /= mag;
+            // mult by max speed
+            particle.vx *= maxSpeed;
+            particle.vy *= maxSpeed;
+        }
     }
 
     function moveFromWalls(particle) {
@@ -205,6 +250,9 @@ function getLoadingScreen() {
         return value;
     }
 
+    function dist(x1, x2, y1, y2) {
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2))
+    }
     /**
      * Init the particle system
      * @return {ParticleSystem}
@@ -212,9 +260,9 @@ function getLoadingScreen() {
     function getParticleSystem() {
         if(masterParticles.length == 0) return [];
         let newParticles = [];
-        for(let i=0; i<CONST.MAX_PARTICLES; i++) {
+        /*for(let i=0; i<CONST.MAX_PARTICLES; i++) {
             newParticles.push(getNewParticle());
-        }
+        }*/
         return newParticles;
     }
 
@@ -227,13 +275,6 @@ function getLoadingScreen() {
             vy: Math.random()-0.5,
             decay: CONST.DECAY_MIN + Math.floor(Math.random()*(CONST.DECAY_MAX - CONST.DECAY_MIN)),
         };
-    }
-
-    function getObjective() {
-        return {
-            x:Math.random()*width,
-            y:Math.random()*height,
-        }
     }
 
     function getFPS() {
@@ -269,7 +310,7 @@ function getLoadingScreen() {
     }
     function onTouchEnd(event) {
         event.preventDefault();
-        if(event.changedTouches.length == 0) mouse.pressed = false;
+        mouse.pressed = false;
     }
 
     function resizeCanvas() {
@@ -277,6 +318,24 @@ function getLoadingScreen() {
         setTimeout(() => {
             height = canvas.height = (window.innerHeight);
         }, 0);
+    }
+
+    /**
+     * No jquery !
+     * @param {HTMLElement} element 
+     */
+    function fadeIn(element) {
+        var op = 0;  // initial opacity
+        element.style.display = 'block';
+        element.style.filter = 'alpha(opacity=0)';
+        var timer = setInterval(function () {
+            if (op >= 0.9){
+                clearInterval(timer);
+            }
+            element.style.opacity = op;
+            element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+            op += 0.1;
+        }, 50);
     }
 
     return {
@@ -295,7 +354,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
     
     testConnection(() => {
         console.log('server up and running');
-        loadingScreen.stop();
+        //loadingScreen.stop();
     });
 });
 
