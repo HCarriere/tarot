@@ -25,6 +25,7 @@ const gameSchema = mongoose.Schema({
         journal: [String],
     }],
     disabled: Boolean,
+    wikiID: String,
 });
 const GameModel = mongoose.model('Game', gameSchema);
 
@@ -38,13 +39,16 @@ function addGame(req, callback) {
         'name',
         'playersNumber',
         'players',
-        'newPlayers'
+        'newPlayers',
+        'originalWikiName',
+        'originalWikiID',
     ]);
     let groupName = req.session.currentGroup;
     if(!groupName) return callback('Erreur non reconnue');
 
     // name
     let name = params.name || 'cool';
+    let wikiID = params.originalWikiName == params.name ? params.originalWikiID : '';
     // name = name.replace(' ','-');
     // players number
     let playersNumber = parseInt(params.playersNumber) || 5;
@@ -88,6 +92,7 @@ function addGame(req, callback) {
         players : players,
         date: new Date(),
         disabled: false,
+        wikiID: wikiID,
     });
     newGame.save((err, object) => {
         if(err) {

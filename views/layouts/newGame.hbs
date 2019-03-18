@@ -13,6 +13,8 @@
                 {{#if defaultName}}<i style="font-size: 9px;color: #a8a8a8;">source: <a href="https://fr.wikipedia.org/?curid={{defaultName.id}}" target="_blank">Wikipedia</a></i>{{/if}}
             </p>
             <input value="{{defaultName.title}}" id="name" name="name" type="text" class="validate" required>
+            <input value="{{defaultName.title}}" name="originalWikiName" type="hidden">
+            <input value="{{defaultName.id}}" name="originalWikiID" type="hidden">
         </div>
 
         <div class="switch col s10 offset-s1">
