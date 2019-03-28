@@ -43,6 +43,12 @@ let handlebars = exphbs.create({
         add1: (ctx, options) => {
             return parseInt(ctx) + 1;
         },
+        join: (list, str) => {
+            return list.join(str);
+        },
+        joinName: (list, str) => {
+            return list.map(item => item.name).join(str);
+        },
     }
 });
 

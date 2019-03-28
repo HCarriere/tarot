@@ -24,7 +24,7 @@
         {{#each players}}
             <span class="new badge hide-on-small-only player" data-badge-caption="{{name}}"></span>
         {{/each}}
-        <span class="new badge grey hide-on-med-and-up" data-badge-caption="{{#each players}}{{name}} - {{/each}}"></span>
+        <span class="new badge grey hide-on-med-and-up" data-badge-caption="{{joinName players ' - '}}"></span>
         {{/if}}
     </a>
     {{/each}}

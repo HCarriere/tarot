@@ -67,6 +67,9 @@ function getGroupWithGames(groupName, callback, req) {
     }, (err, group) => {
         if(err) return console.error(err);
         getGamesFromGroup(group, dateFilter, (games) => {
+            group.players.sort((a, b) => {
+                return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
+            });
             callback({
                 group: group,
                 games: games
@@ -81,6 +84,9 @@ function getGroup(groupName, callback) {
         name: name,
     }, (err, group) => {
         if(err) return console.error(err);
+        group.players.sort((a, b) => {
+            return a.name.toUpperCase() < b.name.toUpperCase() ? -1 : 1;
+        });
         callback(group);
     });
 }

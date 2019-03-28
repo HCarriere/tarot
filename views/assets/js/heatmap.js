@@ -25,11 +25,11 @@
         for(let i=0; i<values.length; i++) {
             if(values[i]) {
                 data.push({
-                    day:i%7,
-                    week:Math.floor(i/7),
+                    day:(i+1)%7,
+                    week:Math.floor((i+1)/7),
                     value: values[i],
                 });
-                if(Math.floor(i/7)+1 > weekMax) {
+                if(Math.floor((i+1)/7)+1 > weekMax) {
                     weekMax = Math.floor(i/7)+1;
                 }
             }
@@ -86,7 +86,7 @@
             .html((d,i) => {
                 let date = new Date();
                 date.setMonth(0);
-                date.setDate(data[i].week * 7 + data[i].day + 1);
+                date.setDate(data[i].week * 7 + data[i].day);
                 return `<div class="heatmap-tooltip">
                             ${date.getDate()}/${date.getMonth()+1} : ${data[i].value}
                         </div>`
