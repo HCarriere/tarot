@@ -70,6 +70,12 @@
             <td class="total {{#ifGt score 0}}bonus{{else}}malus{{/ifGt}}">{{score}}</td>
             {{/each}}
         </tr>
+        <tr>
+            <th></th>
+            {{#each game.players}}
+            <th>{{name}}</th>
+            {{/each}}
+        </tr>
     </tbody>
 </table>
 
