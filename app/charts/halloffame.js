@@ -158,6 +158,12 @@ function getGroupStats(groupName, callback) {
                 if(utils.isPlayerExcluded(group, p)) {
                     delete players[p];
                 }
+
+                let pl = group.players.find(x => x.name == p);
+                if(pl.corruption && pl.corruption > 0) {
+                    giveBadgeToPlayer(players, p, BADGES.CORRUPTED());
+                }    
+                
             }
             return callback({
                 fames: players
@@ -206,6 +212,9 @@ const BADGES = {
     },
     ALONE: function(game) {
         return getBadge('Last Man', 'colorize', 'Seul à finir positif après 7 parties', game);
+    },
+    CORRUPTED: function() {
+        return getBadge('Corrompu', 'euro_symbol', 'Avoir des amis très haut placés...');
     },
     /*SEASON_1ST: function() {
         return getBadge('As de pique', 'star', 'Vainqueur de la saison précédente');

@@ -121,7 +121,12 @@ function cumulatedPointsBarChart(groupName, args, callback, group) {
             // exclude disabled players
             if(!utils.isPlayerExcluded(group,key)) {
                 persons.push(key);
-                stats.push(statsProcess[key]);
+                let corruption = 0;
+                let p = group.players.find(p => p.name == key);
+                if(p.corruption && p.corruption > 0) {
+                    corruption = p.corruption;
+                }    
+                stats.push(statsProcess[key] + corruption);
             }
         }
 

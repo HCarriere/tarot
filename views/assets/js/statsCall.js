@@ -55,11 +55,11 @@
                                 <div class="name">
                                     ${badge.title}
                                 </div>
-                            </div>
-                            <a class="badge-link" href="/game/${badge.gameId}">
+                            </div>`
+                            +(badge.gameId?`<a class="badge-link" href="/game/${badge.gameId}">
                                 <i class="material-icons">link</i>
-                            </a>
-                        </span>
+                            </a>`:'')+
+                        `</span>
                         `;
                     }
                     fame+=`</div>`;

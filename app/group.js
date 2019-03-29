@@ -9,6 +9,7 @@ const groupSchema = mongoose.Schema({
         name: String,
         date: Date,
         disabled: Boolean,
+        corruption: Number,
     }],
 });
 const GroupModel = mongoose.model('Group', groupSchema);

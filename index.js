@@ -220,7 +220,6 @@ app
         } else {
             res.render('game', {
                 game: game,
-                testVar: 'coucou',
                 charts: [
                     chart.game.pointsParPersonnes(game.rounds),
                     chart.game.prisesParPersonnes(game.rounds),
@@ -285,12 +284,6 @@ app
         });
     }, 5, false);
 })
-
-/*
-.get('/stats/player/:player', isAuth, (req, res) => {
-    res.json({test:'player '+req.params.player});
-    // TODO
-})*/
 
 .get('/stats/group', isAuth, (req, res) => {
     hallOfFame.getGroupStats(req.session.currentGroup, (stats) => {
