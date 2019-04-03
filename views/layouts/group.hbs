@@ -79,15 +79,27 @@
 </ul>
 
 <h2>Hall of fame</h2>
+<table class="sortable">
+    <thead>
+        <tr>
+            <th data-value-type="string" class="sorted">Joueur</th>
+            <th data-value-type="number">Badges</th>
+            <th data-value-type="number">Rounds joués</th>
+            <th data-value-type="number">Ratio de victoires</th>
+        </tr>
+    </thead>
+    <tbody>
+    {{#each overallStats}}
+        <tr>
+            <td><a href="/player/{{playerName}}">{{playerName}}</a></td>
+            <td>{{badgesCount}}</td>
+            <td>{{roundsCount}}</td>
+            <td>{{victoryRatio}}</td>
+        </tr>
+    {{/each}}
+    </tbody>
+</table>
 
-<div class="hall-of-fame">
-    <!--<div class="fame">
-        <span class="new badge player left" data-badge-caption="HCE"></span>
-        <div class="badge">
-            <i class="material-icons">star</i>
-        </div>
-    </div>-->
-</div>
 
 
 <h2>Joueurs actifs</h2>

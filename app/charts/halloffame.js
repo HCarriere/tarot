@@ -2,6 +2,29 @@ const Game = require('../game');
 const utils = require('../utils');
 const Group = require('../group');
 
+/**
+ * Process all badges from a gived group.
+ * Should be executed after each game events :
+ *   - round created/modified
+ *   - game created/disabled/enabled/deleted
+ * Do not cache, update the Group model database
+ * @param {String} groupName 
+ * @param {Function} callback 
+ */
+function processBadges(groupName, callback) {
+    getGroupStats(groupName, result => {
+        // update database
+        Group.updateGroupPlayersStats(groupName, result, result => {
+            callback(result);
+        });
+    });
+}
+
+/**
+ * Returns the badges of the group's players
+ * @param {String} groupName 
+ * @param {Function} callback 
+ */
 function getGroupStats(groupName, callback) {
     let stats = {};
    // let charts = [];
@@ -59,6 +82,8 @@ function getGroupStats(groupName, callback) {
                             winInCurrentGame: 0,
                             loseInCurrentGame: 0,
                             gameScore: 0,
+                            totalRoundsLost: 0,
+                            totalRoundsWon: 0,
                         };
                     }
                     playersStats[score.player].totalScore += score.mod;
@@ -67,6 +92,8 @@ function getGroupStats(groupName, callback) {
                     
                     if(hasWonRound(round, score.player)) {
                         playersStats[score.player].winInCurrentGame += 1;
+                        playersStats[score.player].totalRoundsWon += 1;
+
                         if(round.params.player == score.player) {
                             // win without bout
                             if((!round.params.bouts || round.params.bouts.length == 0 )){
@@ -81,6 +108,7 @@ function getGroupStats(groupName, callback) {
                         }
                     } else {
                         playersStats[score.player].loseInCurrentGame += 1;
+                        playersStats[score.player].totalRoundsLost += 1;
                     }
                     
                     if(round.params.player == score.player) {
@@ -150,6 +178,7 @@ function getGroupStats(groupName, callback) {
         // max score
         giveBadgeToPlayer(players, maxPts.player, BADGES.MAX_SCORE(maxPts.value, maxPts.game));
         
+        
         // exclude excluded players
         Group.find(groupName, (err, group) => {
             
@@ -157,12 +186,20 @@ function getGroupStats(groupName, callback) {
             for(let p in players) {
                 if(utils.isPlayerExcluded(group, p)) {
                     delete players[p];
-                }
+                } else {
 
-                let pl = group.players.find(x => x.name == p);
-                if(pl.corruption && pl.corruption > 0) {
-                    giveBadgeToPlayer(players, p, BADGES.CORRUPTED());
-                }    
+                    // corrupted badge (VLE)
+                    let pl = group.players.find(x => x.name == p);
+                    if(pl.corruption && pl.corruption > 0) {
+                        giveBadgeToPlayer(players, p, BADGES.CORRUPTED());
+                    }    
+                    
+                    // set players stats
+                    players[p].stats = {
+                        totalRoundsLost: playersStats[p].totalRoundsLost,
+                        totalRoundsWon: playersStats[p].totalRoundsWon,
+                    }
+                }
                 
             }
             return callback({
@@ -250,9 +287,15 @@ function getBadge(title, icon, description, game) {
 
 function giveBadgeToPlayer(players, playerName, badge) {
     if(!players[playerName]) {
-        players[playerName] = {};
+        players[playerName] = {
+            badges: {}
+        };
     }
-    players[playerName][badge.title] = badge;
+    players[playerName].badges[badge.title] = badge;
+}
+
+function setPlayerStats() {
+
 }
 
 function hasWonRound(round, player) {
@@ -264,5 +307,6 @@ function hasWonRound(round, player) {
 }
 
 module.exports = {
-    getGroupStats,
+    // getGroupStats,
+    processBadges,
 }

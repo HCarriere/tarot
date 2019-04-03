@@ -36,6 +36,10 @@
             }
         });
         
+        // $('.tooltipped').tooltip();
+
+        initSortableTable();
+        
         initScoreRange();
         
         initEditModal();
@@ -233,6 +237,30 @@
 			});
 		});
 	}
+
+    function initSortableTable() {
+        $('table.sortable th').on('click', function(e) {
+            let type = $(this).attr('data-value-type') || 'string';
+            let index = $(this).siblings().addBack().index(this);
+            let lines = $(this).closest('table').find('tbody tr');
+            // sort
+            let newLines = lines.clone();
+            newLines.sort((a, b) => {
+                let valA = $(a).children('td').eq(index).html();
+                let valB = $(b).children('td').eq(index).html();
+                if(type == 'string') {
+                    return valA > valB?1:-1;
+                }
+                if(type == 'number') {
+                    return Number(valB) - Number(valA);
+                }
+            });
+            $(this).siblings().removeClass('sorted');
+            $(this).addClass('sorted');
+            $(this).closest('table').find('tbody').empty();
+            $(this).closest('table').find('tbody').append(newLines);
+        });
+    }
 })();
 
 let colors = (function() {

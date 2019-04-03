@@ -10,6 +10,17 @@ const groupSchema = mongoose.Schema({
         date: Date,
         disabled: Boolean,
         corruption: Number,
+        stats: {
+            totalRoundsLost: Number,
+            totalRoundsWon: Number,
+        },
+        badges: [{
+            title: String,
+            icon: String,
+            description: String,
+            gameName: String,
+            gameId: String,
+        }]
     }],
 });
 const GroupModel = mongoose.model('Group', groupSchema);
@@ -73,10 +84,35 @@ function getGroupWithGames(groupName, callback, req) {
             });
             callback({
                 group: group,
-                games: games
+                games: games,
+                overallStats: getPlayerOverallStats(group),
             });
         });
     });
+}
+
+/**
+ * Compute a group overall stats:
+ * per (active) player:
+ * - number of badges
+ * - number of rounds
+ * - victory ratio
+ * @param {Group} group 
+ */
+function getPlayerOverallStats(group) {
+    let stats = [];
+    for(let player of group.players) {
+        if(player.stats && (player.stats.totalRoundsLost > 0 || player.stats.totalRoundsWon > 0)) {
+            stats.push({
+                playerName: player.name,
+                badgesCount: player.badges.length,
+                roundsCount: player.stats.totalRoundsWon + player.stats.totalRoundsLost,
+                victoryRatio: (player.stats.totalRoundsWon / 
+                    (player.stats.totalRoundsWon+player.stats.totalRoundsLost)).toFixed(2),
+            });
+        }
+    }
+    return stats;
 }
 
 function getGroup(groupName, callback) {
@@ -209,12 +245,20 @@ function setActivePlayers(req, callback) {
     });
 }
 
-// verify player and get games from his group
+/**
+ * Verify that the player exists
+ * Get the games from which the player participated
+ * Also get the player from the Group model
+ * @param {Request} req 
+ * @param {Function} callback(error, games, player(group))
+ * @param {*} playersNumber tarot 4 or 5 ?
+ * @param {*} disabled get disabled games
+ */
 function getAllGamesForPlayer(req, callback, playersNumber, disabled){
     let groupName = req.session.currentGroup;
     // verif player
     let playerName = req.params.player;
-
+    let player;
     GroupModel.findOne({
         name: groupName,
     }, (err,group) => {
@@ -222,19 +266,59 @@ function getAllGamesForPlayer(req, callback, playersNumber, disabled){
             return callback(err);
         }
 
-        if(!group.players.some(p => p.name == playerName)) {
-            return callback('Player not found');
+        player = group.players.find(p => p.name == playerName);
+        if(!player) {
+            return callback('player not found');
         }
+         
         Game.getGames({
             group: groupName,
             playersNumber: playersNumber?playersNumber:5,// default 5
             $or:[{disabled: disabled?disabled:false}, {disabled: undefined}],
             players: {$elemMatch:{name:playerName}}
         }, games => {
-            return callback(null, games, playerName);
+            return callback(null, games, player);
         });
     });
 }
+
+/**
+ * Update group badges from the hallofame processBadges function
+ * Update
+ * {
+ * AAA: {BadgeA:{title: title,
+            icon: icon,
+            description: description,
+            gameName: game.name,
+            gameId: game.id,}, BadgeB:{...}}
+ * }
+ * @param {String} groupName
+ * @param {Badges} stats from halloffame
+ * @param {Function} callback 
+ */
+function updateGroupPlayersStats(groupName, stats, callback) {
+    GroupModel.findOne({
+        name: groupName,
+    }, (err,group) => {
+        if(err) {
+            return callback(err);
+        }
+        for(let player of group.players) {
+            if(stats.fames[player.name]) {
+                player.badges = [];
+                for(let badge in stats.fames[player.name].badges) {
+                    player.badges.push(stats.fames[player.name].badges[badge]);
+                }
+                player.stats = stats.fames[player.name].stats;
+            }
+        }
+        group.save((err, res) => {
+            if(err) console.log(err);
+            callback('OK');
+        });
+    });
+}
+
 
 module.exports = {
     find,
@@ -245,4 +329,5 @@ module.exports = {
     addPlayersToGroup,
     setActivePlayers,
     getAllGamesForPlayer,
+    updateGroupPlayersStats,
 };

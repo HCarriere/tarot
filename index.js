@@ -126,12 +126,14 @@ const hallOfFame = require('./app/charts/halloffame');
 
 app
 .get('/', isAuth, (req, res) => {
+    processStats(req);
     Group.getGroupWithGames(req.session.currentGroup, result => {
         res.render('group', {
             titleSuffix: ' - '+req.session.currentGroup,
             description: 'Outil de comptage de point au jeu de Tarot',
             group: result.group,
             games: result.games,
+            overallStats: result.overallStats,
             additionalJS:[
                 '/js/lib/Chart.min.js',
                 '/js/statsCall.js'
@@ -237,13 +239,16 @@ app
 .post('/round/add', isAuth, (req, res) => {
     Game.addRoundToGame(req, (err, game) => {
         if(err) console.log(err);
+        processStats(req);
         res.redirect('/game/'+game._id);
     });
+    
 })
 
 .post('/round/edit', isAuth, (req, res) => {
     Game.editRoundFromGame(req, (err, game) => {
         if(err) console.log(err);
+        processStats(req);
         res.redirect('/game/'+game._id);
     });
 })
@@ -258,6 +263,7 @@ app
 .post('/game/toggleDisabled', isAuth, (req, res) => {
     Game.toggleDisabled(req, (err, game) => {
         if(err) console.log(err);
+        processStats(req);
         res.redirect('/game/'+game._id);
     })
 })
@@ -268,12 +274,12 @@ app
             console.log(err)
         }
         res.render('player', {
-            playerName: player,
+            player: player,
             charts: [
-                chart.player.individualPointsEvolutionTarot5(games, player),
+                chart.player.individualPointsEvolutionTarot5(games, player.name),
             ],
             heatmaps: [
-                chart.player.gameScoreInYearHeatmapTarot5(games, player),
+                chart.player.gameScoreInYearHeatmapTarot5(games, player.name),
             ],
             additionalJS: [
                 '/js/lib/Chart.min.js',
@@ -285,11 +291,12 @@ app
     }, 5, false);
 })
 
+/*
 .get('/stats/group', isAuth, (req, res) => {
-    hallOfFame.getGroupStats(req.session.currentGroup, (stats) => {
+    Group.getGroupStats(req.session.currentGroup, (stats) => {
         res.json(stats); 
     });
-})
+})*/
 
 .get('/stats/chart/group/:chart', isAuth, (req, res) => {
     chart.group.getChart(req.session.currentGroup, 
@@ -366,5 +373,8 @@ server.listen(port, (err) => {
    }
 });
 
-
+function processStats(req) {
+    hallOfFame.processBadges(req.session.currentGroup, result => {
+    });
+}
 

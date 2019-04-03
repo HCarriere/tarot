@@ -68,7 +68,6 @@
                 
                 // post init
                 colorPlayerBadges();
-                $('.tooltipped').tooltip();
             })
             .fail(function(err) {
                 console.log(err);
